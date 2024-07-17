@@ -30,7 +30,7 @@ public class NoticeImage extends BaseTimeEntity {
     private String image;
 
     @ManyToOne
-    @JoinColumn(name = "notice_id")
+    @JoinColumn(name = "notice_id", nullable = false)
     private Notice notice;
 
 }

@@ -38,8 +38,7 @@ public class Qna extends BaseTimeEntity {
     private boolean open;
 
     @ManyToOne
-    @JoinColumn(name = "employee_id")
-    @Column(nullable = false)
+    @JoinColumn(name = "employee_id", nullable = false)
     private Employee employee;
 
     @ManyToOne

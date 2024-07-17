@@ -36,6 +36,6 @@ public class Notice extends BaseTimeEntity {
     private int hits = 0;
 
     @ManyToOne
-    @JoinColumn(name = "admin_id")
+    @JoinColumn(name = "admin_id", nullable = false)
     private Employee admin;
 }
