@@ -51,15 +51,13 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.GCP_COMPUTE_ENGINE_SSH_KEY }}
 
-      - name: Copy docker-compose file to GCP
+      - name: Pull Docker image from Docker Hub
         run: |
-          scp -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.GCP_COMPUTE_ENGINE_SSH_USER }}@${{ secrets.GCP_COMPUTE_ENGINE_INSTANCE }}:~/docker-compose.yml
+          ssh -o StrictHostKeyChecking=no ${{ secrets.GCP_COMPUTE_ENGINE_SSH_USER }}@${{ secrets.GCP_COMPUTE_ENGINE_INSTANCE }} \
+            "docker pull ${{ secrets.DOCKERHUB_USERNAME }}/clovider-be-app"
 
-      - name: Deploy application
+      - name: Run Docker container on GCP
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.GCP_COMPUTE_ENGINE_SSH_USER }}@${{ secrets.GCP_COMPUTE_ENGINE_INSTANCE }} << 'EOF'
-            docker-compose down
-            docker-compose pull
-            docker-compose up -d
-          EOF
+          ssh -o StrictHostKeyChecking=no ${{ secrets.GCP_COMPUTE_ENGINE_SSH_USER }}@${{ secrets.GCP_COMPUTE_ENGINE_INSTANCE }} \
+            "docker run -d --rm -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/clovider-be-app"
 
