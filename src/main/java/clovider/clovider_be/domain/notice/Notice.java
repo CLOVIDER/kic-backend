@@ -26,11 +26,14 @@ public class Notice extends BaseTimeEntity {
     @Column(name = "notice_id")
     private Long id;
 
+    @Column(nullable = false)
     private String title;
 
+    @Column(nullable = false)
     private String content;
 
-    private int hits;
+    @Column(nullable = false)
+    private int hits = 0;
 
     @ManyToOne
     @JoinColumn(name = "admin_id")
