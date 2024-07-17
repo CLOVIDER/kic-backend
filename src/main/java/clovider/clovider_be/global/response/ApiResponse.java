@@ -1,10 +1,10 @@
 package clovider.clovider_be.global.response;
 
+import clovider.clovider_be.global.response.code.BaseCode;
+import clovider.clovider_be.global.response.code.status.SuccessStatus;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.justdo.glue.sticker.global.response.code.BaseCode;
-import com.justdo.glue.sticker.global.response.code.status.SuccessStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
