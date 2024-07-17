@@ -54,10 +54,8 @@ jobs:
       - name: Pull Docker image from Docker Hub
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.GCP_COMPUTE_ENGINE_SSH_USER }}@${{ secrets.GCP_COMPUTE_ENGINE_INSTANCE }} \
-            "sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/clovider-be-app"
-
+            "docker pull ${{ secrets.DOCKERHUB_USERNAME }}/clovider-be-app"
       - name: Run Docker container on GCP
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.GCP_COMPUTE_ENGINE_SSH_USER }}@${{ secrets.GCP_COMPUTE_ENGINE_INSTANCE }} \
-            "sudo docker run -d --rm -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/clovider-be-app"
-
+            "docker run -d --rm -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/clovider-be-app"
