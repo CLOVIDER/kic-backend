@@ -2,7 +2,7 @@
 name: Feature request
 about: 추가될 기능에 대해 제안해주세요!
 title: "[✨FEATURE]"
-labels: ''
+labels: "✨ Feature"
 assignees: ''
 
 ---
