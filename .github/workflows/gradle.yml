@@ -1,4 +1,4 @@
-name: Java CI with Gradle
+name: Java CICD with Gradle
 
 on:
   push:
@@ -37,3 +37,29 @@ jobs:
 
     - name: docker Hub push
       run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/clovider-be-app
+  deploy:
+    name: Deploy to GCP Compute Engine
+    runs-on: ubuntu-latest
+    needs: build-docker-image
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.GCP_COMPUTE_ENGINE_SSH_KEY }}
+
+      - name: Copy docker-compose file to GCP
+        run: |
+          scp -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.GCP_COMPUTE_ENGINE_SSH_USER }}@${{ secrets.GCP_COMPUTE_ENGINE_INSTANCE }}:~/docker-compose.yml
+
+      - name: Deploy application
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.GCP_COMPUTE_ENGINE_SSH_USER }}@${{ secrets.GCP_COMPUTE_ENGINE_INSTANCE }} << 'EOF'
+            docker-compose down
+            docker-compose pull
+            docker-compose up -d
+          EOF
+
