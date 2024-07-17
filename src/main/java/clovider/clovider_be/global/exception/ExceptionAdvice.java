@@ -1,15 +1,15 @@
 package clovider.clovider_be.global.exception;
 
-import com.justdo.glue.sticker.global.response.ApiResponse;
-import com.justdo.glue.sticker.global.response.code.ErrorReasonDto;
-import com.justdo.glue.sticker.global.response.code.status.ErrorStatus;
+import clovider.clovider_be.global.response.ApiResponse;
+import clovider.clovider_be.global.response.code.ErrorReasonDto;
+import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
 
 @Slf4j
 @RestControllerAdvice(annotations = {RestController.class})
