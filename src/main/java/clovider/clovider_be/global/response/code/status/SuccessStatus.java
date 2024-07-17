@@ -1,7 +1,7 @@
 package clovider.clovider_be.global.response.code.status;
 
-import com.justdo.glue.sticker.global.response.code.BaseCode;
-import com.justdo.glue.sticker.global.response.code.ReasonDto;
+import clovider.clovider_be.global.response.code.BaseCode;
+import clovider.clovider_be.global.response.code.ReasonDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

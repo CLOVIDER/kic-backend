@@ -1,7 +1,7 @@
 package clovider.clovider_be.global.exception;
 
-import com.justdo.glue.sticker.global.response.code.ErrorReasonDto;
-import com.justdo.glue.sticker.global.response.code.status.ErrorStatus;
+import clovider.clovider_be.global.response.code.ErrorReasonDto;
+import clovider.clovider_be.global.response.code.status.ErrorStatus;
 
 public class ApiException extends RuntimeException{
 
