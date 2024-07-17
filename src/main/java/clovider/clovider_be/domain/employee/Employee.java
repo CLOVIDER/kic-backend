@@ -48,6 +48,7 @@ public class Employee extends BaseTimeEntity {
     private String coupleNo;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Role role;
 
 }

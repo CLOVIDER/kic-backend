@@ -1,7 +1,7 @@
-package clovider.clovider_be.domain.qna;
+package clovider.clovider_be.domain.noticeImage;
 
 import clovider.clovider_be.domain.common.BaseTimeEntity;
-import clovider.clovider_be.domain.employee.Employee;
+import clovider.clovider_be.domain.notice.Notice;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,31 +19,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @Getter
-public class Qna extends BaseTimeEntity {
+public class NoticeImage extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
-    @Column(name = "qna_id")
+    @Column(name = "image_id")
     private Long id;
 
     @Column(nullable = false)
-    private String title;
-
-    @Column(nullable = false)
-    private String question;
-
-    private String answer;
-
-    @Column(nullable = false)
-    private boolean open;
+    private String image;
 
     @ManyToOne
-    @JoinColumn(name = "employee_id")
-    @Column(nullable = false)
-    private Employee employee;
-
-    @ManyToOne
-    @JoinColumn(name = "admin_id")
-    private Employee admin;
+    @JoinColumn(name = "notice_id")
+    private Notice notice;
 
 }
