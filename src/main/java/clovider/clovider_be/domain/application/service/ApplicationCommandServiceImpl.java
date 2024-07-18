@@ -1,6 +1,6 @@
 package clovider.clovider_be.domain.application.service;
 
-import clovider.clovider_be.domain.application.entity.Application;
+import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.application.repository.ApplicationRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;

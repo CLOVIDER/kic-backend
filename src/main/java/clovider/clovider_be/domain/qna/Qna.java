@@ -4,7 +4,9 @@ import clovider.clovider_be.domain.common.BaseTimeEntity;
 import clovider.clovider_be.domain.employee.Employee;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -22,7 +24,7 @@ import lombok.NoArgsConstructor;
 public class Qna extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "qna_id")
     private Long id;
 
@@ -35,13 +37,13 @@ public class Qna extends BaseTimeEntity {
     private String answer;
 
     @Column(nullable = false)
-    private boolean open;
+    private boolean visibility;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id", nullable = false)
     private Employee employee;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_id")
     private Employee admin;
 

@@ -1,7 +1,7 @@
 package clovider.clovider_be.domain.application.service;
 
 
-import clovider.clovider_be.domain.application.entity.Application;
+import clovider.clovider_be.domain.application.Application;
 
 public interface ApplicationCommandService {
 

@@ -4,7 +4,9 @@ import clovider.clovider_be.domain.common.BaseTimeEntity;
 import clovider.clovider_be.domain.employee.Employee;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -22,7 +24,7 @@ import lombok.NoArgsConstructor;
 public class Notice extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "notice_id")
     private Long id;
 
@@ -35,7 +37,7 @@ public class Notice extends BaseTimeEntity {
     @Column(nullable = false)
     private int hits = 0;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_id", nullable = false)
     private Employee admin;
 }
