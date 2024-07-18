@@ -1,13 +1,21 @@
 package clovider.clovider_be.domain.application.entity;
 
 import clovider.clovider_be.domain.common.BaseTimeEntity;
+import clovider.clovider_be.domain.employee.Employee;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Entity
 @Setter
 @Getter
-@Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "application")
 public class Application extends BaseTimeEntity {
 
@@ -25,7 +33,9 @@ public class Application extends BaseTimeEntity {
     private Boolean sibling;
 
     private Boolean tempSave;
-
     private String childName;
-    private Long employeeId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_id", nullable = false)
+    private Employee employee;
 }
