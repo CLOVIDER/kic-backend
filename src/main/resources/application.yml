@@ -1,1 +1,9 @@
-spring.application.name=clovider-be
+spring:
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/clovider-test
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
