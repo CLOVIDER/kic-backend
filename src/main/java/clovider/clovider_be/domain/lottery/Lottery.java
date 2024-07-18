@@ -37,7 +37,5 @@ public class Lottery extends BaseTimeEntity {
 
     @Column(name = "accept", nullable = false)
     private Boolean accept;
-
-    // Getters and Setters
-    // ...
+    
 }
