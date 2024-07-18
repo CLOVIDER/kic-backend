@@ -1,5 +1,6 @@
 package clovider.clovider_be.domain.application.entity;
 
+import clovider.clovider_be.domain.application.dto.ApplicationDto;
 import clovider.clovider_be.domain.common.BaseTimeEntity;
 import clovider.clovider_be.domain.employee.Employee;
 import jakarta.persistence.*;
@@ -8,10 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Setter
 @Getter
 @Builder
 @AllArgsConstructor
@@ -24,18 +23,45 @@ public class Application extends BaseTimeEntity {
     @Column(name = "application_id", nullable = false)
     private Long id;
 
-    private Long workYears;
-    private Boolean singleParent;
-    private Integer childrenCnt;
-    private Boolean disability;
-    private Boolean dualIncome;
-    private Boolean employeeCouple;
-    private Boolean sibling;
+    // 임시저장을 위해 모든 컬럼 기본값 지정, 가중치에 모두 포함이 안되는 기본값으로 설정
+    @Column(nullable = false)
+    private Integer workYears = 0;
 
-    private Boolean tempSave;
+    @Column(nullable = false)
+    private Boolean singleParent = false;
+
+    @Column(nullable = false)
+    private Integer childrenCnt = 1;
+
+    @Column(nullable = false)
+    private Boolean disability = false;
+
+    @Column(nullable = false)
+    private Boolean dualIncome = false;
+
+    @Column(nullable = false)
+    private Boolean employeeCouple = false;
+
+    @Column(nullable = false)
+    private Boolean sibling = false;
+
+    @Column
+    private Boolean tempSave = false; //default : 임시저장이 아닌 일반 저장 상태
+
     private String childName;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id", nullable = false)
     private Employee employee;
+
+    @Builder
+    public Application(ApplicationDto applicationDto) {
+        this.workYears = applicationDto.getWorkYears();
+        this.singleParent = applicationDto.getSingleParent();
+        this.childrenCnt = applicationDto.getChildrenCnt();
+        this.disability = applicationDto.getDisability();
+        this.dualIncome = applicationDto.getDualIncome();
+        this.employeeCouple = applicationDto.getEmployeeCouple();
+        this.sibling = applicationDto.getSibling();
+    }
 }

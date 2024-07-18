@@ -13,11 +13,17 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
     }
 
     @Override
-    public void applicationCreate(Application application) {}
+    public void applicationCreate(Application application) {
+
+    }
 
     @Override
-    public void applicationUpdate(Application application) {}
+    public void applicationUpdate(Application application) {
+
+    }
 
     @Override
-    public void applicationDelete(Long Id) {}
+    public void applicationDelete(Long Id) {
+
+    }
 }

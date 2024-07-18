@@ -13,5 +13,7 @@ public class ApplicationController {
 
     @Autowired
     private ApplicationCommandService applicationCommandService;
+
+    @Autowired
     private ApplicationQueryService applicationQueryService;
 }
