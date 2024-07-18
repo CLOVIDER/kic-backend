@@ -27,24 +27,25 @@ public class Employee extends BaseTimeEntity {
     @Column(name = "employee_id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     private String nameKo;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     private String accountId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 40)
     private String password;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     private String employeeNo;
 
     @Column(nullable = false)
     private LocalDate joinDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     private String dept;
 
+    @Column(length = 20)
     private String coupleNo;
 
     @Enumerated(EnumType.STRING)
