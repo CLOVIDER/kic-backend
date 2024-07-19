@@ -49,9 +49,7 @@ public class Recruit extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "kindergarden_id", nullable = false)
     private Kindergarden kindergarden;
-
-
-
+    
     @OneToMany(mappedBy = "recruit", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Lottery> lotteries;
 
