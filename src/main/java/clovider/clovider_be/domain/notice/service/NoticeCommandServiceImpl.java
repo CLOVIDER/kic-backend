@@ -29,7 +29,7 @@ public class NoticeCommandServiceImpl implements NoticeCommandService {
         Employee admin = employeeRepository.findByAccountId(FIXED_ADMIN_USERNAME)
                 .orElseThrow(() -> new ApiException(ErrorStatus._ADMIN_NOT_FOUND));
 
-        // + 로그인한 관리자 id를 SecurityContextHolder 에서 가져와 admin을 추가해서 생성해야함
+        // + 로그인한 관리자 id를 SecurityContextHolder 에서 가져와 admin을 추가해서 생성 요망
         // 현재는 "admin"으로 고정
         Notice savedNotice = noticeRepository.save(Notice.builder()
                 .title(request.getTitle())
@@ -39,6 +39,22 @@ public class NoticeCommandServiceImpl implements NoticeCommandService {
 
         noticeImageCommandService.createNoticeImages(request.getImageUrls(), savedNotice);
 
-        return CustomResult.toCustomResult(savedNotice);
+        return CustomResult.toCustomResult(savedNotice.getId());
+    }
+
+    public CustomResult updateNotice(Long noticeId, NoticeRequest request) {
+
+        Notice foundNotice = noticeRepository.findById(noticeId)
+                .orElseThrow(() -> new ApiException(ErrorStatus._NOTICE_NOT_FOUND));
+
+        // Notice 업데이트
+        foundNotice.updateNotice(request);
+
+        return CustomResult.toCustomResult(foundNotice.getId());
+    }
+
+    public CustomResult deleteNotice(Long noticeId) {
+        noticeRepository.deleteById(noticeId);
+        return CustomResult.toCustomResult(noticeId);
     }
 }

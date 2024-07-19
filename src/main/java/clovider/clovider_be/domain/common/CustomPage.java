@@ -1,18 +1,20 @@
 package clovider.clovider_be.domain.common;
 
 import java.util.List;
+import lombok.Getter;
 import org.springframework.data.domain.Page;
 
+@Getter
 public class CustomPage<T> {
 
-    private List<T> content;
-    private int totalPage;
-    private long totalElements;
-    private int size;
-    private int currPage;
-    private Boolean hasNext;
-    private Boolean isFirst;
-    private Boolean isLast;
+    private final List<T> content;
+    private final int totalPage;
+    private final long totalElements;
+    private final int size;
+    private final int currPage;
+    private final Boolean hasNext;
+    private final Boolean isFirst;
+    private final Boolean isLast;
 
     public CustomPage(Page<T> page) {
         this.content = page.getContent();

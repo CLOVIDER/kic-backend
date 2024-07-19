@@ -1,6 +1,5 @@
 package clovider.clovider_be.domain.common;
 
-import clovider.clovider_be.domain.notice.Notice;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -18,10 +17,10 @@ public class CustomResult {
     private Long id;
     private LocalDateTime createdAt;
 
-    public static CustomResult toCustomResult(Notice notice) {
+    public static CustomResult toCustomResult(Long id) {
         return CustomResult.builder()
-                .id(notice.getId())
-                .createdAt(notice.getCreatedAt())
+                .id(id)
+                .createdAt(LocalDateTime.now())
                 .build();
     }
 }

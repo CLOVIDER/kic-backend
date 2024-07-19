@@ -17,7 +17,10 @@ public enum ErrorStatus implements BaseErrorCode {
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
 
     // 직원(관리자) 관련
-    _ADMIN_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "ADMIN001", "관리자를 찾을 수 없습니다.");
+    _ADMIN_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "ADMIN001", "관리자를 찾을 수 없습니다."),
+
+    // 공사사항 관련
+    _NOTICE_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "NOTICE001", "공지사항을 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
