@@ -1,5 +1,9 @@
 package clovider.clovider_be.domain.employee.service;
 
-public class EmployeeQueryService {
+import clovider.clovider_be.domain.employee.Employee;
+
+public interface EmployeeQueryService {
+
+    Employee getEmployee(Long id);
 
 }
