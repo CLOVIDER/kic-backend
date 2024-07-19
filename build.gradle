@@ -29,6 +29,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    runtimeOnly 'com.mysql:mysql-connector-j'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     // Hibernate Validator 추가
@@ -52,4 +53,11 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+processResources.dependsOn('copyGitSubmodule')
+task copyGitSubmodule(type: Copy) {
+    from './application-config'
+    include '*.yml'
+    into 'src/main/resources'
 }
