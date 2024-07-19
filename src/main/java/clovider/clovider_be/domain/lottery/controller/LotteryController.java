@@ -22,12 +22,12 @@ public class LotteryController {
     public ResponseEntity<LotteryResponseDTO> createLottery(
             @PathVariable Long recruitId,
             @RequestParam Long applicationId,
-            @RequestParam Integer rankNm,
+            @RequestParam Integer rankNum,
             @RequestParam String result,
             @RequestParam Boolean registry,
             @RequestParam Boolean accept) {
         try {
-            LotteryResponseDTO response = lotteryService.createLottery(recruitId, applicationId, rankNm, result, registry, accept);
+            LotteryResponseDTO response = lotteryService.createLottery(recruitId, applicationId, rankNum, result, registry, accept);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
