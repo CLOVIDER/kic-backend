@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "lottery")
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
@@ -16,9 +15,9 @@ public class Lottery extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "lottery_id")
-    private Long lotteryId;
+    private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recruit_id", nullable = false)
     private Recruit recruit;
 
@@ -26,16 +25,16 @@ public class Lottery extends BaseTimeEntity {
 //    @JoinColumn(name = "application_id", nullable = false)
 //    private Application application;
 
-    @Column(name = "rank", nullable = false)
+    @Column(nullable = false)
     private Integer rank;
 
-    @Column(name = "result", length = 15, nullable = false)
+    @Column(length = 15, nullable = false)
     private String result;
 
-    @Column(name = "registry", nullable = false)
+    @Column(nullable = false)
     private Boolean registry;
 
-    @Column(name = "accept", nullable = false)
+    @Column(nullable = false)
     private Boolean accept;
     
 }

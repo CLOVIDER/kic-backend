@@ -4,7 +4,9 @@ import clovider.clovider_be.domain.common.BaseTimeEntity;
 import clovider.clovider_be.domain.notice.Notice;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -22,14 +24,14 @@ import lombok.NoArgsConstructor;
 public class NoticeImage extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue
-    @Column(name = "image_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "notice_image_id")
     private Long id;
 
     @Column(nullable = false)
     private String image;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "notice_id", nullable = false)
     private Notice notice;
 
