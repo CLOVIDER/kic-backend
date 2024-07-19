@@ -1,5 +1,6 @@
 package clovider.clovider_be.domain.lottery;
 
+import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.common.BaseTimeEntity;
 import clovider.clovider_be.domain.recruit.Recruit;
 import jakarta.persistence.*;
@@ -21,12 +22,12 @@ public class Lottery extends BaseTimeEntity {
     @JoinColumn(name = "recruit_id", nullable = false)
     private Recruit recruit;
 
-//    @ManyToOne
-//    @JoinColumn(name = "application_id", nullable = false)
-//    private Application application;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "application_id", nullable = false)
+    private Application application;
 
     @Column(nullable = false)
-    private Integer rank;
+    private Integer rankNm;
 
     @Column(length = 15, nullable = false)
     private String result;
