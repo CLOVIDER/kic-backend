@@ -71,4 +71,8 @@ public class Notice extends BaseTimeEntity {
             this.images.add(image);
         });
     }
+
+    public void incrementHits() {
+        this.hits += 1;
+    }
 }

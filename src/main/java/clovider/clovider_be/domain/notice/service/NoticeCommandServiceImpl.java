@@ -1,8 +1,7 @@
 package clovider.clovider_be.domain.notice.service;
 
 import clovider.clovider_be.domain.common.CustomResult;
-import clovider.clovider_be.domain.employee.Employee;
-import clovider.clovider_be.domain.employee.repository.EmployeeRepository;
+import clovider.clovider_be.domain.employee.service.EmployeeQueryService;
 import clovider.clovider_be.domain.notice.Notice;
 import clovider.clovider_be.domain.notice.dto.NoticeRequest;
 import clovider.clovider_be.domain.notice.repository.NoticeRepository;
@@ -20,21 +19,16 @@ public class NoticeCommandServiceImpl implements NoticeCommandService {
 
     private final NoticeRepository noticeRepository;
     private final NoticeImageCommandService noticeImageCommandService;
-    private final EmployeeRepository employeeRepository;
-
-    private static final String FIXED_ADMIN_USERNAME = "admin";
+    private final EmployeeQueryService employeeQueryService;
 
     public CustomResult createNotice(NoticeRequest request) {
-        // 고정된 "admin"을 EmployeeRepository 에서 찾기
-        Employee admin = employeeRepository.findByAccountId(FIXED_ADMIN_USERNAME)
-                .orElseThrow(() -> new ApiException(ErrorStatus._ADMIN_NOT_FOUND));
 
-        // + 로그인한 관리자 id를 SecurityContextHolder 에서 가져와 admin을 추가해서 생성 요망
-        // 현재는 "admin"으로 고정
+        // 로그인한 관리자 id를 SecurityContextHolder 에서 가져와 admin을 추가해서 생성 요망
+        // 현재는 1번 데이터로 고정
         Notice savedNotice = noticeRepository.save(Notice.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
-                .admin(admin)
+                .admin(employeeQueryService.findById(1L))
                 .build());
 
         noticeImageCommandService.createNoticeImages(request.getImageUrls(), savedNotice);
@@ -47,7 +41,6 @@ public class NoticeCommandServiceImpl implements NoticeCommandService {
         Notice foundNotice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new ApiException(ErrorStatus._NOTICE_NOT_FOUND));
 
-        // Notice 업데이트
         foundNotice.updateNotice(request);
 
         return CustomResult.toCustomResult(foundNotice.getId());

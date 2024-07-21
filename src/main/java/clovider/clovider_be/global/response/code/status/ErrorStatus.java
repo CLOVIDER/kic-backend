@@ -19,6 +19,9 @@ public enum ErrorStatus implements BaseErrorCode {
     // 직원(관리자) 관련
     _ADMIN_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "ADMIN001", "관리자를 찾을 수 없습니다."),
 
+    // 직원 관련
+    _EMPLOYEE_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "EMPLOYEE001", "직원을 찾을 수 없습니다."),
+
     // 공사사항 관련
     _NOTICE_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "NOTICE001", "공지사항을 찾을 수 없습니다.");
 
