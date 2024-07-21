@@ -6,6 +6,8 @@ import clovider.clovider_be.domain.qna.service.QnaCommandService;
 import clovider.clovider_be.domain.qna.service.QnaQueryService;
 import clovider.clovider_be.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,4 +26,9 @@ public class QnaController {
         return ApiResponse.onSuccess(qnaCommandService.createQna(qna));
     }
 
+    @PatchMapping("/qnas/{qnaId}")
+    public ApiResponse<CustomResult> updateQna(@PathVariable Long qnaId,
+            @RequestBody QnaRequest qnaRequest) {
+        return ApiResponse.onSuccess(qnaCommandService.updateQna(qnaId, qnaRequest));
+    }
 }

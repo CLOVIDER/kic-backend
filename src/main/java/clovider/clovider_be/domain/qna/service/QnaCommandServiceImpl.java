@@ -7,14 +7,16 @@ import clovider.clovider_be.domain.qna.dto.QnaRequest;
 import clovider.clovider_be.domain.qna.repository.QnaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class QnaCommandServiceImpl implements QnaCommandService {
 
     private final QnaRepository qnaRepository;
+    private final QnaQueryService qnaQueryService;
     private final EmployeeQueryService employeeQueryService;
-
 
     public CustomResult createQna(QnaRequest qnaRequest) {
 
@@ -23,5 +25,14 @@ public class QnaCommandServiceImpl implements QnaCommandService {
                 .toQna(qnaRequest, employeeQueryService.findById(2L)));
 
         return CustomResult.toCustomResult(savedQna.getId());
+    }
+
+    @Override
+    public CustomResult updateQna(Long qnaId, QnaRequest qnaRequest) {
+        Qna foundQna = qnaQueryService.findById(qnaId);
+
+        foundQna.updateQna(qnaRequest);
+
+        return CustomResult.toCustomResult(foundQna.getId());
     }
 }

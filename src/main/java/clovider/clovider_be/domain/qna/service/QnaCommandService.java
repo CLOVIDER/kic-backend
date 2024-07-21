@@ -8,4 +8,6 @@ import org.springframework.stereotype.Service;
 public interface QnaCommandService {
 
     CustomResult createQna(QnaRequest qnaRequest);
+
+    CustomResult updateQna(Long qnaId, QnaRequest qnaRequest);
 }
