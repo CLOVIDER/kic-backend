@@ -4,6 +4,7 @@ import clovider.clovider_be.domain.common.CustomPage;
 import clovider.clovider_be.domain.common.CustomResult;
 import clovider.clovider_be.domain.notice.dto.NoticeRequest;
 import clovider.clovider_be.domain.notice.dto.NoticeResponse;
+import clovider.clovider_be.domain.notice.dto.NoticeUpdateResponse;
 import clovider.clovider_be.domain.notice.service.NoticeCommandService;
 import clovider.clovider_be.domain.notice.service.NoticeQueryService;
 import clovider.clovider_be.global.response.ApiResponse;
@@ -44,13 +45,13 @@ public class NoticeController {
     }
 
     @PatchMapping("/admin/notices/{noticeId}")
-    public ApiResponse<CustomResult> updateNotice(@PathVariable Long noticeId,
+    public ApiResponse<NoticeUpdateResponse> updateNotice(@PathVariable Long noticeId,
             @RequestBody NoticeRequest noticeRequest) {
         return ApiResponse.onSuccess(noticeCommandService.updateNotice(noticeId, noticeRequest));
     }
 
     @DeleteMapping("/admin/notices/{noticeId}")
-    public ApiResponse<CustomResult> deleteNotice(@PathVariable Long noticeId) {
+    public ApiResponse<String> deleteNotice(@PathVariable Long noticeId) {
         return ApiResponse.onSuccess(noticeCommandService.deleteNotice(noticeId));
     }
 
