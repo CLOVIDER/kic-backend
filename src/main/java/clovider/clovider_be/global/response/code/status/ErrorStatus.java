@@ -22,6 +22,7 @@ public enum ErrorStatus implements BaseErrorCode {
     // JWT 관련
     _JWT_NOT_FOUND(HttpStatus.NOT_FOUND, "JWT_001", "Header에 JWT가 존재하지 않습니다."),
     _JWT_INVALID(HttpStatus.BAD_REQUEST, "JWT_002", "검증되지 않는 JWT 입니다."),
+    _JWT_BLACKLIST(HttpStatus.BAD_REQUEST, "JWT_003", "블랙 리스트 토큰입니다. 다시 로그인 해주세요"),
 
     // S3 관련
     _S3_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "S3_001", "S3에 존재하지 않는 이미지입니다.");

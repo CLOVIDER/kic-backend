@@ -7,6 +7,7 @@ import clovider.clovider_be.domain.employee.Role;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import clovider.clovider_be.global.security.CustomUserDetailService;
+import clovider.clovider_be.global.util.RedisUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -28,19 +29,22 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtProvider {
 
+    private final Key key;
     private final Long ACCESS_TOKEN_EXPIRE_TIME;
     private final Long REFRESH_TOKEN_EXPIRE_TIME;
     private final CustomUserDetailService customUserDetailService;
-    private final Key key;
+    private final RedisUtil redisUtil;
 
     public JwtProvider(@Value("${jwt.secret_key}") String secretKey,
             @Value("${jwt.access_token_expire}") Long accessTokenExpire,
             @Value("${jwt.refresh_token_expire}") Long refreshTokenExpire,
-            CustomUserDetailService customUserDetailService) {
+            CustomUserDetailService customUserDetailService,
+            RedisUtil redisUtil) {
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
         this.ACCESS_TOKEN_EXPIRE_TIME = accessTokenExpire;
         this.REFRESH_TOKEN_EXPIRE_TIME = refreshTokenExpire;
         this.customUserDetailService = customUserDetailService;
+        this.redisUtil = redisUtil;
     }
 
     /**
@@ -60,10 +64,11 @@ public class JwtProvider {
                 .compact();
     }
 
-    public String generateRefreshToken() {
+    public String generateRefreshToken(Long employeeId) {
 
         Date expiredAt = new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRE_TIME);
         return Jwts.builder()
+                .claim(EMPLOYEE_ID_KEY, employeeId)
                 .setIssuedAt(Date.from(ZonedDateTime.now().toInstant()))
                 .setExpiration(expiredAt)
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -112,6 +117,10 @@ public class JwtProvider {
                 claims.get(EMPLOYEE_ID_KEY, Long.class).toString());
         return new UsernamePasswordAuthenticationToken(userDetails, "",
                 userDetails.getAuthorities());
+    }
+
+    public boolean existsRefreshTokenInRedis(Long employeeId) {
+        return redisUtil.hasKey(employeeId.toString());
     }
 
 }
