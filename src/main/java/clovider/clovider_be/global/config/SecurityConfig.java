@@ -1,5 +1,8 @@
 package clovider.clovider_be.global.config;
 
+import clovider.clovider_be.global.jwt.JwtAuthenticationEntryPoint;
+import clovider.clovider_be.global.jwt.JwtAuthenticationFilter;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,11 +13,16 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Bean
     public static BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -28,9 +36,10 @@ public class SecurityConfig {
             "/api/emails/**",
 
             // swagger
-            "v3/api-docs/**",
+            "/v3/api-docs/**",
             "/swagger-resources/**",
-            "/swagger-ui/**"
+            "/swagger-ui/**",
+            "/favicon.ico"
     };
 
     @Bean
@@ -43,14 +52,29 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-                .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(corsCustom -> corsCustom.configurationSource(request -> {
+                    CorsConfiguration cors = new CorsConfiguration();
+                    cors.setAllowedOrigins(
+                            List.of("http://localhost:3000"));
+                    cors.setAllowedMethods(
+                            List.of("GET", "POST", "PATCH", "DELETE"));
+                    cors.setAllowCredentials(true);
+                    cors.addExposedHeader("Authorization");
+                    cors.addExposedHeader("RefreshToken");
+                    return cors;
+                }))
                 .sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize ->
                         authorize.requestMatchers("/api/admin/**").hasRole("ADMIN")
                                 .anyRequest()
-                                .authenticated());
+                                .authenticated())
+                .exceptionHandling(handler -> handler
+                        .authenticationEntryPoint(jwtAuthenticationEntryPoint))
+                .addFilterBefore(jwtAuthenticationFilter,
+                        UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
