@@ -18,16 +18,12 @@ public class LotteryController {
         this.lotteryService = lotteryService;
     }
 
-    @PostMapping("/create/{recruitId}")
+    @PostMapping("/create/{recruitId}/{applicationId}")
     public ResponseEntity<LotteryResponseDTO> createLottery(
             @PathVariable Long recruitId,
-            @RequestParam Long applicationId,
-            @RequestParam Integer rankNum,
-            @RequestParam String result,
-            @RequestParam Boolean registry,
-            @RequestParam Boolean accept) {
+            @PathVariable Long applicationId) {
         try {
-            LotteryResponseDTO response = lotteryService.createLottery(recruitId, applicationId, rankNum, result, registry, accept);
+            LotteryResponseDTO response = lotteryService.createLottery(recruitId, applicationId);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
