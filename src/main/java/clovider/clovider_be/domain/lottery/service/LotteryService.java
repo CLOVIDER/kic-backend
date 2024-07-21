@@ -38,6 +38,7 @@ public class LotteryService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid application ID"));
 
 
+        // 이 아래 부분 erd 수정하고 구현 마저 해야 할듯.
         // 모집 ID로 전체 신청자 목록 가져오기
         List<Application> applications = lotteryRepository.findAllByRecruitId(recruitId);
         log.info("Recruit: {} applications: {}", recruitId, applications);
