@@ -5,8 +5,6 @@ import clovider.clovider_be.domain.employee.service.EmployeeQueryService;
 import clovider.clovider_be.domain.qna.Qna;
 import clovider.clovider_be.domain.qna.dto.QnaRequest;
 import clovider.clovider_be.domain.qna.repository.QnaRepository;
-import clovider.clovider_be.global.exception.ApiException;
-import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,8 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class QnaCommandServiceImpl implements QnaCommandService {
 
     private final QnaRepository qnaRepository;
+    private final QnaQueryService qnaQueryService;
     private final EmployeeQueryService employeeQueryService;
-
 
     public CustomResult createQna(QnaRequest qnaRequest) {
 
@@ -31,8 +29,7 @@ public class QnaCommandServiceImpl implements QnaCommandService {
 
     @Override
     public CustomResult updateQna(Long qnaId, QnaRequest qnaRequest) {
-        Qna foundQna = qnaRepository.findById(qnaId)
-                .orElseThrow(() -> new ApiException(ErrorStatus._QNA_NOT_FOUND));
+        Qna foundQna = qnaQueryService.findById(qnaId);
 
         foundQna.updateQna(qnaRequest);
 

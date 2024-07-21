@@ -6,8 +6,6 @@ import clovider.clovider_be.domain.notice.Notice;
 import clovider.clovider_be.domain.notice.dto.NoticeRequest;
 import clovider.clovider_be.domain.notice.repository.NoticeRepository;
 import clovider.clovider_be.domain.noticeImage.service.NoticeImageCommandService;
-import clovider.clovider_be.global.exception.ApiException;
-import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +17,7 @@ public class NoticeCommandServiceImpl implements NoticeCommandService {
 
     private final NoticeRepository noticeRepository;
     private final NoticeImageCommandService noticeImageCommandService;
+    private final NoticeQueryService noticeQueryService;
     private final EmployeeQueryService employeeQueryService;
 
     public CustomResult createNotice(NoticeRequest request) {
@@ -38,8 +37,7 @@ public class NoticeCommandServiceImpl implements NoticeCommandService {
 
     public CustomResult updateNotice(Long noticeId, NoticeRequest request) {
 
-        Notice foundNotice = noticeRepository.findById(noticeId)
-                .orElseThrow(() -> new ApiException(ErrorStatus._NOTICE_NOT_FOUND));
+        Notice foundNotice = noticeQueryService.findById(noticeId);
 
         foundNotice.updateNotice(request);
 
