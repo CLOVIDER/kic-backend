@@ -2,6 +2,7 @@ package clovider.clovider_be.domain.qna;
 
 import clovider.clovider_be.domain.common.BaseTimeEntity;
 import clovider.clovider_be.domain.employee.Employee;
+import clovider.clovider_be.domain.qna.dto.QnaRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -47,4 +48,9 @@ public class Qna extends BaseTimeEntity {
     @JoinColumn(name = "admin_id")
     private Employee admin;
 
+    public void updateQna(QnaRequest qnaRequest) {
+        this.title = qnaRequest.getTitle();
+        this.question = qnaRequest.getQuestion();
+        this.visibility = qnaRequest.isVisibility();
+    }
 }
