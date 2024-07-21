@@ -19,6 +19,11 @@ public class NoticeQueryServiceImpl implements NoticeQueryService {
 
     private final NoticeRepository noticeRepository;
 
+    public Notice findById(Long id) {
+        return noticeRepository.findById(id)
+                .orElseThrow(() -> new ApiException(ErrorStatus._NOTICE_NOT_FOUND));
+    }
+
     @Transactional
     public NoticeResponse getNotice(Long noticeId) {
         Notice foundNotice = noticeRepository.findById(noticeId)
