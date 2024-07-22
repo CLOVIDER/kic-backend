@@ -1,7 +1,6 @@
-package clovider.clovider_be.domain.noticeImage;
+package clovider.clovider_be.domain.document;
 
-import clovider.clovider_be.domain.common.BaseTimeEntity;
-import clovider.clovider_be.domain.notice.Notice;
+import clovider.clovider_be.domain.application.Application;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -18,23 +17,22 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
-@Getter
-@Table(name = "notice_image_tb")
-public class NoticeImage extends BaseTimeEntity {
+@Table(name = "document_tb")
+public class Document {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "notice_image_id")
+    @Column(name = "docuemnt_id")
     private Long id;
 
     @Column(nullable = false)
     private String image;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "notice_id", nullable = false)
-    private Notice notice;
-
+    @JoinColumn(name = "application_id", nullable = false)
+    private Application application;
 }
