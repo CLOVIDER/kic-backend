@@ -18,7 +18,6 @@ public class CustomResult {
     private LocalDateTime createdAt;
 
     public static CustomResult toCustomResult(Long id) {
-
         return CustomResult.builder()
                 .id(id)
                 .createdAt(LocalDateTime.now())

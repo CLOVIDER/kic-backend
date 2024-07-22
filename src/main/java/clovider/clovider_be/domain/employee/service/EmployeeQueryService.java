@@ -6,6 +6,6 @@ import clovider.clovider_be.global.jwt.dto.AuthRequest.LoginRequest;
 public interface EmployeeQueryService {
 
     Employee getEmployee(Long id);
-    Employee checkAccountIdAndPwd(LoginRequest loginRequest);
 
+    Employee checkAccountIdAndPwd(LoginRequest loginRequest);
 }

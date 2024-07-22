@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     Optional<Employee> findByAccountIdAndPassword(String accountId, String password);
+    Optional<Employee> findByAccountId(String accountId);
 }

@@ -31,6 +31,5 @@ public class EmployeeQueryServiceImpl implements EmployeeQueryService {
                 loginRequest.getPassword()).orElseThrow(
                 () -> new ApiException(ErrorStatus._JWT_LOGIN_ERROR)
         );
-
     }
 }

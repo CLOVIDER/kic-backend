@@ -19,6 +19,12 @@ public enum ErrorStatus implements BaseErrorCode {
     // Employee 관련
     _EMPLOYEE_NOT_FOUND(HttpStatus.NOT_FOUND, "EMPLOYEE_001", "요청 직원 정보는 존재하지 않습니다."),
 
+    // 직원(관리자) 관련
+    _ADMIN_NOT_FOUND(HttpStatus.NOT_FOUND, "ADMIN001", "관리자를 찾을 수 없습니다."),
+
+    // 공사사항 관련
+    _NOTICE_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "NOTICE001", "공지사항을 찾을 수 없습니다."),
+
     // JWT 관련
     _JWT_NOT_FOUND(HttpStatus.UNAUTHORIZED, "JWT_001", "Header에 JWT가 존재하지 않습니다."),
     _JWT_INVALID(HttpStatus.UNAUTHORIZED, "JWT_002", "검증되지 않는 JWT 입니다."),
@@ -30,7 +36,9 @@ public enum ErrorStatus implements BaseErrorCode {
             "Redis에 존재하는 Refresh Token과 다릅니다."),
 
     // S3 관련
-    _S3_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "S3_001", "S3에 존재하지 않는 이미지입니다.");
+    _S3_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "S3_001", "S3에 존재하지 않는 이미지입니다."),
+    // qna 관련
+    _QNA_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "QNA001", "qna를 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
