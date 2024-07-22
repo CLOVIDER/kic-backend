@@ -1,7 +1,7 @@
 package clovider.clovider_be.domain.recruit;
 
 import clovider.clovider_be.domain.common.BaseTimeEntity;
-import clovider.clovider_be.domain.kindergarden.Kindergarden;
+import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import clovider.clovider_be.domain.lottery.Lottery;
 import jakarta.persistence.*;
 import lombok.*;
@@ -47,7 +47,7 @@ public class Recruit extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "kindergarden_id", nullable = false)
-    private Kindergarden kindergarden;
+    private Kindergarten kindergarten;
 
     @OneToMany(mappedBy = "recruit", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Lottery> lotteries;

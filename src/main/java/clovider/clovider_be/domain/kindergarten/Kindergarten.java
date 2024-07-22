@@ -1,4 +1,4 @@
-package clovider.clovider_be.domain.kindergarden;
+package clovider.clovider_be.domain.kindergarten;
 
 import clovider.clovider_be.domain.common.BaseTimeEntity;
 import jakarta.persistence.Column;
@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,28 +17,30 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Kindergarden extends BaseTimeEntity {
+@Table(name = "kindergarten_td")
+public class Kindergarten extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "kindergarten_id")
     private Long id;
 
-    @Column(nullable = false)
-    private String kdgName;
+    @Column(nullable = false, length = 20)
+    private String kindergartenNm;
 
     @Column(nullable = false)
-    private String kdgAddress;
+    private String kindergartenAddr;
 
     @Column(nullable = false)
-    private String kdgScale;
+    private String kindergartenScale;
+
+    @Column(nullable = false, length = 50)
+    private String kindergartenNo;
 
     @Column(nullable = false)
-    private String kdgNo;
-
-    @Column(nullable = false)
-    private String kdgTime;
+    private String kindergartenTime;
 
     @Column(nullable = false, columnDefinition = "TEXT")
-    private String kdgInfo;
+    private String kindergartenInfo;
 
 }
