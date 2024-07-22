@@ -22,7 +22,7 @@ public class QnaCommandServiceImpl implements QnaCommandService {
 
         // 2번 데이터로 고정
         Qna savedQna = qnaRepository.save(QnaRequest
-                .toQna(qnaRequest, employeeQueryService.findById(2L)));
+                .toQna(qnaRequest, employeeQueryService.getEmployee(2L)));
 
         return CustomResult.toCustomResult(savedQna.getId());
     }
