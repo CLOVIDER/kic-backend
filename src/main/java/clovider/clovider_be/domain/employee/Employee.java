@@ -1,6 +1,7 @@
 package clovider.clovider_be.domain.employee;
 
 import clovider.clovider_be.domain.common.BaseTimeEntity;
+import clovider.clovider_be.domain.enums.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -30,17 +31,17 @@ public class Employee extends BaseTimeEntity {
     @Column(nullable = false, length = 20)
     private String nameKo;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 40)
     private String accountId;
 
-    @Column(nullable = false, length = 40)
+    @Column(nullable = false, length = 100)
     private String password;
 
     @Column(nullable = false, length = 20)
     private String employeeNo;
 
     @Column(nullable = false)
-    private LocalDate joinDate;
+    private LocalDate joinDt;
 
     @Column(nullable = false, length = 20)
     private String dept;
