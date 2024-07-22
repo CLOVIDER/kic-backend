@@ -1,6 +1,7 @@
 package clovider.clovider_be.domain.recruit;
 
 import clovider.clovider_be.domain.common.BaseTimeEntity;
+import clovider.clovider_be.domain.enums.AgeClass;
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import clovider.clovider_be.domain.lottery.Lottery;
 import jakarta.persistence.*;
@@ -14,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @Getter
+@Table(name = "recruit_tb")
 public class Recruit extends BaseTimeEntity {
 
     @Id
@@ -22,28 +24,28 @@ public class Recruit extends BaseTimeEntity {
     private Long id;
 
     @Column(nullable = false)
-    private LocalDateTime recruitStartDate;
+    private LocalDateTime recruitStartDt;
 
     @Column(nullable = false)
-    private LocalDateTime recruitEndDate;
+    private LocalDateTime recruitEndDt;
 
     @Column(nullable = false)
     private Integer recruitCnt;
 
     @Column(length = 20, nullable = false)
-    private String ageRange;
+    private AgeClass ageClass;
 
     @Column(nullable = false)
-    private LocalDateTime firstStartDate;
+    private LocalDateTime firstStartDt;
 
     @Column(nullable = false)
-    private LocalDateTime firstEndDate;
+    private LocalDateTime firstEndDt;
 
     @Column(nullable = false)
-    private LocalDateTime secondStartDate;
+    private LocalDateTime secondStartDt;
 
     @Column(nullable = false)
-    private LocalDateTime secondEndDate;
+    private LocalDateTime secondEndDt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "kindergarden_id", nullable = false)
