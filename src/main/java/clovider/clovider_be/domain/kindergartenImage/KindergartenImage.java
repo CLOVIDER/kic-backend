@@ -1,5 +1,6 @@
 package clovider.clovider_be.domain.kindergartenImage;
 
+import clovider.clovider_be.domain.common.BaseTimeEntity;
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,14 +22,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @Table(name = "kindergarten_image_tb")
-public class KindergartenImage {
+public class KindergartenImage extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "kindergarten_image_id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 2048)
     private String image;
 
     @ManyToOne(fetch = FetchType.LAZY)

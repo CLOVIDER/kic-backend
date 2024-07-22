@@ -1,11 +1,15 @@
 package clovider.clovider_be.domain.kindergarten;
 
-import clovider.clovider_be.domain.common.BaseTimeEntity;
+import clovider.clovider_be.domain.common.BaseTimeEntity;=
+import clovider.clovider_be.domain.kindergartenImage.KindergartenImage;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.Id;=
+import jakarta.persistence.OneToMany;
+import java.util.List;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,5 +46,8 @@ public class Kindergarten extends BaseTimeEntity {
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String kindergartenInfo;
+
+    @OneToMany(mappedBy = "kindergarten", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<KindergartenImage> kindergartenImages;
 
 }
