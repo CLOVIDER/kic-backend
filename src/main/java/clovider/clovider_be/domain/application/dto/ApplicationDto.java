@@ -1,6 +1,5 @@
 package clovider.clovider_be.domain.application.dto;
 
-import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,10 +8,10 @@ import lombok.NoArgsConstructor;
 public class ApplicationDto {
 
     private Integer workYears;
-    private Boolean singleParent;
+    private Boolean isSingleParent;
     private Integer childrenCnt;
-    private Boolean disability;
-    private Boolean dualIncome;
-    private Boolean employeeCouple;
-    private Boolean sibling;
+    private Boolean isDisability;
+    private Boolean isDualIncome;
+    private Boolean isEmployeeCouple;
+    private Boolean isSibling;
 }

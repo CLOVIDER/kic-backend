@@ -11,7 +11,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,25 +34,25 @@ public class Application extends BaseTimeEntity {
     private Integer workYears = 0;
 
     @Column(nullable = false)
-    private Boolean singleParent = false;
+    private Boolean isSingleParent = false;
 
     @Column(nullable = false)
     private Integer childrenCnt = 1;
 
     @Column(nullable = false)
-    private Boolean disability = false;
+    private Boolean isDisability = false;
 
     @Column(nullable = false)
-    private Boolean dualIncome = false;
+    private Boolean isDualIncome = false;
 
     @Column(nullable = false)
-    private Boolean employeeCouple = false;
+    private Boolean isEmployeeCouple = false;
 
     @Column(nullable = false)
-    private Boolean sibling = false;
+    private Boolean isSibling = false;
 
     @Column
-    private Boolean tempSave = false; //default : 임시저장이 아닌 일반 저장 상태
+    private Boolean isTemp = false; //default : 임시저장이 아닌 일반 저장 상태
 
     private String childName;
 
@@ -64,11 +63,11 @@ public class Application extends BaseTimeEntity {
     @Builder
     public Application(ApplicationDto applicationDto) {
         this.workYears = applicationDto.getWorkYears();
-        this.singleParent = applicationDto.getSingleParent();
+        this.isSingleParent = applicationDto.getIsSingleParent();
         this.childrenCnt = applicationDto.getChildrenCnt();
-        this.disability = applicationDto.getDisability();
-        this.dualIncome = applicationDto.getDualIncome();
-        this.employeeCouple = applicationDto.getEmployeeCouple();
-        this.sibling = applicationDto.getSibling();
+        this.isDisability = applicationDto.getIsDisability();
+        this.isDualIncome = applicationDto.getIsDualIncome();
+        this.isEmployeeCouple = applicationDto.getIsEmployeeCouple();
+        this.isSibling = applicationDto.getIsSibling();
     }
 }
