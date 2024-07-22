@@ -44,9 +44,6 @@ public class SecurityConfig {
             "/swagger-resources/**",
             "/swagger-ui/**",
             "/favicon.ico",
-
-            //temp
-            "/api/applications"
     };
 
     @Bean
