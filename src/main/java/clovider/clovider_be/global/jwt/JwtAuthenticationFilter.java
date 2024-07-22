@@ -38,6 +38,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String bearerToken = request.getHeader(ACCESS_HEADER_STRING);
         if (bearerToken == null || !isBearer(bearerToken)) {
             request.setAttribute("exception", ErrorStatus._JWT_NOT_FOUND);
+            filterChain.doFilter(request, response);
+            return;
         } else {
             accessToken = bearerToken.substring(7);
             log.info("===================== ACCESS-TOKEN : " + accessToken);

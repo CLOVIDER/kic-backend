@@ -6,6 +6,7 @@ import static clovider.clovider_be.global.util.JwtProperties.REFRESH_HEADER_STRI
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.global.jwt.JwtProvider;
 import clovider.clovider_be.global.jwt.dto.TokenVo;
+import clovider.clovider_be.global.util.JwtProperties;
 import clovider.clovider_be.global.util.RedisUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,8 @@ public class JwtService {
     }
 
     public void setHeaderAccessToken(HttpServletResponse response, String accessToken) {
-        response.setHeader(ACCESS_HEADER_STRING, accessToken);
+        String beaerToken = JwtProperties.TOKEN_PREFIX + accessToken;
+        response.setHeader(ACCESS_HEADER_STRING, beaerToken);
     }
 
     public void setHeaderRefreshToken(HttpServletResponse response, String refreshToken) {
