@@ -18,10 +18,12 @@ public class KindergartenResponse {
     private Long kindergartenImageId;
     private LocalDateTime createdAt;
 
-    public static KindergartenResponse toKindergertenResponse(Long kindergartenId, Long kindergartenImageId) {
+    public static KindergartenResponse toKindergertenResponse(Long kindergartenId,
+            Long kindergartenImageId) {
         return KindergartenResponse.builder()
                 .kindergartenId(kindergartenId)
                 .kindergartenImageId(kindergartenImageId)
                 .createdAt(LocalDateTime.now())
                 .build();
     }
+}
