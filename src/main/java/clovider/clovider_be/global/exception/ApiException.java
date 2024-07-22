@@ -19,4 +19,8 @@ public class ApiException extends RuntimeException{
     public ErrorReasonDto getErrorReasonHttpStatus() {
         return this.errorStatus.getReasonHttpStatus();
     }
+
+    public ErrorStatus getErrorStatus() {
+        return errorStatus;
+    }
 }

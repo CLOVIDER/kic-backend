@@ -1,7 +1,9 @@
 package clovider.clovider_be.global.config;
 
+import clovider.clovider_be.global.jwt.JwtAccessDeniedHandler;
 import clovider.clovider_be.global.jwt.JwtAuthenticationEntryPoint;
 import clovider.clovider_be.global.jwt.JwtAuthenticationFilter;
+import clovider.clovider_be.global.jwt.JwtExceptionFilter;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +25,8 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final JwtExceptionFilter jwtExceptionFilter;
 
     @Bean
     public static BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -72,9 +76,11 @@ public class SecurityConfig {
                                 .anyRequest()
                                 .authenticated())
                 .exceptionHandling(handler -> handler
-                        .authenticationEntryPoint(jwtAuthenticationEntryPoint))
+                        .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                        .accessDeniedHandler(jwtAccessDeniedHandler))
                 .addFilterBefore(jwtAuthenticationFilter,
-                        UsernamePasswordAuthenticationFilter.class);
+                        UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class);
 
         return http.build();
     }
