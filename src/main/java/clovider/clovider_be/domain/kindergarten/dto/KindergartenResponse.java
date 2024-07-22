@@ -25,4 +25,3 @@ public class KindergartenResponse {
                 .createdAt(LocalDateTime.now())
                 .build();
     }
-}

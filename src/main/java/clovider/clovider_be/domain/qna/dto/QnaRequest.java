@@ -9,13 +9,13 @@ public class QnaRequest {
 
     private String title;
     private String question;
-    private boolean visibility;
+    private Character isVisibility;
 
     public static Qna toQna(QnaRequest qnaRequest, Employee employee) {
         return Qna.builder()
                 .title(qnaRequest.getTitle())
                 .question(qnaRequest.getQuestion())
-                .visibility(qnaRequest.isVisibility())
+                .isVisibility(qnaRequest.getIsVisibility())
                 .employee(employee).build();
     }
 }

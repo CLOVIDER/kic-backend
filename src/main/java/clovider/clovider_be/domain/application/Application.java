@@ -23,6 +23,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "application_tb")
 public class Application extends BaseTimeEntity {
 
     @Id
@@ -34,26 +35,26 @@ public class Application extends BaseTimeEntity {
     @Column(nullable = false)
     private Integer workYears = 0;
 
-    @Column(nullable = false)
-    private Boolean singleParent = false;
+    @Column(nullable = false, length = 1)
+    private Character isSingleParent = 0;
 
     @Column(nullable = false)
     private Integer childrenCnt = 1;
 
-    @Column(nullable = false)
-    private Boolean disability = false;
+    @Column(nullable = false, length = 1)
+    private Character isDisability = 0;
 
-    @Column(nullable = false)
-    private Boolean dualIncome = false;
+    @Column(nullable = false, length = 1)
+    private Character isDualIncome = 0;
 
-    @Column(nullable = false)
-    private Boolean employeeCouple = false;
+    @Column(nullable = false, length = 1)
+    private Character isEmployeeCouple = 0;
 
-    @Column(nullable = false)
-    private Boolean sibling = false;
+    @Column(nullable = false, length = 1)
+    private Character isSibling = 0;
 
-    @Column
-    private Boolean tempSave = false; //default : 임시저장이 아닌 일반 저장 상태
+    @Column(nullable = false, length = 1)
+    private Character isTemp = 0; //default : 임시저장이 아닌 일반 저장 상태
 
     private String childName;
 
@@ -64,11 +65,11 @@ public class Application extends BaseTimeEntity {
     @Builder
     public Application(ApplicationDto applicationDto) {
         this.workYears = applicationDto.getWorkYears();
-        this.singleParent = applicationDto.getSingleParent();
+        this.isSingleParent = applicationDto.getIsSingleParent();
         this.childrenCnt = applicationDto.getChildrenCnt();
-        this.disability = applicationDto.getDisability();
-        this.dualIncome = applicationDto.getDualIncome();
-        this.employeeCouple = applicationDto.getEmployeeCouple();
-        this.sibling = applicationDto.getSibling();
+        this.isDisability = applicationDto.getIsDisability();
+        this.isDualIncome = applicationDto.getIsDualIncome();
+        this.isEmployeeCouple = applicationDto.getIsEmployeeCouple();
+        this.isSibling = applicationDto.getIsSibling();
     }
 }

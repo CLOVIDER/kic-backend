@@ -1,4 +1,4 @@
-package clovider.clovider_be.domain.applicationdocument;
+package clovider.clovider_be.domain.document;
 
 import clovider.clovider_be.domain.application.Application;
 import jakarta.persistence.Column;
@@ -21,7 +21,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ApplicationDocument {
+@Table(name = "document_tb")
+public class Document {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
