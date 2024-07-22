@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public interface ApplicationCommandService {
 
     CustomResult applicationCreate(ApplicationWriteDto applicationWriteDto);
-    void applicationUpdate(Long Id, ApplicationUpdateDto applicationUpdateDto);
-    void applicationDelete(Long Id);
+    CustomResult applicationUpdate(Long Id, ApplicationUpdateDto applicationUpdateDto);
+    CustomResult applicationDelete(Long Id);
     void applicationTempSave(Application application);
 }

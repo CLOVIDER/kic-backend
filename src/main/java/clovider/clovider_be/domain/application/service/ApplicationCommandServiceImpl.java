@@ -50,16 +50,21 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
     }
 
     @Override
-    public void applicationUpdate(Long Id, ApplicationUpdateDto applicationUpdateDto) {
-        Application application = applicationRepository.findById(Id).orElseThrow();
-        application.update(applicationUpdateDto);
+    public CustomResult applicationUpdate(Long Id, ApplicationUpdateDto applicationUpdateDto) {
+        Application savedApplication = applicationRepository.findById(Id).orElseThrow();
+        savedApplication.update(applicationUpdateDto);
 
+        applicationDocumentCommandService.createApplicationDocuments(applicationUpdateDto.getImageUrls(), savedApplication);
+
+        return CustomResult.toCustomResult(savedApplication.getId());
     }
 
     @Override
-    public void applicationDelete(Long Id) {
-        Application application = applicationRepository.findById(Id).orElseThrow();
-        applicationRepository.delete(application);
+    public CustomResult applicationDelete(Long Id) {
+        Application savedApplication = applicationRepository.findById(Id).orElseThrow();
+        applicationRepository.delete(savedApplication);
+
+        return CustomResult.toCustomResult(savedApplication.getId());
     }
 
     @Override

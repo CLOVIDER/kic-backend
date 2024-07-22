@@ -1,5 +1,6 @@
 package clovider.clovider_be.domain.application.dto;
 
+import clovider.clovider_be.domain.employee.Employee;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,9 +12,7 @@ public class ApplicationReadDto {
 
     private Long id; //신청서 id
 
-    // 직원 도메인 구현 후 사용
-//    private Long employeeId; //직원 id
-//    private String accountId; //직원 사내 이메일에 사용하는 아이디
+    private Employee employee;
 
     // 모집 도메인 구현 후 사용
     // 신청서 하나 당 여러 모집에 해당되고 결과도 여러개니 List로 저장
@@ -35,5 +34,5 @@ public class ApplicationReadDto {
     private Boolean isSibling;
     private String childName;
 
-    private List<MultipartFile> applicationDocumentList;
+    private List<String> imageUrls;
 }

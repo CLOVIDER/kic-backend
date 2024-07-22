@@ -1,5 +1,6 @@
 package clovider.clovider_be.domain.application.dto;
 
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,4 +15,6 @@ public class ApplicationUpdateDto {
     private Character isEmployeeCouple;
     private Character isSibling;
     private String childName;
+
+    private List<String> imageUrls;
 }
