@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class JwtService {
+public class AuthService {
 
     private final JwtProvider jwtProvider;
     private final RedisUtil redisUtil;
