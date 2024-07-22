@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 public class ApplicationDto {
 
     private Integer workYears;
-    private Boolean isSingleParent;
+    private Character isSingleParent;
     private Integer childrenCnt;
-    private Boolean isDisability;
-    private Boolean isDualIncome;
-    private Boolean isEmployeeCouple;
-    private Boolean isSibling;
+    private Character isDisability;
+    private Character isDualIncome;
+    private Character isEmployeeCouple;
+    private Character isSibling;
 }

@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "kindergarten_td")
+@Table(name = "kindergarten_tb")
 public class Kindergarten extends BaseTimeEntity {
 
     @Id

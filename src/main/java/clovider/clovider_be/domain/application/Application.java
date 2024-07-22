@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "application_td")
+@Table(name = "application_tb")
 public class Application extends BaseTimeEntity {
 
     @Id
@@ -35,26 +35,26 @@ public class Application extends BaseTimeEntity {
     @Column(nullable = false)
     private Integer workYears = 0;
 
-    @Column(nullable = false)
-    private Boolean isSingleParent = false;
+    @Column(nullable = false, length = 1)
+    private Character isSingleParent = 0;
 
     @Column(nullable = false)
     private Integer childrenCnt = 1;
 
-    @Column(nullable = false)
-    private Boolean isDisability = false;
+    @Column(nullable = false, length = 1)
+    private Character isDisability = 0;
 
-    @Column(nullable = false)
-    private Boolean isDualIncome = false;
+    @Column(nullable = false, length = 1)
+    private Character isDualIncome = 0;
 
-    @Column(nullable = false)
-    private Boolean isEmployeeCouple = false;
+    @Column(nullable = false, length = 1)
+    private Character isEmployeeCouple = 0;
 
-    @Column(nullable = false)
-    private Boolean isSibling = false;
+    @Column(nullable = false, length = 1)
+    private Character isSibling = 0;
 
-    @Column
-    private Boolean isTemp = false; //default : 임시저장이 아닌 일반 저장 상태
+    @Column(nullable = false, length = 1)
+    private Character isTemp = 0; //default : 임시저장이 아닌 일반 저장 상태
 
     private String childName;
 

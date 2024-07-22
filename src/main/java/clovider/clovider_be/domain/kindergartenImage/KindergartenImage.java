@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "kindergarten_image_td")
+@Table(name = "kindergarten_image_tb")
 public class KindergartenImage {
 
     @Id

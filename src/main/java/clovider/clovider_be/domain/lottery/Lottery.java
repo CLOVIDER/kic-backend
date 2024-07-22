@@ -2,6 +2,7 @@ package clovider.clovider_be.domain.lottery;
 
 import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.common.BaseTimeEntity;
+import clovider.clovider_be.domain.enums.Result;
 import clovider.clovider_be.domain.recruit.Recruit;
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,6 +12,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @Getter
+@Table(name = "lottery_tb")
 public class Lottery extends BaseTimeEntity {
 
     @Id
@@ -27,15 +29,16 @@ public class Lottery extends BaseTimeEntity {
     private Application application;
 
     @Column(nullable = false)
-    private Integer rankNm;
+    private Integer rankNo;
 
+    @Enumerated(EnumType.STRING)
     @Column(length = 15, nullable = false)
-    private String result;
+    private Result result;
 
-    @Column(nullable = false)
-    private Boolean registry;
+    @Column(nullable = false, length = 1)
+    private Character registry;
 
-    @Column(nullable = false)
-    private Boolean accept;
+    @Column(nullable = false, length = 1)
+    private Character accept;
     
 }
