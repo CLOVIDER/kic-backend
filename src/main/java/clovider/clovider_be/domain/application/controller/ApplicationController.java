@@ -18,11 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ApplicationController {
 
+    @Autowired
     private ApplicationCommandService applicationCommandService;
     private ApplicationQueryService applicationQueryService;
 
     @PostMapping("/applications")
-    public ApiResponse<CustomResult> createApplication(@RequestBody ApplicationWriteDto applicationWriteDto) {
-        return ApiResponse.onSuccess(applicationCommandService.applicationCreate(applicationWriteDto));
+    public ApiResponse<CustomResult> createApplication(@RequestBody ApplicationWriteDto dto) {
+        return ApiResponse.onSuccess(applicationCommandService.applicationCreate(dto));
     }
 }

@@ -40,6 +40,7 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
                 .isEmployeeCouple(applicationWriteDto.getIsEmployeeCouple())
                 .isSibling(applicationWriteDto.getIsSibling())
                 .childName(applicationWriteDto.getChildName())
+                .isTemp(applicationWriteDto.getIsTemp())
                 .build()
         );
 

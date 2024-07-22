@@ -59,7 +59,7 @@ public class Application extends BaseTimeEntity {
     @Column(nullable = false, length = 1)
     private Character isSibling = 0;
 
-    @Column(nullable = false, length = 1)
+    @Column(length = 1)
     private Character isTemp = 0; //default : 임시저장이 아닌 일반 저장 상태
 
     private String childName;

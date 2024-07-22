@@ -19,6 +19,7 @@ public class ApplicationWriteDto {
     private Character isEmployeeCouple;
     private Character isSibling;
     private String childName;
+    private Character isTemp;
 
     private List<String> imageUrls;
 }
