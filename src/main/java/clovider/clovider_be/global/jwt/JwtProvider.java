@@ -10,11 +10,8 @@ import clovider.clovider_be.global.security.CustomUserDetailService;
 import clovider.clovider_be.global.util.RedisUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
@@ -23,6 +20,7 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -96,31 +94,42 @@ public class JwtProvider {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
-        } catch (SecurityException | MalformedJwtException e) {
-            throw new JwtException("잘못된 JWT 서명입니다.");
         } catch (ExpiredJwtException e) {
-            throw new JwtException("만료된 JWT 입니다.");
-        } catch (UnsupportedJwtException e) {
-            throw new JwtException("지원되지 않는 JWT 입니다.");
-        } catch (IllegalArgumentException e) {
-            throw new JwtException("JWT 정보가 잘못되었습니다.");
+            return false;
+        } catch (Exception e) {
+            return false;
         }
     }
 
-    public Authentication getAuthentication(String token) {
+    public void getAuthentication(String token) {
         Claims claims = parseClaims(token);
-        if (claims.get(EMPLOYEE_ID_KEY, Long.class) == null) {
-            throw new JwtException("직원 정보가 없는 JWT 입니다.");
-        }
 
         UserDetails userDetails = customUserDetailService.loadUserByUsername(
                 claims.get(EMPLOYEE_ID_KEY, Long.class).toString());
-        return new UsernamePasswordAuthenticationToken(userDetails, "",
+
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                userDetails, token,
                 userDetails.getAuthorities());
+
+        setContextHolder(authenticationToken);
     }
 
-    public boolean existsRefreshTokenInRedis(Long employeeId) {
-        return redisUtil.hasKey(employeeId.toString());
+    private void setContextHolder(Authentication authentication) {
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+
+    public boolean checkRefreshTokenInRedis(Long employeeId, String receivedToken) {
+        String existedToken = redisUtil.get(employeeId.toString());
+        return receivedToken.equals(existedToken);
+    }
+
+    public Long getExpiration(String token) {
+
+        Date expiration = Jwts.parserBuilder().setSigningKey(key)
+                .build().parseClaimsJws(token).getBody().getExpiration();
+
+        long now = new Date().getTime();
+        return expiration.getTime() - now;
     }
 
 }
