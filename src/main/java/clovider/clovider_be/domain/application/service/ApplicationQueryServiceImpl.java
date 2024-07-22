@@ -17,11 +17,12 @@ public class ApplicationQueryServiceImpl implements ApplicationQueryService {
     private final EmployeeRepository employeeRepository;
 
 
-//    @Override
-//    public ApplicationReadDto applicationRead(Long Id){
-//        Application application = applicationRepository.findById(Id).orElseThrow();
-//
-//    };
+    @Override
+    public ApplicationReadDto applicationRead(Long Id){
+        Application savedApplication = applicationRepository.findById(Id).orElseThrow();
+
+        return ApplicationReadDto.toEntity(savedApplication);
+    }
 
     @Override
     public void applicationPagination()

@@ -1,17 +1,26 @@
 package clovider.clovider_be.domain.application.dto;
 
+import clovider.clovider_be.domain.application.Application;
+import clovider.clovider_be.domain.document.Document;
 import clovider.clovider_be.domain.employee.Employee;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
+@AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter
 public class ApplicationReadDto {
 
     private Long id; //신청서 id
 
+    @JsonIgnore
     private Employee employee;
 
     // 모집 도메인 구현 후 사용
@@ -26,13 +35,31 @@ public class ApplicationReadDto {
 //    private List<String> kdgList;
 
     private Integer workYears;
-    private Boolean isSingleParent;
+    private Character isSingleParent;
     private Integer isChildrenCnt;
-    private Boolean isDisability;
-    private Boolean isDualIncome;
-    private Boolean isEmployeeCouple;
-    private Boolean isSibling;
+    private Character isDisability;
+    private Character isDualIncome;
+    private Character isEmployeeCouple;
+    private Character isSibling;
     private String childName;
 
-    private List<String> imageUrls;
+    private List<Document> documents;
+
+    public static ApplicationReadDto toEntity(Application application) {
+        Employee employee = application.getEmployee();
+
+        return ApplicationReadDto.builder()
+                .id(application.getId())
+                .employee(application.getEmployee())
+                .workYears(application.getWorkYears())
+                .isSingleParent(application.getIsSingleParent())
+                .isChildrenCnt(application.getChildrenCnt())
+                .isDisability(application.getIsDisability())
+                .isDualIncome(application.getIsDualIncome())
+                .isEmployeeCouple(application.getIsEmployeeCouple())
+                .isSibling(application.getIsSibling())
+                .childName(application.getChildName())
+                .documents(application.getDocuments())
+                .build();
+    }
 }

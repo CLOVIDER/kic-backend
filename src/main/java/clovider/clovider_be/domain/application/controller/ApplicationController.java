@@ -1,5 +1,6 @@
 package clovider.clovider_be.domain.application.controller;
 
+import clovider.clovider_be.domain.application.dto.ApplicationReadDto;
 import clovider.clovider_be.domain.application.dto.ApplicationUpdateDto;
 import clovider.clovider_be.domain.application.dto.ApplicationWriteDto;
 import clovider.clovider_be.domain.application.service.ApplicationCommandService;
@@ -24,6 +25,8 @@ public class ApplicationController {
 
     @Autowired
     private ApplicationCommandService applicationCommandService;
+
+    @Autowired
     private ApplicationQueryService applicationQueryService;
 
     @PostMapping("/applications")
@@ -39,5 +42,10 @@ public class ApplicationController {
     @DeleteMapping("/applications/{applicationId}")
     public ApiResponse<CustomResult> deleteApplication(@PathVariable Long applicationId) {
         return ApiResponse.onSuccess(applicationCommandService.applicationDelete(applicationId));
+    }
+
+    @GetMapping("/applications/{applicationId}")
+    public ApiResponse<ApplicationReadDto> getApplication(@PathVariable Long applicationId) {
+        return ApiResponse.onSuccess(applicationQueryService.applicationRead(applicationId));
     }
 }
