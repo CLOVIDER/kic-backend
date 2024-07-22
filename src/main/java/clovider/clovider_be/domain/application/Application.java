@@ -71,7 +71,6 @@ public class Application extends BaseTimeEntity {
     @OneToMany(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Document> documents = new ArrayList<>();
 
-    @Builder
     public void update(ApplicationUpdateDto applicationUpdateDto) {
         this.isSingleParent = applicationUpdateDto.getIsSingleParent();
         this.childrenCnt = applicationUpdateDto.getChildrenCnt();

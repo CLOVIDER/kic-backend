@@ -2,6 +2,7 @@ package clovider.clovider_be.domain.application.dto;
 
 import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.employee.Employee;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,16 +20,5 @@ public class ApplicationWriteDto {
     private Character isSibling;
     private String childName;
 
-//    public Application toEntity(Employee employee){
-//        return Application.builder()
-//                .isSingleParent(isSingleParent)
-//                .childrenCnt(childrenCnt)
-//                .isDisability(isDisability)
-//                .isDualIncome(isDualIncome)
-//                .isEmployeeCouple(isEmployeeCouple)
-//                .isSibling(isSibling)
-//                .childName(childName)
-//                .employee(employee)
-//                .build();
-//    }
+    private List<String> imageUrls;
 }
