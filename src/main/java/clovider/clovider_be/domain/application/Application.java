@@ -1,8 +1,11 @@
 package clovider.clovider_be.domain.application;
 
 import clovider.clovider_be.domain.application.dto.ApplicationDto;
+import clovider.clovider_be.domain.application.dto.ApplicationUpdateDto;
 import clovider.clovider_be.domain.common.BaseTimeEntity;
+import clovider.clovider_be.domain.document.Document;
 import clovider.clovider_be.domain.employee.Employee;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,7 +14,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -62,14 +68,17 @@ public class Application extends BaseTimeEntity {
     @JoinColumn(name = "employee_id", nullable = false)
     private Employee employee;
 
+    @OneToMany(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Document> documents = new ArrayList<>();
+
     @Builder
-    public Application(ApplicationDto applicationDto) {
-        this.workYears = applicationDto.getWorkYears();
-        this.isSingleParent = applicationDto.getIsSingleParent();
-        this.childrenCnt = applicationDto.getChildrenCnt();
-        this.isDisability = applicationDto.getIsDisability();
-        this.isDualIncome = applicationDto.getIsDualIncome();
-        this.isEmployeeCouple = applicationDto.getIsEmployeeCouple();
-        this.isSibling = applicationDto.getIsSibling();
+    public void update(ApplicationUpdateDto applicationUpdateDto) {
+        this.isSingleParent = applicationUpdateDto.getIsSingleParent();
+        this.childrenCnt = applicationUpdateDto.getChildrenCnt();
+        this.isDisability = applicationUpdateDto.getIsDisability();
+        this.isDualIncome = applicationUpdateDto.getIsDualIncome();
+        this.isEmployeeCouple = applicationUpdateDto.getIsEmployeeCouple();
+        this.isSibling = applicationUpdateDto.getIsSibling();
+        this.childName = applicationUpdateDto.getChildName();
     }
 }
