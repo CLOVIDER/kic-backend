@@ -1,4 +1,4 @@
-package clovider.clovider_be.global.jwt.dto;
+package clovider.clovider_be.global.auth.dto;
 
 import lombok.Getter;
 

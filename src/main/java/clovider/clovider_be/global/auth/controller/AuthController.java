@@ -1,13 +1,13 @@
-package clovider.clovider_be.global.jwt.controller;
+package clovider.clovider_be.global.auth.controller;
 
 import static clovider.clovider_be.domain.common.CustomResult.toCustomResult;
 
 import clovider.clovider_be.domain.common.CustomResult;
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.employee.service.EmployeeQueryService;
-import clovider.clovider_be.global.jwt.dto.AuthRequest.LoginRequest;
-import clovider.clovider_be.global.jwt.dto.TokenVo;
-import clovider.clovider_be.global.jwt.service.AuthService;
+import clovider.clovider_be.global.auth.dto.AuthRequest.LoginRequest;
+import clovider.clovider_be.global.auth.dto.TokenVo;
+import clovider.clovider_be.global.auth.service.AuthService;
 import clovider.clovider_be.global.response.ApiResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

@@ -6,7 +6,6 @@ import static clovider.clovider_be.global.util.JwtProperties.TOKEN_PREFIX;
 
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
-import clovider.clovider_be.global.util.RedisUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,7 +22,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
-    private final RedisUtil redisUtil;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -44,7 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             accessToken = bearerToken.substring(7);
             log.info("===================== ACCESS-TOKEN : " + accessToken);
 
-            if (checkBlackList(accessToken)) {
+            if (jwtProvider.checkBlackList(accessToken)) {
                 log.info("===================== BLACKLIST LOGIN");
                 throw new ApiException(ErrorStatus._JWT_BLACKLIST);
             }
@@ -84,7 +82,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return authorizationHeader.startsWith(TOKEN_PREFIX);
     }
 
-    private boolean checkBlackList(String accessToken) {
-        return redisUtil.hasKeyBlackList(accessToken);
-    }
 }

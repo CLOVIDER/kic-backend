@@ -1,5 +1,6 @@
 package clovider.clovider_be.global.jwt;
 
+import static clovider.clovider_be.global.util.JwtProperties.ACCESS_HEADER_STRING;
 import static clovider.clovider_be.global.util.JwtProperties.EMPLOYEE_ID_KEY;
 import static clovider.clovider_be.global.util.JwtProperties.ROLE;
 
@@ -14,6 +15,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -130,6 +132,10 @@ public class JwtProvider {
 
         long now = new Date().getTime();
         return expiration.getTime() - now;
+    }
+
+    public boolean checkBlackList(String accessToken) {
+        return redisUtil.hasKeyBlackList(accessToken);
     }
 
 }
