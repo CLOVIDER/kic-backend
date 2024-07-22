@@ -20,12 +20,12 @@ public class KindergartenCommandServiceImpl implements
             String kdgNo, String kdgTime, String kdgInfo, String kdgImage) {
 
         Kindergarten kindergarten = Kindergarten.builder()
-                .kdgName(kdgName)
-                .kdgAddress(kdgAddress)
-                .kdgScale(kdgScale)
-                .kdgNo(kdgNo)
-                .kdgTime(kdgTime)
-                .kdgInfo(kdgInfo)
+                .kdgName(Optional.ofNullable(kdgName).orElse("Default Name"))
+                .kdgAddress(Optional.ofNullable(kdgAddress).orElse("Default Address"))
+                .kdgScale(Optional.ofNullable(kdgScale).orElse("Default Scale"))
+                .kdgNo(Optional.ofNullable(kdgNo).orElse("000-0000-0000"))
+                .kdgTime(Optional.ofNullable(kdgTime).orElse("00:00 - 00:00"))
+                .kdgInfo(Optional.ofNullable(kdgInfo).orElse("Default Info"))
                 .build();
 
         kindergarten = kindergartenRepository.save(kindergarten);

@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/kdgs")
-public class KindergardenController {
+public class KindergartenController {
     private final KindergartenCommandService kindergartenCommandService;
     private final KindergartenQueryService kindergartenQueryService;
     private final KindergartenImageCommandService kindergartenImageCommandService;
