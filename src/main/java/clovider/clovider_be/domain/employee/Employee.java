@@ -16,10 +16,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Employee extends BaseTimeEntity {
 
     @Id
@@ -33,7 +33,7 @@ public class Employee extends BaseTimeEntity {
     @Column(nullable = false, length = 20)
     private String accountId;
 
-    @Column(nullable = false, length = 40)
+    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false, length = 20)

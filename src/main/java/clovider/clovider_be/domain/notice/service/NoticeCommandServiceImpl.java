@@ -27,7 +27,7 @@ public class NoticeCommandServiceImpl implements NoticeCommandService {
         Notice savedNotice = noticeRepository.save(Notice.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
-                .admin(employeeQueryService.findById(1L))
+                .admin(employeeQueryService.getEmployee(1L))
                 .build());
 
         noticeImageCommandService.createNoticeImages(request.getImageUrls(), savedNotice);
