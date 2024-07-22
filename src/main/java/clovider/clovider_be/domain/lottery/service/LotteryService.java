@@ -37,10 +37,8 @@ public class LotteryService {
         Application application = applicationRepository.findById(applicationId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid application ID"));
 
-
-        // 이 아래 부분 erd 수정하고 구현 마저 해야 할듯.
         // 모집 ID로 전체 신청자 목록 가져오기
-        List<Application> applications = lotteryRepository.findAllByRecruitId(recruitId);
+        List<Application> applications = applicationRepository.findByRecruit(recruit);
         log.info("Recruit: {} applications: {}", recruitId, applications);
 
         // 신청서 ID와 weight를 포함하는 리스트 생성
@@ -74,19 +72,14 @@ public class LotteryService {
 
         String result = isSelected ? "당첨" : "낙첨";
 
-        //아래는 편의상 테스트용
-        Integer rankNm = 1;
-        Boolean registry = true;
-        Boolean accept = true;
-
         // 추첨 생성
         Lottery lottery = Lottery.builder()
                 .recruit(recruit)
                 .application(application)
-                .rankNm(rankNm)
+                .rankNm(1)  // 랭크는 임시로 1로 설정 (필요시 수정)
                 .result(result)
-                .registry(registry)
-                .accept(accept)
+                .registry(true)  // 등록 여부는 임시로 true로 설정 (필요시 수정)
+                .accept(true)  // 승인 여부는 임시로 true로 설정 (필요시 수정)
                 .build();
 
         Lottery savedLottery = lotteryRepository.save(lottery);

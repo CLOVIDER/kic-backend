@@ -3,6 +3,7 @@ package clovider.clovider_be.domain.application;
 import clovider.clovider_be.domain.application.dto.ApplicationDto;
 import clovider.clovider_be.domain.common.BaseTimeEntity;
 import clovider.clovider_be.domain.employee.Employee;
+import clovider.clovider_be.domain.recruit.Recruit;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -60,6 +61,10 @@ public class Application extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id", nullable = false)
     private Employee employee;
+
+    @ManyToOne
+    @JoinColumn(name = "recruit_id")
+    private Recruit recruit;
 
     @Builder
     public Application(ApplicationDto applicationDto) {
