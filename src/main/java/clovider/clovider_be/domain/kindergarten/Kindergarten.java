@@ -24,21 +24,21 @@ public class Kindergarten extends BaseTimeEntity {
     private Long id;
 
     @Column(nullable = false)
-    private String kdgName;
+    private String kindergartenNm;
 
     @Column(nullable = false)
-    private String kdgAddress;
+    private String kindergartenAddr;
 
     @Column(nullable = false)
-    private String kdgScale;
+    private String kindergartenScale;
 
     @Column(nullable = false)
-    private String kdgNo;
+    private String kindergartenNo;
 
     @Column(nullable = false)
-    private String kdgTime;
+    private String kindergartenTime;
 
     @Column(nullable = false, columnDefinition = "TEXT")
-    private String kdgInfo;
+    private String kindergartenInfo;
 
 }

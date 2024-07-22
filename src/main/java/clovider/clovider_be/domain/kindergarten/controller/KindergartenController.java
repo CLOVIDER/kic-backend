@@ -2,6 +2,7 @@ package clovider.clovider_be.domain.kindergarten.controller;
 
 import clovider.clovider_be.domain.common.CustomResult;
 import clovider.clovider_be.domain.kindergarten.dto.KindergartenRequest;
+import clovider.clovider_be.domain.kindergarten.dto.KindergartenResponse;
 import clovider.clovider_be.domain.kindergarten.service.KindergartenCommandService;
 import clovider.clovider_be.domain.kindergarten.service.KindergartenQueryService;
 import clovider.clovider_be.domain.kindergartenImage.service.KindergartenImageCommandService;
@@ -21,10 +22,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
-@Tag(name = "Kindergarden API")
+@Tag(name = "Kindergartens API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/kdgs")
+@RequestMapping("/api/kindergartens")
 public class KindergartenController {
     private final KindergartenCommandService kindergartenCommandService;
     private final KindergartenQueryService kindergartenQueryService;
@@ -38,31 +39,26 @@ public class KindergartenController {
     @Parameter(name = "kdgTime", description = "어린이집 운영시간", required = true, example = "7:00 - 22:00")
     @Parameter(name = "kdgInfo", description = "어린이집 기타 정보", required = true, example = "- 저희 어린이집은 어쩌구이고\n- 어쩌구입니다.")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ApiResponse<CustomResult> registerKdg(HttpServletRequest request,
+    public ApiResponse<KindergartenResponse> registerKdg(HttpServletRequest request,
             @ModelAttribute KindergartenRequest kindergartenRequest) {
 
-        // MultipartFile kdgImage 처리
-        String imageUrl = kindergartenImageCommandService.saveKindergartenImage(kindergartenRequest.getKdgImage());
-
-        CustomResult result = kindergartenCommandService.registerKdg(
+        KindergartenResponse result = kindergartenCommandService.registerKdg(
                 kindergartenRequest.getKdgName(),
                 kindergartenRequest.getKdgAddress(),
                 kindergartenRequest.getKdgScale(),
                 kindergartenRequest.getKdgNo(),
                 kindergartenRequest.getKdgTime(),
                 kindergartenRequest.getKdgInfo(),
-                imageUrl);
-
-        log.info("Kindergarten registered successfully with id: {}", result.toString());
+                kindergartenRequest.getKdgImage());
 
         return ApiResponse.onSuccess(result);
     }
 
     @Operation(summary = "어린이집 정보 삭제", description = "어린이집 상세 정보를 삭제하는 API입니다.")
     @Parameter(name = "kdgId", description = "어린이집 ID", required = true, example = "1")
-    @DeleteMapping("/{kdgId}")
+    @DeleteMapping("/{kindergartenId}")
     public ApiResponse<CustomResult> deleteKdg(HttpServletRequest request,
-            @PathVariable(name = "kdgId") Long kdgId) {
+            @PathVariable(name = "kindergartenId") Long kdgId) {
 
         CustomResult result = kindergartenCommandService.deleteKdg(kdgId);
 
