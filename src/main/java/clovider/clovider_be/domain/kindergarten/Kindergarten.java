@@ -1,4 +1,4 @@
-package clovider.clovider_be.domain.kindergarden;
+package clovider.clovider_be.domain.kindergarten;
 
 import clovider.clovider_be.domain.common.BaseTimeEntity;
 import jakarta.persistence.Column;
@@ -16,10 +16,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Kindergarden extends BaseTimeEntity {
+public class Kindergarten extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "kindergarten_id")
     private Long id;
 
     @Column(nullable = false)

@@ -1,6 +1,7 @@
-package clovider.clovider_be.domain.kindergardenImage;
+package clovider.clovider_be.domain.kindergartenImage;
 
-import clovider.clovider_be.domain.kindergarden.Kindergarden;
+import clovider.clovider_be.domain.common.BaseTimeEntity;
+import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -19,17 +20,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity
-public class KindergardenImage {
+public class KindergartenImage extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "kindergarden_image_id")
+    @Column(name = "kindergarten_image_id")
     private Long id;
 
     @Column(nullable = false, columnDefinition = "LONGTEXT")
     private String image;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "kindergarden_id", nullable = false)
-    private Kindergarden kindergarden;
+    @JoinColumn(name = "kindergarten_id", nullable = false)
+    private Kindergarten kindergarten;
 }

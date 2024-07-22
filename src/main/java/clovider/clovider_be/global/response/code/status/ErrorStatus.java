@@ -25,6 +25,9 @@ public enum ErrorStatus implements BaseErrorCode {
     // 공사사항 관련
     _NOTICE_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "NOTICE001", "공지사항을 찾을 수 없습니다."),
 
+    // Kindergarden 관련
+    _KDG_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "KDG001", "존재하지 않는 어린이집 아이디 입니다."),
+
     // qna 관련
     _QNA_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "QNA001", "qna를 찾을 수 없습니다.");
 
