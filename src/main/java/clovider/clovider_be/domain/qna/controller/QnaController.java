@@ -2,6 +2,7 @@ package clovider.clovider_be.domain.qna.controller;
 
 import clovider.clovider_be.domain.common.CustomResult;
 import clovider.clovider_be.domain.qna.dto.QnaRequest;
+import clovider.clovider_be.domain.qna.dto.QnaUpdateResponse;
 import clovider.clovider_be.domain.qna.service.QnaCommandService;
 import clovider.clovider_be.domain.qna.service.QnaQueryService;
 import clovider.clovider_be.global.response.ApiResponse;
@@ -27,8 +28,10 @@ public class QnaController {
     }
 
     @PatchMapping("/qnas/{qnaId}")
-    public ApiResponse<CustomResult> updateQna(@PathVariable Long qnaId,
+    public ApiResponse<QnaUpdateResponse> updateQna(@PathVariable Long qnaId,
             @RequestBody QnaRequest qnaRequest) {
         return ApiResponse.onSuccess(qnaCommandService.updateQna(qnaId, qnaRequest));
     }
+
+    
 }

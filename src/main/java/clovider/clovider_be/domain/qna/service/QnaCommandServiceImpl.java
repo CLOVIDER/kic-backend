@@ -4,6 +4,7 @@ import clovider.clovider_be.domain.common.CustomResult;
 import clovider.clovider_be.domain.employee.service.EmployeeQueryService;
 import clovider.clovider_be.domain.qna.Qna;
 import clovider.clovider_be.domain.qna.dto.QnaRequest;
+import clovider.clovider_be.domain.qna.dto.QnaUpdateResponse;
 import clovider.clovider_be.domain.qna.repository.QnaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,11 +29,11 @@ public class QnaCommandServiceImpl implements QnaCommandService {
     }
 
     @Override
-    public CustomResult updateQna(Long qnaId, QnaRequest qnaRequest) {
+    public QnaUpdateResponse updateQna(Long qnaId, QnaRequest qnaRequest) {
         Qna foundQna = qnaQueryService.findById(qnaId);
 
         foundQna.updateQna(qnaRequest);
 
-        return CustomResult.toCustomResult(foundQna.getId());
+        return QnaUpdateResponse.of(qnaId);
     }
 }
