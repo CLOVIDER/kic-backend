@@ -4,7 +4,7 @@ import static clovider.clovider_be.global.util.JwtProperties.ACCESS_HEADER_STRIN
 import static clovider.clovider_be.global.util.JwtProperties.EMPLOYEE_ID_KEY;
 import static clovider.clovider_be.global.util.JwtProperties.ROLE;
 
-import clovider.clovider_be.domain.employee.Role;
+import clovider.clovider_be.domain.enums.Role;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import clovider.clovider_be.global.security.CustomUserDetailService;
