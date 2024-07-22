@@ -4,10 +4,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Schema(description = "데이터 처리 응답 DTO")
 @Builder
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomResult {
