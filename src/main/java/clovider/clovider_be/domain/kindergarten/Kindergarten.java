@@ -27,7 +27,7 @@ public class Kindergarten extends BaseTimeEntity {
     @Column(name = "kindergarten_id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     private String kindergartenNm;
 
     @Column(nullable = false)
@@ -36,7 +36,7 @@ public class Kindergarten extends BaseTimeEntity {
     @Column(nullable = false)
     private String kindergartenScale;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String kindergartenNo;
 
     @Column(nullable = false)
