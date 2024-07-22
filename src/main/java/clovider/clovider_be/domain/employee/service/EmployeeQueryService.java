@@ -1,10 +1,11 @@
 package clovider.clovider_be.domain.employee.service;
 
 import clovider.clovider_be.domain.employee.Employee;
-import org.springframework.stereotype.Service;
+import clovider.clovider_be.global.jwt.dto.AuthRequest.LoginRequest;
 
-@Service
 public interface EmployeeQueryService {
 
-    Employee findById(Long id);
+    Employee getEmployee(Long id);
+
+    Employee checkAccountIdAndPwd(LoginRequest loginRequest);
 }
