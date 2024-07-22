@@ -27,7 +27,7 @@ public class KindergartenImage extends BaseTimeEntity {
     @Column(name = "kindergarten_image_id")
     private Long id;
 
-    @Column(nullable = false, columnDefinition = "LONGTEXT")
+    @Column(nullable = false, length = 2048)
     private String image;
 
     @ManyToOne(fetch = FetchType.LAZY)

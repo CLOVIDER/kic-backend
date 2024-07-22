@@ -6,13 +6,11 @@ import clovider.clovider_be.domain.kindergarten.dto.KindergartenRequest;
 import clovider.clovider_be.domain.kindergarten.dto.KindergartenResponse;
 import clovider.clovider_be.domain.kindergarten.repository.KindergartenRepository;
 import clovider.clovider_be.domain.kindergartenImage.service.KindergartenImageCommandService;
-import clovider.clovider_be.domain.kindergartenImage.service.KindergartenImageCommandServiceImpl;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor

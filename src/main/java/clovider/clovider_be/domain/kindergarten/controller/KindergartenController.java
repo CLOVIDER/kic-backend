@@ -11,13 +11,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,16 +26,16 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Kindergartens API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/kindergartens")
+@RequestMapping("/api/admin/kindergartens")
 public class KindergartenController {
     private final KindergartenCommandService kindergartenCommandService;
     private final KindergartenQueryService kindergartenQueryService;
     private final KindergartenImageCommandService kindergartenImageCommandService;
 
     @Operation(summary = "어린이집 정보 등록", description = "새로운 어린이집 상세정보를 등록하는 API입니다.")
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping
     public ApiResponse<KindergartenResponse> registerKdg(HttpServletRequest request,
-            @ModelAttribute KindergartenRequest kindergartenRequest) {
+            @Valid @RequestBody  KindergartenRequest kindergartenRequest) {
 
         KindergartenResponse result = kindergartenCommandService.registerKdg(kindergartenRequest);
 
