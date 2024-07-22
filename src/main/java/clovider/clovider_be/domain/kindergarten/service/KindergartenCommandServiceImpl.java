@@ -2,6 +2,7 @@ package clovider.clovider_be.domain.kindergarten.service;
 
 import clovider.clovider_be.domain.common.CustomResult;
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
+import clovider.clovider_be.domain.kindergarten.dto.KindergartenRequest;
 import clovider.clovider_be.domain.kindergarten.dto.KindergartenResponse;
 import clovider.clovider_be.domain.kindergarten.repository.KindergartenRepository;
 import clovider.clovider_be.domain.kindergartenImage.service.KindergartenImageCommandService;
@@ -20,21 +21,20 @@ public class KindergartenCommandServiceImpl implements KindergartenCommandServic
     private final KindergartenImageCommandService kindergartenImageCommandService;
 
     @Override
-    public KindergartenResponse registerKdg(String kindergartenNm, String kindergartenAddr, String kindergartenScale,
-            String kindergartenNo, String kindergartenTime, String kindergartenInfo, MultipartFile kindergartenImage) {
+    public KindergartenResponse registerKdg(KindergartenRequest kindergartenRequest) {
 
         Kindergarten kindergarten = Kindergarten.builder()
-                .kindergartenNm(Optional.ofNullable(kindergartenNm).orElse("Default Name"))
-                .kindergartenAddr(Optional.ofNullable(kindergartenAddr).orElse("Default Address"))
-                .kindergartenScale(Optional.ofNullable(kindergartenScale).orElse("Default Scale"))
-                .kindergartenNo(Optional.ofNullable(kindergartenNo).orElse("000-0000-0000"))
-                .kindergartenTime(Optional.ofNullable(kindergartenTime).orElse("00:00 - 00:00"))
-                .kindergartenInfo(Optional.ofNullable(kindergartenInfo).orElse("Default Info"))
+                .kindergartenNm(kindergartenRequest.getKindergartenNm())
+                .kindergartenAddr(kindergartenRequest.getKindergartenAddr())
+                .kindergartenScale(kindergartenRequest.getKindergartenScale())
+                .kindergartenNo(kindergartenRequest.getKindergartenNo())
+                .kindergartenTime(kindergartenRequest.getKindergartenTime())
+                .kindergartenInfo(kindergartenRequest.getKindergartenInfo())
                 .build();
 
         kindergarten = kindergartenRepository.save(kindergarten);
 
-        Long kindergartenImageId = kindergartenImageCommandService.saveKindergartenImage(kindergarten, kindergartenImage);
+        Long kindergartenImageId = kindergartenImageCommandService.saveKindergartenImage(kindergarten, kindergartenRequest.getKindergartenImage());
 
         return KindergartenResponse.toKindergertenResponse(kindergarten.getId(), kindergartenImageId);
     }

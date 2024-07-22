@@ -17,6 +17,9 @@ public class KindergartenImageCommandServiceImpl implements KindergartenImageCom
 
     @Override
     public Long saveKindergartenImage(Kindergarten kindergarten, MultipartFile kindergartenImageFile) {
+        if(kindergartenImageFile == null){
+            //TODO: 버킷에 저장해둔 디폴트 이미지로 보여주는 로직 필요
+        }
         //TODO: S3 버킷 저장 로직 필요
         String S3BucketUrl = "path/to/saved/image.jpg";
 

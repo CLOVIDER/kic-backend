@@ -32,24 +32,11 @@ public class KindergartenController {
     private final KindergartenImageCommandService kindergartenImageCommandService;
 
     @Operation(summary = "어린이집 정보 등록", description = "새로운 어린이집 상세정보를 등록하는 API입니다.")
-    @Parameter(name = "kdgName", description = "어린이집 이름", required = true, example = "샛별 어린이집")
-    @Parameter(name = "kdgAddress", description = "어린이집 주소", required = true, example = "경기도 성남시")
-    @Parameter(name = "kdgScale", description = "어린이집 규모(정원, 크기)", required = true, example = "정원: 150명, 크기: 10m^2/명")
-    @Parameter(name = "kdgNo", description = "어린이집 전화번호", required = true, example = "031-1234-5678")
-    @Parameter(name = "kdgTime", description = "어린이집 운영시간", required = true, example = "7:00 - 22:00")
-    @Parameter(name = "kdgInfo", description = "어린이집 기타 정보", required = true, example = "- 저희 어린이집은 어쩌구이고\n- 어쩌구입니다.")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<KindergartenResponse> registerKdg(HttpServletRequest request,
             @ModelAttribute KindergartenRequest kindergartenRequest) {
 
-        KindergartenResponse result = kindergartenCommandService.registerKdg(
-                kindergartenRequest.getKdgName(),
-                kindergartenRequest.getKdgAddress(),
-                kindergartenRequest.getKdgScale(),
-                kindergartenRequest.getKdgNo(),
-                kindergartenRequest.getKdgTime(),
-                kindergartenRequest.getKdgInfo(),
-                kindergartenRequest.getKdgImage());
+        KindergartenResponse result = kindergartenCommandService.registerKdg(kindergartenRequest);
 
         return ApiResponse.onSuccess(result);
     }
