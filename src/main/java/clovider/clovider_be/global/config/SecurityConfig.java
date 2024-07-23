@@ -38,6 +38,7 @@ public class SecurityConfig {
             "/api",
             "/api/login",
             "/api/emails/**",
+            "/api/**",
 
             // swagger
             "/v3/api-docs/**",

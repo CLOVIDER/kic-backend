@@ -4,6 +4,7 @@ import clovider.clovider_be.domain.common.BaseTimeEntity;
 import clovider.clovider_be.domain.enums.AgeClass;
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import clovider.clovider_be.domain.lottery.Lottery;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -48,6 +49,7 @@ public class Recruit extends BaseTimeEntity {
     private LocalDateTime secondEndDt;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     @JoinColumn(name = "kindergarten_id", nullable = false)
     private Kindergarten kindergarten;
 
