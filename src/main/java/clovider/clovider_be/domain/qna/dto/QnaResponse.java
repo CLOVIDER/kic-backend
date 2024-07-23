@@ -1,10 +1,5 @@
 package clovider.clovider_be.domain.qna.dto;
 
-import clovider.clovider_be.domain.employee.Employee;
-import jakarta.persistence.Column;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

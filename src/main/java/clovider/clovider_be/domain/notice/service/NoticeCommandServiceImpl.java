@@ -1,13 +1,18 @@
 package clovider.clovider_be.domain.notice.service;
 
 import clovider.clovider_be.domain.common.CustomResult;
+import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.employee.service.EmployeeQueryService;
 import clovider.clovider_be.domain.notice.Notice;
 import clovider.clovider_be.domain.notice.dto.NoticeRequest;
 import clovider.clovider_be.domain.notice.dto.NoticeUpdateResponse;
 import clovider.clovider_be.domain.notice.repository.NoticeRepository;
 import clovider.clovider_be.domain.noticeImage.service.NoticeImageCommandService;
+import clovider.clovider_be.global.auth.service.AuthService;
+import clovider.clovider_be.global.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,13 +25,13 @@ public class NoticeCommandServiceImpl implements NoticeCommandService {
     private final NoticeImageCommandService noticeImageCommandService;
     private final NoticeQueryService noticeQueryService;
     private final EmployeeQueryService employeeQueryService;
+    private final AuthService authService;
 
     public CustomResult createNotice(NoticeRequest request) {
+        Employee employee = authService.getCurrentEmployee();
 
-        // 로그인한 관리자 id를 SecurityContextHolder 에서 가져와 admin을 추가해서 생성 요망
-        // 현재는 1번 데이터로 고정
         Notice savedNotice = noticeRepository.save(
-                NoticeRequest.toNotice(request, employeeQueryService.getEmployee(1L)));
+                NoticeRequest.toNotice(request, employeeQueryService.getEmployee(employee.getId())));
 
         noticeImageCommandService.createNoticeImages(request.getImageUrls(), savedNotice);
 

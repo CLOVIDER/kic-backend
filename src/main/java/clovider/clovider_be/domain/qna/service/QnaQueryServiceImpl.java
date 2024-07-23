@@ -7,9 +7,11 @@ import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class QnaQueryServiceImpl implements QnaQueryService {
 
     private final QnaRepository qnaRepository;

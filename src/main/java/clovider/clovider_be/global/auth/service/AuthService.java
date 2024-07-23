@@ -6,11 +6,13 @@ import static clovider.clovider_be.global.util.JwtProperties.REFRESH_HEADER_STRI
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.global.jwt.JwtProvider;
 import clovider.clovider_be.global.auth.dto.TokenVo;
+import clovider.clovider_be.global.security.CustomUserDetails;
 import clovider.clovider_be.global.util.JwtProperties;
 import clovider.clovider_be.global.util.RedisUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -39,6 +41,12 @@ public class AuthService {
 
     public void setHeaderRefreshToken(HttpServletResponse response, String refreshToken) {
         response.setHeader(REFRESH_HEADER_STRING, refreshToken);
+    }
+
+    public Employee getCurrentEmployee() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        CustomUserDetails userDetails = (CustomUserDetails) principal;
+        return userDetails.getEmployee();
     }
 
 }
