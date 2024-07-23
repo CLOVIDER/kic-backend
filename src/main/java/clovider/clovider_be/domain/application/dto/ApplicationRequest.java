@@ -19,7 +19,5 @@ public class ApplicationRequest {
     private String childName;
     private Character isTemp;
 
-
-
     private List<String> imageUrls;
 }
