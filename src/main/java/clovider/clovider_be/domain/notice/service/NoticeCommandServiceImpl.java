@@ -27,8 +27,7 @@ public class NoticeCommandServiceImpl implements NoticeCommandService {
     private final EmployeeQueryService employeeQueryService;
     private final AuthService authService;
 
-    public CustomResult createNotice(NoticeRequest request) {
-        Employee employee = authService.getCurrentEmployee();
+    public CustomResult createNotice(Employee employee, NoticeRequest request) {
 
         Notice savedNotice = noticeRepository.save(
                 NoticeRequest.toNotice(request, employeeQueryService.getEmployee(employee.getId())));

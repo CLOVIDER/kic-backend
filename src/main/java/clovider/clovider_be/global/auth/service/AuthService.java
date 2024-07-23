@@ -43,10 +43,4 @@ public class AuthService {
         response.setHeader(REFRESH_HEADER_STRING, refreshToken);
     }
 
-    public Employee getCurrentEmployee() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        CustomUserDetails userDetails = (CustomUserDetails) principal;
-        return userDetails.getEmployee();
-    }
-
 }

@@ -25,10 +25,8 @@ public class QnaCommandServiceImpl implements QnaCommandService {
     private final AuthService authService;
 
     @Override
-    public CustomResult createQna(QnaRequest qnaRequest) {
-        Employee employee = authService.getCurrentEmployee();
+    public CustomResult createQna(Employee employee, QnaRequest qnaRequest) {
 
-        // 2번 데이터로 고정
         Qna savedQna = qnaRepository.save(QnaRequest
                 .toQna(qnaRequest, employeeQueryService.getEmployee(employee.getId())));
 
