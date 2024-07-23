@@ -19,4 +19,4 @@
 - [ ] 권민우 @MINUUUUUUUUUUUU
 - [ ] 김관일 @KIM-KWAN-IL
 
-@anselmo228 @leejuae @MINUUUUUUUUUUUU @KIM-KWAN-IL @sungsil0624
+@anselmo228 @leejuae @MINUUUUUUUUUUUU @KIM-KWAN-IL @sungsil0624 @kylo-dev
