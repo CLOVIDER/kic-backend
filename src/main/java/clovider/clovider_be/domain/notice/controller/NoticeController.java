@@ -2,10 +2,13 @@ package clovider.clovider_be.domain.notice.controller;
 
 import clovider.clovider_be.domain.common.CustomPage;
 import clovider.clovider_be.domain.common.CustomResult;
+import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.notice.dto.NoticeRequest;
 import clovider.clovider_be.domain.notice.dto.NoticeResponse;
+import clovider.clovider_be.domain.notice.dto.NoticeUpdateResponse;
 import clovider.clovider_be.domain.notice.service.NoticeCommandService;
 import clovider.clovider_be.domain.notice.service.NoticeQueryService;
+import clovider.clovider_be.global.annotation.AuthEmployee;
 import clovider.clovider_be.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,18 +42,18 @@ public class NoticeController {
     }
 
     @PostMapping("/admin/notices")
-    public ApiResponse<CustomResult> createNotice(@RequestBody NoticeRequest noticeRequest) {
-        return ApiResponse.onSuccess(noticeCommandService.createNotice(noticeRequest));
+    public ApiResponse<CustomResult> createNotice(@AuthEmployee Employee employee, @RequestBody NoticeRequest noticeRequest) {
+        return ApiResponse.onSuccess(noticeCommandService.createNotice(employee, noticeRequest));
     }
 
     @PatchMapping("/admin/notices/{noticeId}")
-    public ApiResponse<CustomResult> updateNotice(@PathVariable Long noticeId,
+    public ApiResponse<NoticeUpdateResponse> updateNotice(@PathVariable Long noticeId,
             @RequestBody NoticeRequest noticeRequest) {
         return ApiResponse.onSuccess(noticeCommandService.updateNotice(noticeId, noticeRequest));
     }
 
     @DeleteMapping("/admin/notices/{noticeId}")
-    public ApiResponse<CustomResult> deleteNotice(@PathVariable Long noticeId) {
+    public ApiResponse<String> deleteNotice(@PathVariable Long noticeId) {
         return ApiResponse.onSuccess(noticeCommandService.deleteNotice(noticeId));
     }
 

@@ -16,7 +16,7 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(employee.getRole().name()));
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + employee.getRole().name()));
         return authorities;
     }
 
@@ -48,5 +48,9 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public Employee getEmployee() {
+        return employee;
     }
 }
