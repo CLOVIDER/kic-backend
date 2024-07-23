@@ -24,6 +24,7 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
     @Override
     public CustomResult applicationCreate(ApplicationRequest applicationRequest) {
 
+        // TODO: 토큰으로 유저정보 사용하기
         Employee employee = employeeQueryService.getEmployee(1L);
 
         Application savedApplication = applicationRepository.save(
@@ -37,11 +38,13 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
                 .isEmployeeCouple(applicationRequest.getIsEmployeeCouple())
                 .isSibling(applicationRequest.getIsSibling())
                 .childName(applicationRequest.getChildName())
-                .isTemp(applicationRequest.getIsTemp())
+                .isTemp('0')
                 .build()
         );
 
         applicationDocumentCommandService.createApplicationDocuments(applicationRequest.getImageUrls(), savedApplication);
+
+        //TODO: 추첨 테이블에 들어가는 로직 cnrk해야함
 
         return CustomResult.toCustomResult(savedApplication.getId());
     }
@@ -65,8 +68,28 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
     }
 
     @Override
-    public void applicationTempSave(Application application) {
+    public CustomResult applicationTempSave(ApplicationRequest applicationRequest) {
+        // TODO: 토큰으로 유저정보 사용하기
+        Employee employee = employeeQueryService.getEmployee(1L);
 
+        Application savedApplication = applicationRepository.save(
+                Application.builder()
+                .employee(employee)
+                .workYears(LocalDate.now().getYear() - employee.getJoinDt().getYear()) //현재 년도 - 입사 년도
+                .isSingleParent(applicationRequest.getIsSingleParent())
+                .childrenCnt(applicationRequest.getChildrenCnt())
+                .isDisability(applicationRequest.getIsDisability())
+                .isDualIncome(applicationRequest.getIsDualIncome())
+                .isEmployeeCouple(applicationRequest.getIsEmployeeCouple())
+                .isSibling(applicationRequest.getIsSibling())
+                .childName(applicationRequest.getChildName())
+                .isTemp('1')
+                .build()
+        );
+
+        applicationDocumentCommandService.createApplicationDocuments(applicationRequest.getImageUrls(), savedApplication);
+
+        return CustomResult.toCustomResult(savedApplication.getId());
     }
 
 

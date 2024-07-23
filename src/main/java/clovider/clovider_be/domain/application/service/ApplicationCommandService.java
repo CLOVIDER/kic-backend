@@ -12,5 +12,5 @@ public interface ApplicationCommandService {
     CustomResult applicationCreate(ApplicationRequest applicationRequest);
     CustomResult applicationUpdate(Long Id, ApplicationRequest applicationRequest);
     CustomResult applicationDelete(Long Id);
-    void applicationTempSave(Application application);
+    CustomResult applicationTempSave(ApplicationRequest ApplicationRequest);
 }

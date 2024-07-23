@@ -23,7 +23,7 @@ public class ApplicationQueryServiceImpl implements ApplicationQueryService {
 
 
     @Override
-    public ApplicationResponse applicationRead(Long Id){
+    public ApplicationResponse applicationRead(Long Id){ //applicationId 기반 말고 유저 기반 정보를 가져오는 것이 필요
         Application savedApplication = applicationRepository.findById(Id).orElseThrow(
                 () -> new ApiException(ErrorStatus._APPLICATION_NOT_FOUND)
         );
@@ -31,6 +31,7 @@ public class ApplicationQueryServiceImpl implements ApplicationQueryService {
         return ApplicationResponse.toEntity(savedApplication);
     }
 
+    //TODO: 모집에 따른 구분 필요
     @Override
     public CustomPage<ApplicationResponse> applicationListRead(int page, int size)
     {
@@ -40,4 +41,6 @@ public class ApplicationQueryServiceImpl implements ApplicationQueryService {
 
         return new CustomPage<>(applicationListResponsePage);
     }
+
+    //
 }

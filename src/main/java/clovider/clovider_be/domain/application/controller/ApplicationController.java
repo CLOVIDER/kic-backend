@@ -57,4 +57,9 @@ public class ApplicationController {
             @RequestParam(defaultValue = "10") int size) {
         return ApiResponse.onSuccess(applicationQueryService.applicationListRead(page, size));
     }
+
+    @PostMapping("/applications/tmp")
+    public ApiResponse<CustomResult> createApplicationTmp(@RequestBody ApplicationRequest dto) {
+        return ApiResponse.onSuccess(applicationCommandService.applicationTempSave(dto));
+    }
 }
