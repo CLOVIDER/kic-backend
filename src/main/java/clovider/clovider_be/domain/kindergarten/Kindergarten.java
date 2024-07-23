@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @NoArgsConstructor
@@ -29,25 +30,30 @@ public class Kindergarten extends BaseTimeEntity {
     @Column(name = "kindergarten_id")
     private Long id;
 
+    @Setter
     @Column(nullable = false, length = 20)
     private String kindergartenNm;
 
+    @Setter
     @Column(nullable = false)
     private String kindergartenAddr;
 
+    @Setter
     @Column(nullable = false)
     private String kindergartenScale;
 
+    @Setter
     @Column(nullable = false, length = 50)
     private String kindergartenNo;
 
+    @Setter
     @Column(nullable = false)
     private String kindergartenTime;
 
+    @Setter
     @Column(nullable = false, columnDefinition = "TEXT")
     private String kindergartenInfo;
 
     @OneToMany(mappedBy = "kindergarten", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<KindergartenImage> kindergartenImages;
-
 }

@@ -6,7 +6,8 @@ import clovider.clovider_be.domain.kindergarten.dto.KindergartenResponse;
 
 public interface KindergartenCommandService {
 
-    KindergartenResponse registerKdg(KindergartenRequest kindergartenRequest);
-    CustomResult deleteKdg(Long kdgId);
+    KindergartenResponse registerKindergarten(KindergartenRequest.KindergartenRegisterRequest kindergartenRequest);
+    CustomResult deleteKindergarten(Long kindergartenId);
+    KindergartenResponse updateKindergarten(Long kindergartenId, KindergartenRequest.KindergartenUpdateRequest kindergartenUpdateRequest);
 
 }
