@@ -1,6 +1,7 @@
 package clovider.clovider_be.domain.document;
 
 import clovider.clovider_be.domain.application.Application;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -32,6 +33,7 @@ public class Document {
     @Column(nullable = false)
     private String image;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "application_id", nullable = false)
     private Application application;
