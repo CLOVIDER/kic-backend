@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
-@Tag(name = "Kindergartens API")
+@Tag(name = "kindergartens-controller")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/admin/kindergartens")
