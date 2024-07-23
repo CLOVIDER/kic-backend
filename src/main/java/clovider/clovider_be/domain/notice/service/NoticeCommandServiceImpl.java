@@ -26,7 +26,7 @@ public class NoticeCommandServiceImpl implements NoticeCommandService {
         // 로그인한 관리자 id를 SecurityContextHolder 에서 가져와 admin을 추가해서 생성 요망
         // 현재는 1번 데이터로 고정
         Notice savedNotice = noticeRepository.save(
-                NoticeRequest.toNotice(request, employeeQueryService.findById(1L)));
+                NoticeRequest.toNotice(request, employeeQueryService.getEmployee(1L)));
 
         noticeImageCommandService.createNoticeImages(request.getImageUrls(), savedNotice);
 

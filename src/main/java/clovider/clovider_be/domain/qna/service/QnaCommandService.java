@@ -11,4 +11,6 @@ public interface QnaCommandService {
     CustomResult createQna(QnaRequest qnaRequest);
 
     QnaUpdateResponse updateQna(Long qnaId, QnaRequest qnaRequest);
+
+    String deleteQna(Long qnaId);
 }

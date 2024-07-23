@@ -36,4 +36,12 @@ public class QnaCommandServiceImpl implements QnaCommandService {
 
         return QnaUpdateResponse.of(qnaId);
     }
+
+    @Override
+    public String deleteQna(Long qnaId) {
+        qnaRepository.deleteById(qnaId);
+        return "qna 삭제에 성공하였습니다.";
+    }
+
+
 }
