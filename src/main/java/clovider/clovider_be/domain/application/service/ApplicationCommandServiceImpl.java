@@ -1,16 +1,13 @@
 package clovider.clovider_be.domain.application.service;
 
 import clovider.clovider_be.domain.application.Application;
-import clovider.clovider_be.domain.application.dto.ApplicationUpdateDto;
-import clovider.clovider_be.domain.application.dto.ApplicationWriteDto;
+import clovider.clovider_be.domain.application.dto.ApplicationRequest;
 import clovider.clovider_be.domain.application.repository.ApplicationRepository;
 import clovider.clovider_be.domain.common.CustomResult;
 import clovider.clovider_be.domain.document.service.ApplicationDocumentCommandService;
 import clovider.clovider_be.domain.employee.Employee;
-import clovider.clovider_be.domain.employee.repository.EmployeeRepository;
 import clovider.clovider_be.domain.employee.service.EmployeeQueryService;
 import jakarta.transaction.Transactional;
-import java.net.Authenticator;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +22,7 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
     private final EmployeeQueryService employeeQueryService;
 
     @Override
-    public CustomResult applicationCreate(ApplicationWriteDto applicationWriteDto) {
+    public CustomResult applicationCreate(ApplicationRequest applicationRequest) {
 
         Employee employee = employeeQueryService.getEmployee(1L);
 
@@ -33,28 +30,28 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
                 Application.builder()
                 .employee(employee)
                 .workYears(LocalDate.now().getYear() - employee.getJoinDt().getYear()) //현재 년도 - 입사 년도
-                .isSingleParent(applicationWriteDto.getIsSingleParent())
-                .childrenCnt(applicationWriteDto.getChildrenCnt())
-                .isDisability(applicationWriteDto.getIsDisability())
-                .isDualIncome(applicationWriteDto.getIsDualIncome())
-                .isEmployeeCouple(applicationWriteDto.getIsEmployeeCouple())
-                .isSibling(applicationWriteDto.getIsSibling())
-                .childName(applicationWriteDto.getChildName())
-                .isTemp(applicationWriteDto.getIsTemp())
+                .isSingleParent(applicationRequest.getIsSingleParent())
+                .childrenCnt(applicationRequest.getChildrenCnt())
+                .isDisability(applicationRequest.getIsDisability())
+                .isDualIncome(applicationRequest.getIsDualIncome())
+                .isEmployeeCouple(applicationRequest.getIsEmployeeCouple())
+                .isSibling(applicationRequest.getIsSibling())
+                .childName(applicationRequest.getChildName())
+                .isTemp(applicationRequest.getIsTemp())
                 .build()
         );
 
-        applicationDocumentCommandService.createApplicationDocuments(applicationWriteDto.getImageUrls(), savedApplication);
+        applicationDocumentCommandService.createApplicationDocuments(applicationRequest.getImageUrls(), savedApplication);
 
         return CustomResult.toCustomResult(savedApplication.getId());
     }
 
     @Override
-    public CustomResult applicationUpdate(Long Id, ApplicationUpdateDto applicationUpdateDto) {
+    public CustomResult applicationUpdate(Long Id, ApplicationRequest applicationRequest) {
         Application savedApplication = applicationRepository.findById(Id).orElseThrow();
-        savedApplication.update(applicationUpdateDto);
+        savedApplication.update(applicationRequest);
 
-        applicationDocumentCommandService.createApplicationDocuments(applicationUpdateDto.getImageUrls(), savedApplication);
+        applicationDocumentCommandService.createApplicationDocuments(applicationRequest.getImageUrls(), savedApplication);
 
         return CustomResult.toCustomResult(savedApplication.getId());
     }

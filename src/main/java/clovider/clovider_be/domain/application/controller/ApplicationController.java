@@ -1,8 +1,7 @@
 package clovider.clovider_be.domain.application.controller;
 
-import clovider.clovider_be.domain.application.dto.ApplicationReadDto;
-import clovider.clovider_be.domain.application.dto.ApplicationUpdateDto;
-import clovider.clovider_be.domain.application.dto.ApplicationWriteDto;
+import clovider.clovider_be.domain.application.dto.ApplicationResponse;
+import clovider.clovider_be.domain.application.dto.ApplicationRequest;
 import clovider.clovider_be.domain.application.service.ApplicationCommandService;
 import clovider.clovider_be.domain.application.service.ApplicationQueryService;
 import clovider.clovider_be.domain.common.CustomResult;
@@ -30,12 +29,12 @@ public class ApplicationController {
     private ApplicationQueryService applicationQueryService;
 
     @PostMapping("/applications")
-    public ApiResponse<CustomResult> createApplication(@RequestBody ApplicationWriteDto dto) {
+    public ApiResponse<CustomResult> createApplication(@RequestBody ApplicationRequest dto) {
         return ApiResponse.onSuccess(applicationCommandService.applicationCreate(dto));
     }
 
     @PatchMapping("/applications/{applicationId}")
-    public ApiResponse<CustomResult> updateApplication(@PathVariable Long applicationId, @RequestBody ApplicationUpdateDto dto) {
+    public ApiResponse<CustomResult> updateApplication(@PathVariable Long applicationId, @RequestBody ApplicationRequest dto) {
         return ApiResponse.onSuccess(applicationCommandService.applicationUpdate(applicationId, dto));
     }
 
@@ -45,7 +44,7 @@ public class ApplicationController {
     }
 
     @GetMapping("/applications/{applicationId}")
-    public ApiResponse<ApplicationReadDto> getApplication(@PathVariable Long applicationId) {
+    public ApiResponse<ApplicationResponse> getApplication(@PathVariable Long applicationId) {
         return ApiResponse.onSuccess(applicationQueryService.applicationRead(applicationId));
     }
 }

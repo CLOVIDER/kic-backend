@@ -4,6 +4,6 @@ import lombok.Getter;
 
 //관리자 입장에서 확인할 신청서 리스트
 @Getter
-public class ApplicationListDto {
+public class ApplicationListResponse {
     private Long id; //kdg 아이디
 }
