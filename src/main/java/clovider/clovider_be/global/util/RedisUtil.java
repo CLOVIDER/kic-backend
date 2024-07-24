@@ -11,15 +11,16 @@ public class RedisUtil {
 
     private final RedisTemplate<String, String> refreshTemplate;
     private final RedisTemplate<String, String> blackListTemplate;
+    private final RedisTemplate<String, String> emailTemplate;
 
     @Autowired
     public RedisUtil(@Qualifier("refreshTemplate") RedisTemplate<String, String> refreshTemplate,
-            @Qualifier("blackListTemplate") RedisTemplate<String, String> blackListTemplate) {
+            @Qualifier("blackListTemplate") RedisTemplate<String, String> blackListTemplate,
+            @Qualifier("emailTemplate") RedisTemplate<String, String> emailTemplate) {
         this.refreshTemplate = refreshTemplate;
         this.blackListTemplate = blackListTemplate;
+        this.emailTemplate = emailTemplate;
     }
-
-    // TODO: Email 공간 추가
 
     public void set(String key, String value, Long expiration) {
         refreshTemplate.opsForValue().set(key, value, expiration, TimeUnit.SECONDS);
@@ -53,5 +54,19 @@ public class RedisUtil {
     public boolean hasKeyBlackList(String key) {
         return Boolean.TRUE.equals(blackListTemplate.hasKey(key));
     }
+
+    // email
+    public String getEmailCode(String key) {
+        return emailTemplate.opsForValue().get(key);
+    }
+
+    public void setEmailCode(String key, String value) {
+        emailTemplate.opsForValue().set(key, value, 3, TimeUnit.MINUTES);
+    }
+
+    public boolean hasKeyEmail(String key) {
+        return Boolean.TRUE.equals(emailTemplate.hasKey(key));
+    }
+
 
 }
