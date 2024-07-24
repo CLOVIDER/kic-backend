@@ -6,6 +6,7 @@ import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.auth.dto.AuthRequest.LoginRequest;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class EmployeeQueryServiceImpl implements EmployeeQueryService {
 
     private final EmployeeRepository employeeRepository;
+    private final BCryptPasswordEncoder bCryptEncoder;
 
     @Override
     public Employee getEmployee(Long id) {
@@ -26,16 +28,21 @@ public class EmployeeQueryServiceImpl implements EmployeeQueryService {
     // TODO: BCrypt 적용 부분 추가하기 (Before: 회원가입으로 더미데이터 넣기)
     @Override
     public Employee checkAccountIdAndPwd(LoginRequest loginRequest) {
-        return employeeRepository.findByAccountIdAndPassword(
-                loginRequest.getAccountId(),
-                loginRequest.getPassword()).orElseThrow(
-                () -> new ApiException(ErrorStatus._JWT_LOGIN_ERROR)
+
+        Employee employee = employeeRepository.findByAccountId(
+                loginRequest.getAccountId()).orElseThrow(
+                () -> new ApiException(ErrorStatus._EMPLOYEE_NOT_FOUND)
         );
+        if (!bCryptEncoder.matches(loginRequest.getPassword(), employee.getPassword())) {
+            throw new ApiException(ErrorStatus._AUTH_INVALID_PASSWORD);
+        }
+
+        return employee;
     }
 
     @Override
     public Boolean existsEmployee(String accountId) {
 
-        return employeeRepository.existsByAccountId(accountId);
+        return employeeRepository.findByAccountId(accountId).isPresent();
     }
 }

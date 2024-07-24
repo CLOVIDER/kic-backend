@@ -28,15 +28,15 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ApiResponse<CustomResult> login(@RequestBody LoginRequest request,
+    public ApiResponse<TokenVo> login(@RequestBody LoginRequest request,
             HttpServletResponse response) {
 
         Employee employee = employeeQueryService.checkAccountIdAndPwd(request);
         TokenVo tokenVo = authService.generateATAndRT(employee);
-        authService.setHeaderAccessToken(response, tokenVo.accessToken());
-        authService.setHeaderRefreshToken(response, tokenVo.refreshToken());
+        // authService.setHeaderAccessToken(response, tokenVo.accessToken());
+        // authService.setHeaderRefreshToken(response, tokenVo.refreshToken());
 
-        return ApiResponse.onSuccess(toCustomResult(employee.getId()));
+        return ApiResponse.onSuccess(tokenVo);
     }
 
     @Operation(summary = "회원가입 - 직원 더미 데이터 생성하는 API", description = "비밀번호를 bcrypt 암호화 적용해서 DB에 저장하기")
