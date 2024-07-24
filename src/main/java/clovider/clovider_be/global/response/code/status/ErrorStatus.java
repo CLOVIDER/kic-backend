@@ -18,6 +18,7 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 직원 관련
     _EMPLOYEE_NOT_FOUND(HttpStatus.NOT_FOUND, "EMPLOYEE400", "요청한 직원 정보를 찾을 수 없습니다.."),
+    _EMPLOYEE_DUPLICATED_ID(HttpStatus.BAD_REQUEST, "EMPLOYEE401", "중복된 아이디입니다."),
 
     // 관리자 관련
     _ADMIN_NOT_FOUND(HttpStatus.NOT_FOUND, "ADMIN400", "요청한 관리자 정보를 찾을 수 없습니다.."),
