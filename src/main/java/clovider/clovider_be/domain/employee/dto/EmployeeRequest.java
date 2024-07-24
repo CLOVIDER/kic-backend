@@ -11,4 +11,9 @@ public class EmployeeRequest {
         @NotBlank(message = "비밀번호가 입력되지 않았습니다.")
         private String password;
     }
+
+    @Getter
+    public static class AuthAccountId {
+        private String accountId;
+    }
 }

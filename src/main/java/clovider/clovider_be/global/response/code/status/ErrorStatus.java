@@ -38,6 +38,10 @@ public enum ErrorStatus implements BaseErrorCode {
     _JWT_DIFF_REFRESH_TOKEN_IN_REDIS(HttpStatus.UNAUTHORIZED, "JWT405",
             "Redis에 존재하는 Refresh Token과 다릅니다."),
 
+    // Mail 관련
+
+    _MAIL_CREATE_CODE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "MAIL500", "인증 코드 생성 중 서버 에러가 발생했습니다."),
+
     // S3 관련
     _S3_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "S3400", "S3에 존재하지 않는 이미지입니다."),
 
