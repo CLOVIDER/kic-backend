@@ -47,25 +47,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 throw new ApiException(ErrorStatus._JWT_BLACKLIST);
             }
         }
+        switch (jwtProvider.validateToken(accessToken)) {
 
-        if (jwtProvider.validateToken(accessToken)) {
-            Long employeeId = jwtProvider.getEmployeeId(accessToken);
-            String refreshToken = request.getHeader(REFRESH_HEADER_STRING);
-            log.info("===================== REFRESH-TOKEN " + refreshToken);
-            if (refreshToken == null) {
-                log.info("===================== NOT REFRESH-TOKEN");
-                throw new ApiException(ErrorStatus._JWT_REFRESH_TOKEN_NOT_FOUND);
-            } else if (!jwtProvider.checkRefreshTokenInRedis(employeeId, refreshToken)) {
-                log.info("===================== DIFF REFRESH-TOKEN");
-                throw new ApiException(ErrorStatus._JWT_DIFF_REFRESH_TOKEN_IN_REDIS);
-            }
-            jwtProvider.getAuthentication(accessToken);
-            log.info("===================== LOGIN SUCCESS");
-            log.info("===================== EMPLOYEE ID : " + employeeId);
-        } else {
-            log.info("===================== INVALID ACCESS-TOKEN");
-            request.setAttribute("exception", ErrorStatus._JWT_INVALID);
+            case "VALID":
+                jwtProvider.getAuthentication(accessToken);
+                log.info("===================== LOGIN SUCCESS");
+                break;
+
+            case "INVALID":
+                log.info("===================== INVALID ACCESS-TOKEN");
+                request.setAttribute("exception", ErrorStatus._JWT_INVALID);
+                break;
+
+            case "EXPIRED":
+                log.info("===================== EXPIRED ACCESS-TOKEN");
+                request.setAttribute("exception", ErrorStatus._JWT_EXPIRED);
+                break;
         }
+
         filterChain.doFilter(request, response);
     }
 

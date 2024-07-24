@@ -37,6 +37,7 @@ public enum ErrorStatus implements BaseErrorCode {
             "Header에 RefreshToken이 존재하지 않습니다."),
     _JWT_DIFF_REFRESH_TOKEN_IN_REDIS(HttpStatus.UNAUTHORIZED, "JWT404",
             "Redis에 존재하는 Refresh Token과 다릅니다."),
+    _JWT_EXPIRED(HttpStatus.UNAUTHORIZED, "JWT405", "만료된 AccessToken 입니다."),
 
     // AUTH 관련
     _AUTH_INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "AUTH400", "잘못된 비밀번호입니다. 다시 입력해주세요."),
