@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -80,5 +81,15 @@ public class KindergartenController {
 
         return ApiResponse.onSuccess(result);
     }
+
+    @Operation(summary = "전체 어린이집 정보 불러오기", description = "전체 어린이집 정보를 불러오는 API입니다.")
+    @GetMapping("")
+    public ApiResponse<List<KindergartenGetResponse>> getAllKindergartenInfo() {
+
+        List<KindergartenGetResponse> result = kindergartenQueryService.getAllKindergartens();
+
+        return ApiResponse.onSuccess(result);
+    }
+
 
 }
