@@ -8,4 +8,5 @@ public interface EmployeeQueryService {
     Employee getEmployee(Long id);
 
     Employee checkAccountIdAndPwd(LoginRequest loginRequest);
+
 }
