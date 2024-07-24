@@ -1,7 +1,9 @@
 package clovider.clovider_be.domain.qna.controller;
 
+import clovider.clovider_be.domain.common.CustomPage;
 import clovider.clovider_be.domain.common.CustomResult;
 import clovider.clovider_be.domain.employee.Employee;
+import clovider.clovider_be.domain.notice.dto.NoticeResponse;
 import clovider.clovider_be.domain.qna.Qna;
 import clovider.clovider_be.domain.qna.dto.QnaRequest;
 import clovider.clovider_be.domain.qna.dto.QnaResponse;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -47,6 +50,13 @@ public class QnaController {
     @GetMapping("/qnas/{qnaId}")
     public ApiResponse<QnaResponse> getQna(@PathVariable Long qnaId) {
         return ApiResponse.onSuccess(qnaQueryService.getQna(qnaId));
+    }
+
+    @GetMapping("/qnas")
+    public ApiResponse<CustomPage<QnaResponse>> getAllQnas(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ApiResponse.onSuccess(qnaQueryService.getAllQnas(page, size));
     }
     
 }

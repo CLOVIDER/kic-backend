@@ -1,11 +1,16 @@
 package clovider.clovider_be.domain.qna.service;
 
+import clovider.clovider_be.domain.common.CustomPage;
+import clovider.clovider_be.domain.notice.Notice;
+import clovider.clovider_be.domain.notice.dto.NoticeResponse;
 import clovider.clovider_be.domain.qna.Qna;
 import clovider.clovider_be.domain.qna.dto.QnaResponse;
 import clovider.clovider_be.domain.qna.repository.QnaRepository;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,4 +32,15 @@ public class QnaQueryServiceImpl implements QnaQueryService {
         return Qna.toQnaResponse(qnaRepository.findById(qnaId)
                 .orElseThrow(() -> new ApiException(ErrorStatus._QNA_NOT_FOUND)));
     }
+
+    @Override
+    public CustomPage<QnaResponse> getAllQnas(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Qna> qnaPage = qnaRepository.findAll(pageRequest);
+
+        Page<QnaResponse> qnaResponsePage = qnaPage.map(Qna::toQnaResponse);
+
+        return new CustomPage<>(qnaResponsePage);
+    }
+
 }
