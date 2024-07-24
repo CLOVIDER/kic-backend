@@ -8,4 +8,6 @@ public interface EmployeeQueryService {
     Employee getEmployee(Long id);
 
     Employee checkAccountIdAndPwd(LoginRequest loginRequest);
+
+    Boolean existsEmployee(String accountId);
 }

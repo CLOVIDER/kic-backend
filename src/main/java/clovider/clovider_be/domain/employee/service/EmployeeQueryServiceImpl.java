@@ -32,4 +32,10 @@ public class EmployeeQueryServiceImpl implements EmployeeQueryService {
                 () -> new ApiException(ErrorStatus._JWT_LOGIN_ERROR)
         );
     }
+
+    @Override
+    public Boolean existsEmployee(String accountId) {
+
+        return employeeRepository.existsByAccountId(accountId);
+    }
 }

@@ -8,4 +8,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     Optional<Employee> findByAccountIdAndPassword(String accountId, String password);
     Optional<Employee> findByAccountId(String accountId);
+
+    Boolean existsByAccountId(String accountId);
 }
