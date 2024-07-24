@@ -4,6 +4,9 @@ import clovider.clovider_be.domain.common.CustomResult;
 import clovider.clovider_be.domain.kindergarten.dto.KindergartenRequest;
 import clovider.clovider_be.domain.kindergarten.dto.KindergartenRequest.KindergartenUpdateRequest;
 import clovider.clovider_be.domain.kindergarten.dto.KindergartenResponse;
+import clovider.clovider_be.domain.kindergarten.dto.KindergartenResponse.KindergartenGetResponse;
+import clovider.clovider_be.domain.kindergarten.dto.KindergartenResponse.KindergartenRegisterResponse;
+import clovider.clovider_be.domain.kindergarten.dto.KindergartenResponse.KindergartenUpdateResponse;
 import clovider.clovider_be.domain.kindergarten.service.KindergartenCommandService;
 import clovider.clovider_be.domain.kindergarten.service.KindergartenQueryService;
 import clovider.clovider_be.domain.kindergartenImage.service.KindergartenImageCommandService;
@@ -37,10 +40,10 @@ public class KindergartenController {
 
     @Operation(summary = "어린이집 정보 등록", description = "새로운 어린이집 상세정보를 등록하는 API입니다.")
     @PostMapping
-    public ApiResponse<KindergartenResponse> registerKindergarten(
+    public ApiResponse<KindergartenRegisterResponse> registerKindergarten(
             @Valid @RequestBody KindergartenRequest.KindergartenRegisterRequest request) {
 
-        KindergartenResponse result = kindergartenCommandService.registerKindergarten(request);
+        KindergartenRegisterResponse result = kindergartenCommandService.registerKindergarten(request);
 
         return ApiResponse.onSuccess(result);
     }
@@ -58,11 +61,11 @@ public class KindergartenController {
     @Operation(summary = "어린이집 정보 일부 수정", description = "어린이집 정보를 일부 수정하는 API입니다.")
     @Parameter(name = "kdgId", description = "어린이집 ID", required = true, example = "1")
     @PatchMapping("/{kindergartenId}")
-    public ApiResponse<KindergartenResponse> updateKindergarten(
+    public ApiResponse<KindergartenUpdateResponse> updateKindergarten(
             @RequestBody KindergartenUpdateRequest request,
             @PathVariable("kindergartenId") Long kindergartenId) {
 
-        KindergartenResponse result = kindergartenCommandService.updateKindergarten(kindergartenId, request);
+        KindergartenUpdateResponse result = kindergartenCommandService.updateKindergarten(kindergartenId, request);
 
         return ApiResponse.onSuccess(result);
     }
@@ -70,10 +73,10 @@ public class KindergartenController {
     @Operation(summary = "개별 어린이집 정보 불러오기", description = "어린이집 개별 정보를 불러오는 API입니다.")
     @Parameter(name = "kdgId", description = "어린이집 ID", required = true, example = "1")
     @GetMapping("/{kindergartenId}")
-    public ApiResponse<KindergartenResponse> getKindergartenInfo(
+    public ApiResponse<KindergartenGetResponse> getKindergartenInfo(
             @PathVariable("kindergartenId") Long kindergartenId) {
 
-        KindergartenResponse result = kindergartenQueryService.getKindergarten(kindergartenId);
+        KindergartenGetResponse result = kindergartenQueryService.getKindergarten(kindergartenId);
 
         return ApiResponse.onSuccess(result);
     }
