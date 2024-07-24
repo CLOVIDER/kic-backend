@@ -4,6 +4,7 @@ import clovider.clovider_be.domain.common.CustomResult;
 import clovider.clovider_be.domain.kindergarten.dto.KindergartenRequest;
 import clovider.clovider_be.domain.kindergarten.dto.KindergartenRequest.KindergartenUpdateRequest;
 import clovider.clovider_be.domain.kindergarten.dto.KindergartenResponse;
+import clovider.clovider_be.domain.kindergarten.dto.KindergartenResponse.KindergartenDeleteResponse;
 import clovider.clovider_be.domain.kindergarten.dto.KindergartenResponse.KindergartenGetResponse;
 import clovider.clovider_be.domain.kindergarten.dto.KindergartenResponse.KindergartenRegisterResponse;
 import clovider.clovider_be.domain.kindergarten.dto.KindergartenResponse.KindergartenUpdateResponse;
@@ -37,7 +38,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class KindergartenController {
     private final KindergartenCommandService kindergartenCommandService;
     private final KindergartenQueryService kindergartenQueryService;
-    private final KindergartenImageCommandService kindergartenImageCommandService;
 
     @Operation(summary = "어린이집 정보 등록", description = "새로운 어린이집 상세정보를 등록하는 API입니다.")
     @PostMapping
@@ -52,9 +52,9 @@ public class KindergartenController {
     @Operation(summary = "어린이집 정보 삭제", description = "어린이집 상세 정보를 삭제하는 API입니다.")
     @Parameter(name = "kdgId", description = "어린이집 ID", required = true, example = "1")
     @DeleteMapping("/{kindergartenId}")
-    public ApiResponse<CustomResult> deleteKindergarten(@PathVariable("kindergartenId") Long kindergartenId) {
+    public ApiResponse<KindergartenDeleteResponse> deleteKindergarten(@PathVariable("kindergartenId") Long kindergartenId) {
 
-        CustomResult result = kindergartenCommandService.deleteKindergarten(kindergartenId);
+        KindergartenDeleteResponse result = kindergartenCommandService.deleteKindergarten(kindergartenId);
 
         return ApiResponse.onSuccess(result);
     }
