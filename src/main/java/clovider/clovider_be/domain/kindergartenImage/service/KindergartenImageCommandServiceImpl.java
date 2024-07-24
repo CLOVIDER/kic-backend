@@ -4,6 +4,7 @@ import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import clovider.clovider_be.domain.kindergartenImage.KindergartenImage;
 import clovider.clovider_be.domain.kindergartenImage.repository.KindergartenImageRepository;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,11 +30,12 @@ public class KindergartenImageCommandServiceImpl implements KindergartenImageCom
     }
 
     public Long updateKindergartenImage(Kindergarten kindergarten, String newImageUrl) {
+        Optional<KindergartenImage> existingImage = kindergartenImageQueryService.getKindergartenImage(kindergarten.getId());
 
-        List<KindergartenImage> existingImages = kindergartenImageQueryService.getKindergartenImage(kindergarten.getId());
-        kindergartenImageRepository.deleteAll(existingImages);
+        if (existingImage.isPresent()) {
+            kindergartenImageRepository.delete(existingImage.get());
+        }
 
-        // 새로운 이미지 추가
         KindergartenImage newImage = KindergartenImage.builder()
                 .image(newImageUrl)
                 .kindergarten(kindergarten)

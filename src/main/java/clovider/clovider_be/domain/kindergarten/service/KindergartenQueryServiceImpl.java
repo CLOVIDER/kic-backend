@@ -1,9 +1,9 @@
 package clovider.clovider_be.domain.kindergarten.service;
 
-import static clovider.clovider_be.domain.kindergarten.dto.KindergartenResponse.toKindergartenGetResponse;
 
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import clovider.clovider_be.domain.kindergarten.dto.KindergartenResponse;
+import clovider.clovider_be.domain.kindergarten.dto.KindergartenResponse.KindergartenGetResponse;
 import clovider.clovider_be.domain.kindergarten.repository.KindergartenRepository;
 import clovider.clovider_be.domain.kindergartenImage.KindergartenImage;
 import clovider.clovider_be.domain.kindergartenImage.repository.KindergartenImageRepository;
@@ -23,12 +23,12 @@ public class KindergartenQueryServiceImpl implements KindergartenQueryService {
     private final KindergartenImageQueryService kindergartenImageQuery;
 
     @Override
-    public KindergartenResponse getKindergarten(Long kindergartenId) {
+    public KindergartenGetResponse getKindergarten(Long kindergartenId) {
         Kindergarten kindergarten = kindergartenRepository.findById(kindergartenId)
                 .orElseThrow(() -> new ApiException(ErrorStatus._KDG_NOT_FOUND));
 
-        List<String> imageUrls = kindergartenImageQuery.getKindergartenImageUrls(kindergartenId);
+        String imageUrls = kindergartenImageQuery.getKindergartenImageUrls(kindergartenId);
 
-        return toKindergartenGetResponse(kindergarten, imageUrls);
+        return KindergartenGetResponse.toKindergartenGetResponse(kindergarten, imageUrls);
     }
 }

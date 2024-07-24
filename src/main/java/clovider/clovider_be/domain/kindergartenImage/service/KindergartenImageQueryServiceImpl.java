@@ -1,10 +1,8 @@
 package clovider.clovider_be.domain.kindergartenImage.service;
 
-import clovider.clovider_be.domain.kindergarten.repository.KindergartenRepository;
 import clovider.clovider_be.domain.kindergartenImage.KindergartenImage;
 import clovider.clovider_be.domain.kindergartenImage.repository.KindergartenImageRepository;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,17 +14,29 @@ public class KindergartenImageQueryServiceImpl implements KindergartenImageQuery
     private final KindergartenImageRepository kindergartenImageRepository;
 
     @Override
-    public List<String> getKindergartenImageUrls(Long KindergartenId) {
-        List<KindergartenImage> kindergartenImages = kindergartenImageRepository.findByKindergartenId(KindergartenId);
-        List<String> imageUrls = kindergartenImages.stream()
-                .map(KindergartenImage::getImage)
-                .collect(Collectors.toList());
+    public String getKindergartenImageUrls(Long kindergartenId) {
+        Optional<KindergartenImage> kindergartenImage = kindergartenImageRepository.findByKindergartenId(kindergartenId);
 
-        return imageUrls;
+        if (kindergartenImage.isEmpty()) {
+            return "default/image.png";
+        }
+
+        return kindergartenImage.get().getImage();
+    }
+
+
+    @Override
+    public Optional<KindergartenImage> getKindergartenImage(Long kindergartenId) {
+        return kindergartenImageRepository.findByKindergartenId(kindergartenId);
     }
 
     @Override
-    public List<KindergartenImage> getKindergartenImage(Long kindergartenId) {
-        return kindergartenImageRepository.findByKindergartenId(kindergartenId);
+    public Long getKindergartenImageId(Long kindergartenId) {
+        Optional<KindergartenImage> kindergartenImage = kindergartenImageRepository.findByKindergartenId(kindergartenId);
+
+        if(kindergartenImage.isEmpty()){
+            return 0L; // TODO: 디폴트 이미지 DB에 저장해두고, 해당 id값으로 바꾸기
+        }
+        return kindergartenImage.get().getId();
     }
 }
