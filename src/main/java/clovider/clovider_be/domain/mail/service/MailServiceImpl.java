@@ -1,5 +1,6 @@
 package clovider.clovider_be.domain.mail.service;
 
+import clovider.clovider_be.domain.employee.dto.EmployeeRequest.VerifyCode;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import clovider.clovider_be.global.util.RedisUtil;
@@ -7,6 +8,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -37,6 +39,17 @@ public class MailServiceImpl implements MailService {
         javaMailSender.send(message);
 
         redisUtil.setEmailCode(accountId, authCode);
+    }
+
+    @Override
+    public String verifyAuthCode(VerifyCode request) {
+
+        String authCode = redisUtil.getEmailCode(request.getAccountId());
+
+        return Optional.ofNullable(authCode)
+                .filter(code -> code.equals(request.getAuthCode()))
+                .map(code -> "사내 이메일 인증에 성공하였습니다.")
+                .orElseThrow(() -> new ApiException(ErrorStatus._MAIL_WRONG_CODE));
     }
 
     private String createCode() {
