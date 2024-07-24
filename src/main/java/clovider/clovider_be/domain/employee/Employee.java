@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -22,7 +23,11 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "employee_tb")
+@Table(name = "employee_tb",
+    uniqueConstraints = {
+        @UniqueConstraint(name = "UniqueAccointId", columnNames = {"account_id"})
+    }
+)
 public class Employee extends BaseTimeEntity {
 
     @Id
