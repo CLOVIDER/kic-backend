@@ -12,7 +12,6 @@ import lombok.Setter;
 public class KindergartenRequest {
 
     @Data
-    @Builder
     @AllArgsConstructor
     @NoArgsConstructor
     @Schema(description = "새로운 어린이집 상세정보를 등록하기 위한 요청 DTO")
@@ -48,7 +47,6 @@ public class KindergartenRequest {
     }
 
     @Data
-    @Builder
     @AllArgsConstructor
     @NoArgsConstructor
     @Schema(description = "새로운 어린이집 상세정보를 등록하기 위한 요청 DTO")

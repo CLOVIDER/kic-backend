@@ -1,6 +1,9 @@
 package clovider.clovider_be.domain.kindergarten.service;
 
 
+import static clovider.clovider_be.domain.kindergarten.dto.KindergartenResponse.KindergartenRegisterResponse.toKindergartenRegisterResponse;
+import static clovider.clovider_be.domain.kindergarten.dto.KindergartenResponse.KindergartenDeleteResponse.toKindergartenDeleteResponse;
+
 import clovider.clovider_be.domain.common.CustomResult;
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import clovider.clovider_be.domain.kindergarten.dto.KindergartenRequest.KindergartenRegisterRequest;
@@ -47,31 +50,39 @@ public class KindergartenCommandServiceImpl implements KindergartenCommandServic
 
         Long kindergartenImageId = kindergartenImageCommandService.saveKindergartenImage(kindergarten, kindergartenRegisterRequest.getKindergartenImage());
 
-        return KindergartenRegisterResponse.toKindergartenRegisterResponse(kindergarten, kindergartenImageId);
+        return toKindergartenRegisterResponse(kindergarten, kindergartenImageId);
     }
 
     @Override
-    public CustomResult deleteKindergarten(Long kindergartenId) {
+    public KindergartenDeleteResponse deleteKindergarten(Long kindergartenId) {
         List<Long> recruitIds = new ArrayList<>();
 
-        KindergartenGetResponse kindergartenGetResponse = kindergartenQueryService.getKindergarten(kindergartenId);
-
+        kindergartenRepository.findById(kindergartenId)
+                .orElseThrow(() -> new ApiException(ErrorStatus._KDG_NOT_FOUND));
+        
         recruitIds = recruitCommandService.resetKindergarten(kindergartenId);
 
         kindergartenRepository.deleteById(kindergartenId);
 
-        return CustomResult.toCustomResult(kindergartenId);
+        return toKindergartenDeleteResponse(kindergartenId, recruitIds);
     }
 
     @Override
-    public KindergartenUpdateResponse updateKindergarten(Long kindergartenId,
-            KindergartenUpdateRequest request) {
+    public KindergartenUpdateResponse updateKindergarten(Long kindergartenId, KindergartenUpdateRequest request) {
         Long kindergartenImageId = 0L;
 
         Kindergarten kindergarten = kindergartenRepository.findById(kindergartenId)
                 .orElseThrow(() -> new ApiException(ErrorStatus._KDG_NOT_FOUND));
 
-        Kindergarten savedkindergarten = kindergartenRepository.save(updateFields(request, kindergarten));
+        kindergarten.updateKindergarten(
+                request.getKindergartenNm(),
+                request.getKindergartenAddr(),
+                request.getKindergartenScale(),
+                request.getKindergartenNo(),
+                request.getKindergartenTime(),
+                request.getKindergartenInfo());
+
+        Kindergarten savedKindergarten = kindergartenRepository.save(kindergarten);
 
         if(request.getKindergartenImage() == null){
             kindergartenImageId = kindergartenImageQueryService.getKindergartenImageId(kindergartenId);
@@ -79,30 +90,6 @@ public class KindergartenCommandServiceImpl implements KindergartenCommandServic
             kindergartenImageId = kindergartenImageCommandService.updateKindergartenImage(kindergarten, request.getKindergartenImage());
         }
 
-        return KindergartenUpdateResponse.toKindergartenUpdateResponse(savedkindergarten, kindergartenImageId);
-    }
-
-    private Kindergarten updateFields(KindergartenUpdateRequest request, Kindergarten kindergarten) {
-
-        if (request.getKindergartenNm() != null) {
-            kindergarten.setKindergartenNm(request.getKindergartenNm());
-        }
-        if (request.getKindergartenAddr() != null) {
-            kindergarten.setKindergartenAddr(request.getKindergartenAddr());
-        }
-        if (request.getKindergartenScale() != null) {
-            kindergarten.setKindergartenScale(request.getKindergartenScale());
-        }
-        if (request.getKindergartenNo() != null) {
-            kindergarten.setKindergartenNo(request.getKindergartenNo());
-        }
-        if (request.getKindergartenTime() != null) {
-            kindergarten.setKindergartenTime(request.getKindergartenTime());
-        }
-        if (request.getKindergartenInfo() != null) {
-            kindergarten.setKindergartenInfo(request.getKindergartenInfo());
-        }
-
-        return kindergarten;
+        return KindergartenUpdateResponse.toKindergartenUpdateResponse(savedKindergarten, kindergartenImageId);
     }
 }

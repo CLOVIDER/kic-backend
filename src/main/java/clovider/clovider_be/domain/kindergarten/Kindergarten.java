@@ -30,30 +30,35 @@ public class Kindergarten extends BaseTimeEntity {
     @Column(name = "kindergarten_id")
     private Long id;
 
-    @Setter
     @Column(nullable = false, length = 20)
     private String kindergartenNm;
 
-    @Setter
     @Column(nullable = false)
     private String kindergartenAddr;
 
-    @Setter
     @Column(nullable = false)
     private String kindergartenScale;
 
-    @Setter
     @Column(nullable = false, length = 50)
     private String kindergartenNo;
 
-    @Setter
     @Column(nullable = false)
     private String kindergartenTime;
 
-    @Setter
     @Column(nullable = false, columnDefinition = "TEXT")
     private String kindergartenInfo;
 
     @OneToMany(mappedBy = "kindergarten", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<KindergartenImage> kindergartenImages;
+
+    public void updateKindergarten(String kindergartenNm, String kindergartenAddr, String kindergartenScale,
+            String kindergartenNo, String kindergartenTime, String kindergartenInfo) {
+        this.kindergartenNm = kindergartenNm;
+        this.kindergartenAddr = kindergartenAddr;
+        this.kindergartenScale = kindergartenScale;
+        this.kindergartenNo = kindergartenNo;
+        this.kindergartenTime = kindergartenTime;
+        this.kindergartenInfo = kindergartenInfo;
+    }
 }
+

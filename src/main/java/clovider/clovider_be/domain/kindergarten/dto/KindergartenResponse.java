@@ -3,6 +3,7 @@ package clovider.clovider_be.domain.kindergarten.dto;
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 
 public class KindergartenResponse {
 
-    @Schema(description = "어린이집 정 등록 응답 DTO")
+    @Schema(description = "어린이집 정보 등록 응답 DTO")
     @Builder
     @Getter
     @AllArgsConstructor
@@ -50,16 +51,15 @@ public class KindergartenResponse {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class KindergertenDeleteResponse {
+    public static class KindergartenDeleteResponse {
 
         private Long kindergartenId;
-        private Long kindergartenImageId;
+        private List<Long> relatedRecruit;
 
-        public static KindergertenDeleteResponse toKindergertenDeleteResponse(Long kindergartenId,
-                Long kindergartenImageId) {
-            return KindergertenDeleteResponse.builder()
+        public static KindergartenDeleteResponse toKindergartenDeleteResponse(Long kindergartenId, List<Long> relatedRecruit) {
+            return KindergartenDeleteResponse.builder()
                     .kindergartenId(kindergartenId)
-                    .kindergartenImageId(kindergartenImageId)
+                    .relatedRecruit(relatedRecruit)
                     .build();
         }
     }
