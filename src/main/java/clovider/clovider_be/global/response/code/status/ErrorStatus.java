@@ -18,6 +18,7 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 직원 관련
     _EMPLOYEE_NOT_FOUND(HttpStatus.NOT_FOUND, "EMPLOYEE400", "요청한 직원 정보를 찾을 수 없습니다.."),
+    _EMPLOYEE_DUPLICATED_ID(HttpStatus.BAD_REQUEST, "EMPLOYEE401", "중복된 아이디입니다."),
 
     // 관리자 관련
     _ADMIN_NOT_FOUND(HttpStatus.NOT_FOUND, "ADMIN400", "요청한 관리자 정보를 찾을 수 없습니다.."),
@@ -32,11 +33,14 @@ public enum ErrorStatus implements BaseErrorCode {
     _JWT_NOT_FOUND(HttpStatus.UNAUTHORIZED, "JWT400", "Header에 AccessToken 이 존재하지 않습니다."),
     _JWT_INVALID(HttpStatus.UNAUTHORIZED, "JWT401", "검증되지 않는 AccessToken 입니다."),
     _JWT_BLACKLIST(HttpStatus.UNAUTHORIZED, "JWT402", "블랙 리스트에 존재하는 토큰입니다. 다시 로그인 해주세요"),
-    _JWT_LOGIN_ERROR(HttpStatus.BAD_REQUEST, "JWT403", "아이디와 비밀번호 정보를 다시 확인해주세요"),
-    _JWT_REFRESH_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "JWT404",
+    _JWT_REFRESH_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "JWT403",
             "Header에 RefreshToken이 존재하지 않습니다."),
-    _JWT_DIFF_REFRESH_TOKEN_IN_REDIS(HttpStatus.UNAUTHORIZED, "JWT405",
+    _JWT_DIFF_REFRESH_TOKEN_IN_REDIS(HttpStatus.UNAUTHORIZED, "JWT404",
             "Redis에 존재하는 Refresh Token과 다릅니다."),
+    _JWT_EXPIRED(HttpStatus.UNAUTHORIZED, "JWT405", "만료된 AccessToken 입니다."),
+
+    // AUTH 관련
+    _AUTH_INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "AUTH400", "잘못된 비밀번호입니다. 다시 입력해주세요."),
 
     // S3 관련
     _S3_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "S3400", "S3에 존재하지 않는 이미지입니다."),

@@ -1,6 +1,5 @@
 package clovider.clovider_be.global.jwt;
 
-import static clovider.clovider_be.global.util.JwtProperties.ACCESS_HEADER_STRING;
 import static clovider.clovider_be.global.util.JwtProperties.EMPLOYEE_ID_KEY;
 import static clovider.clovider_be.global.util.JwtProperties.ROLE;
 
@@ -12,10 +11,11 @@ import clovider.clovider_be.global.util.RedisUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import jakarta.servlet.http.HttpServletRequest;
+import io.jsonwebtoken.security.SignatureException;
 import java.security.Key;
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -92,14 +92,14 @@ public class JwtProvider {
         }
     }
 
-    public boolean validateToken(String token) {
+    public String validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return true;
+            return "VALID";
         } catch (ExpiredJwtException e) {
-            return false;
-        } catch (Exception e) {
-            return false;
+            return "EXPIRED";
+        } catch (SignatureException | MalformedJwtException e) {
+            return "INVALID";
         }
     }
 

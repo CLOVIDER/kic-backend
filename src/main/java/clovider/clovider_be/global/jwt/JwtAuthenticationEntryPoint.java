@@ -26,9 +26,11 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
         if (exception.equals(ErrorStatus._JWT_NOT_FOUND)) {
             exceptionHandler(response, ErrorStatus._JWT_NOT_FOUND,
-                    HttpServletResponse.SC_FORBIDDEN);
+                    HttpServletResponse.SC_UNAUTHORIZED);
         } else if (exception.equals(ErrorStatus._JWT_INVALID)) {
-            exceptionHandler(response, ErrorStatus._JWT_INVALID, HttpServletResponse.SC_FORBIDDEN);
+            exceptionHandler(response, ErrorStatus._JWT_INVALID, HttpServletResponse.SC_UNAUTHORIZED);
+        } else if (exception.equals(ErrorStatus._JWT_EXPIRED)) {
+            exceptionHandler(response, ErrorStatus._JWT_EXPIRED, HttpServletResponse.SC_UNAUTHORIZED);
         }
     }
 
