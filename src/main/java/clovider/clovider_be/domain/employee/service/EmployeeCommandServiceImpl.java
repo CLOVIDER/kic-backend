@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class EmployeeCommandServiceImpl implements EmployeeCommandService {
 
     private final BCryptPasswordEncoder bCryptEncoder;
-    private final EmployeeQueryService employeeQueryService;
     private final EmployeeRepository employeeRepository;
 
     @Override
@@ -33,7 +32,7 @@ public class EmployeeCommandServiceImpl implements EmployeeCommandService {
     @Override
     public Employee signUp(LoginRequest request) {
 
-        if (employeeQueryService.existsEmployee(request.getAccountId())) {
+        if (employeeRepository.findByAccountId(request.getAccountId()).isPresent()) {
             throw new ApiException(ErrorStatus._EMPLOYEE_DUPLICATED_ID);
         }
 

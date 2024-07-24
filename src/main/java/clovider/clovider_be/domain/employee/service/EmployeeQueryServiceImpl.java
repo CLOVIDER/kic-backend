@@ -39,10 +39,4 @@ public class EmployeeQueryServiceImpl implements EmployeeQueryService {
 
         return employee;
     }
-
-    @Override
-    public Boolean existsEmployee(String accountId) {
-
-        return employeeRepository.findByAccountId(accountId).isPresent();
-    }
 }

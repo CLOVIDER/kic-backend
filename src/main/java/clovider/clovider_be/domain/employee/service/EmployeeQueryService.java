@@ -9,5 +9,4 @@ public interface EmployeeQueryService {
 
     Employee checkAccountIdAndPwd(LoginRequest loginRequest);
 
-    Boolean existsEmployee(String accountId);
 }
