@@ -101,9 +101,18 @@ public class S3Service {
     }
 
     // 이미지 삭제
-    public void deleteObject(String objectName) throws AmazonS3Exception {
-        String s3File = extractImageFromUrl(objectName);
-        amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, s3File));
+    public void deleteObject(String objectName) {
+        try {
+            String s3File = extractImageFromUrl(objectName);
+            amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, s3File));
+        } catch (AmazonS3Exception e) {
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND.value()) {
+                // S3 에 파일이 존재하지 않을 때에만 커스텀 ErrorStatus 던지기
+                throw new ApiException(ErrorStatus._S3_IMAGE_NOT_FOUND);
+            } else {
+                throw e;
+            }
+        }
     }
 
     // S3 주소에 이미지 URL 추출
