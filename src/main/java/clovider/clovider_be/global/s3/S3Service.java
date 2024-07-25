@@ -101,8 +101,8 @@ public class S3Service {
     }
 
     // 이미지 삭제
-    public void deleteFile(String fileName) throws AmazonS3Exception {
-        String s3File = extractImageFromUrl(fileName);
+    public void deleteObject(String objectName) throws AmazonS3Exception {
+        String s3File = extractImageFromUrl(objectName);
         amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, s3File));
     }
 
