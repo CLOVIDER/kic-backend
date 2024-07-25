@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -56,9 +58,9 @@ public class S3Service {
     }
 
     // 이미지 업로드
-    public String uploadImage(MultipartFile file) {
+    public String uploadImage(MultipartFile file, String domainName) {
         String fileName = createFileName(file.getOriginalFilename());
-        String folder = "images/";
+        String folder = "images/" + domainName + "/";
         return uploadToS3(file, folder, fileName);
     }
 
@@ -78,6 +80,7 @@ public class S3Service {
         return amazonS3Client.getUrl(bucket, folder + fileName).toString();
     }
 
+    // TODO: 스케줄링 얘기하면서 수정헤야할 사항
     // 여러 개의 파일 업로드
     public List<String> uploadFiles(List<MultipartFile> multipartFiles, String applicationId) {
         List<String> fileList = new ArrayList<>();
@@ -88,10 +91,10 @@ public class S3Service {
     }
 
     // 여러 개의 이미지 업로드
-    public List<String> uploadImages(List<MultipartFile> multipartFiles) {
+    public List<String> uploadImages(List<MultipartFile> multipartFiles, String domainName) {
         List<String> imageList = new ArrayList<>();
         for (MultipartFile file : multipartFiles) {
-            imageList.add(uploadImage(file));
+            imageList.add(uploadImage(file, domainName));
         }
         return imageList;
     }
