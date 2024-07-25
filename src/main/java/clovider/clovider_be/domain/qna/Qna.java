@@ -4,6 +4,7 @@ import clovider.clovider_be.domain.common.BaseTimeEntity;
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.qna.dto.QnaRequest;
 import clovider.clovider_be.domain.qna.dto.QnaResponse;
+import clovider.clovider_be.domain.qna.dto.QnaUpdateResponse;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -68,5 +69,10 @@ public class Qna extends BaseTimeEntity {
                 .writerName(qna.employee.getNameKo())
                 .createdAt(qna.getCreatedAt().toLocalDate())
                 .build();
+    }
+
+    public void updateAnswer(String answer, Employee admin) {
+        this.answer = answer;
+        this.admin = admin;
     }
 }

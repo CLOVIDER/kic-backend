@@ -3,8 +3,7 @@ package clovider.clovider_be.domain.qna.controller;
 import clovider.clovider_be.domain.common.CustomPage;
 import clovider.clovider_be.domain.common.CustomResult;
 import clovider.clovider_be.domain.employee.Employee;
-import clovider.clovider_be.domain.notice.dto.NoticeResponse;
-import clovider.clovider_be.domain.qna.Qna;
+import clovider.clovider_be.domain.qna.dto.QnaAnswerRequest;
 import clovider.clovider_be.domain.qna.dto.QnaRequest;
 import clovider.clovider_be.domain.qna.dto.QnaResponse;
 import clovider.clovider_be.domain.qna.dto.QnaUpdateResponse;
@@ -57,6 +56,12 @@ public class QnaController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         return ApiResponse.onSuccess(qnaQueryService.getAllQnas(page, size));
+    }
+
+    @PatchMapping("/qnas/admin/{qnaId}")
+    public ApiResponse<QnaUpdateResponse> updateQnaAnswer(@AuthEmployee Employee admin,
+            @PathVariable Long qnaId, @RequestBody QnaAnswerRequest qnaAnswerRequest){
+        return ApiResponse.onSuccess(qnaCommandService.updateAnswer(admin, qnaId, qnaAnswerRequest));
     }
     
 }
