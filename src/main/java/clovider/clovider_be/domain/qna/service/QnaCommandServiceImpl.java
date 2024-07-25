@@ -4,13 +4,11 @@ import clovider.clovider_be.domain.common.CustomResult;
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.employee.service.EmployeeQueryService;
 import clovider.clovider_be.domain.qna.Qna;
+import clovider.clovider_be.domain.qna.dto.QnaAnswerRequest;
 import clovider.clovider_be.domain.qna.dto.QnaRequest;
 import clovider.clovider_be.domain.qna.dto.QnaUpdateResponse;
 import clovider.clovider_be.domain.qna.repository.QnaRepository;
-import clovider.clovider_be.global.auth.service.AuthService;
-import clovider.clovider_be.global.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +20,6 @@ public class QnaCommandServiceImpl implements QnaCommandService {
     private final QnaRepository qnaRepository;
     private final QnaQueryService qnaQueryService;
     private final EmployeeQueryService employeeQueryService;
-    private final AuthService authService;
 
     @Override
     public CustomResult createQna(Employee employee, QnaRequest qnaRequest) {
@@ -48,5 +45,13 @@ public class QnaCommandServiceImpl implements QnaCommandService {
         return "qna 삭제에 성공하였습니다.";
     }
 
+    @Override
+    public QnaUpdateResponse updateAnswer(Employee admin, Long qnaId, QnaAnswerRequest qnaAnswerRequest) {
+        Qna foundQna = qnaQueryService.findById(qnaId);
 
+        foundQna.updateAnswer(qnaAnswerRequest.getAnswer(), admin);
+
+        return QnaUpdateResponse.of(qnaId);
+    }
+    
 }
