@@ -18,8 +18,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -28,6 +26,9 @@ import org.springframework.web.server.ResponseStatusException;
 @PropertySource("classpath:application-dev.yml")
 public class S3Service {
     private final AmazonS3Client amazonS3Client;
+
+    private static final String DOCUMENTS_FOLDER = "documents/";
+    private static final String IMAGES_FOLDER = "images/";
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
@@ -53,14 +54,14 @@ public class S3Service {
     // 파일 업로드
     public String uploadFile(MultipartFile file, String applicationId) {
         String fileName = createFileName(file.getOriginalFilename());
-        String folder = "documents/" + applicationId + "/";
+        String folder = DOCUMENTS_FOLDER + applicationId + "/";
         return uploadToS3(file, folder, fileName);
     }
 
     // 이미지 업로드
     public String uploadImage(MultipartFile file, String domainName) {
         String fileName = createFileName(file.getOriginalFilename());
-        String folder = "images/" + domainName + "/";
+        String folder = IMAGES_FOLDER + domainName + "/";
         return uploadToS3(file, folder, fileName);
     }
 
