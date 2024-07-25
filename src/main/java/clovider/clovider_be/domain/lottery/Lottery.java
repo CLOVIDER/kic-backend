@@ -36,9 +36,9 @@ public class Lottery extends BaseTimeEntity {
     private Result result;
 
     @Column(nullable = false, length = 1)
-    private Character registry;
+    private Character isRegistry;
 
     @Column(nullable = false, length = 1)
-    private Character accept;
+    private Character isAccept;
     
 }

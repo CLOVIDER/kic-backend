@@ -8,7 +8,8 @@ import lombok.RequiredArgsConstructor;
 public enum Result {
     WIN("당첨"),
     LOSE("낙첨"),
-    WAIT("대기");
+    WAIT("대기"),
+    ING("진행중");
 
     private final String description;
 }

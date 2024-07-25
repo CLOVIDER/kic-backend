@@ -18,12 +18,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @Getter
+@DynamicInsert
 @Table(name = "qna_tb")
 public class Qna extends BaseTimeEntity {
 
@@ -42,7 +45,8 @@ public class Qna extends BaseTimeEntity {
     private String answer;
 
     @Column(nullable = false, length = 1)
-    private Character isVisibility = 0;
+    @ColumnDefault("'0'")
+    private Character isVisibility;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id", nullable = false)
