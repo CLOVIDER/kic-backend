@@ -10,13 +10,5 @@
 
 -
 
-### ☑️ 팀원 확인
-
-- [ ] 김현겸 @kylo-dev
-- [ ] 정희찬 @anselmo228
-- [ ] 정준희 @sungsil0624
-- [ ] 이주애 @leejuae
-- [ ] 권민우 @MINUUUUUUUUUUUU
-- [ ] 김관일 @KIM-KWAN-IL
-
+### ☑️ 누구에게 리뷰를 요청할까요?
 @anselmo228 @leejuae @MINUUUUUUUUUUUU @KIM-KWAN-IL @sungsil0624 @kylo-dev
