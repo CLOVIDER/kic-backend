@@ -1,5 +1,9 @@
 package clovider.clovider_be.domain.kindergartenImage.service;
 
-public interface KindergartenImageCommandService {
+import clovider.clovider_be.domain.kindergarten.Kindergarten;
 
+public interface KindergartenImageCommandService {
+    Long saveKindergartenImage(Kindergarten kindergarten, String kindergartenImage);
+
+    Long updateKindergartenImage(Kindergarten kindergarten, String newImageUrl);
 }

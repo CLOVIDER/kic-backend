@@ -6,7 +6,6 @@ import static clovider.clovider_be.global.util.JwtProperties.TOKEN_PREFIX;
 
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
-import clovider.clovider_be.global.util.RedisUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,7 +22,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
-    private final RedisUtil redisUtil;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -44,36 +42,36 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             accessToken = bearerToken.substring(7);
             log.info("===================== ACCESS-TOKEN : " + accessToken);
 
-            if (checkBlackList(accessToken)) {
+            if (jwtProvider.checkBlackList(accessToken)) {
                 log.info("===================== BLACKLIST LOGIN");
                 throw new ApiException(ErrorStatus._JWT_BLACKLIST);
             }
         }
+        switch (jwtProvider.validateToken(accessToken)) {
 
-        if (jwtProvider.validateToken(accessToken)) {
-            Long employeeId = jwtProvider.getEmployeeId(accessToken);
-            String refreshToken = request.getHeader(REFRESH_HEADER_STRING);
-            log.info("===================== REFRESH-TOKEN " + refreshToken);
-            if (refreshToken == null) {
-                log.info("===================== NOT REFRESH-TOKEN");
-                throw new ApiException(ErrorStatus._JWT_REFRESH_TOKEN_NOT_FOUND);
-            } else if (!jwtProvider.checkRefreshTokenInRedis(employeeId, refreshToken)) {
-                log.info("===================== DIFF REFRESH-TOKEN");
-                throw new ApiException(ErrorStatus._JWT_DIFF_REFRESH_TOKEN_IN_REDIS);
-            }
-            jwtProvider.getAuthentication(accessToken);
-            log.info("===================== LOGIN SUCCESS");
-            log.info("===================== EMPLOYEE ID : " + employeeId);
-        } else {
-            log.info("===================== INVALID ACCESS-TOKEN");
-            request.setAttribute("exception", ErrorStatus._JWT_INVALID);
+            case "VALID":
+                jwtProvider.getAuthentication(accessToken);
+                log.info("===================== LOGIN SUCCESS");
+                break;
+
+            case "INVALID":
+                log.info("===================== INVALID ACCESS-TOKEN");
+                request.setAttribute("exception", ErrorStatus._JWT_INVALID);
+                break;
+
+            case "EXPIRED":
+                log.info("===================== EXPIRED ACCESS-TOKEN");
+                request.setAttribute("exception", ErrorStatus._JWT_EXPIRED);
+                break;
         }
+
         filterChain.doFilter(request, response);
     }
 
     private boolean isPublicUrl(String requestUrl) {
         return requestUrl.equals("/api") ||
                 requestUrl.equals("/api/login") ||
+                requestUrl.equals("/api/signup") ||
                 requestUrl.startsWith("/swagger-ui/**") ||
                 requestUrl.startsWith("/swagger-resources/**") ||
                 requestUrl.startsWith("/v3/api-docs/**") ||
@@ -84,7 +82,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return authorizationHeader.startsWith(TOKEN_PREFIX);
     }
 
-    private boolean checkBlackList(String accessToken) {
-        return redisUtil.hasKeyBlackList(accessToken);
-    }
 }

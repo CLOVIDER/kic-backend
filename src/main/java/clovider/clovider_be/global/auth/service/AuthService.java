@@ -1,16 +1,18 @@
-package clovider.clovider_be.global.jwt.service;
+package clovider.clovider_be.global.auth.service;
 
 import static clovider.clovider_be.global.util.JwtProperties.ACCESS_HEADER_STRING;
 import static clovider.clovider_be.global.util.JwtProperties.REFRESH_HEADER_STRING;
 
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.global.jwt.JwtProvider;
-import clovider.clovider_be.global.jwt.dto.TokenVo;
+import clovider.clovider_be.global.auth.dto.TokenVo;
+import clovider.clovider_be.global.security.CustomUserDetails;
 import clovider.clovider_be.global.util.JwtProperties;
 import clovider.clovider_be.global.util.RedisUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service

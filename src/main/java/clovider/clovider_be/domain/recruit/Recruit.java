@@ -48,10 +48,14 @@ public class Recruit extends BaseTimeEntity {
     private LocalDateTime secondEndDt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "kindergarden_id", nullable = false)
+    @JoinColumn(name = "kindergarten_id", nullable = false)
     private Kindergarten kindergarten;
 
     @OneToMany(mappedBy = "recruit", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Lottery> lotteries;
+
+    public void changeKindergarten(Kindergarten kindergarten){
+        this.kindergarten = kindergarten;
+    }
 
 }
