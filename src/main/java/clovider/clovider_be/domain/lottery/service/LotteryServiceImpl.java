@@ -141,7 +141,7 @@ public class LotteryServiceImpl implements LotteryService {
                     true,
                     "COMMON200",
                     "Registry updated successfully.",
-                    new LotteryResisterResponseDTO.Result(updatedLottery.getId(), updatedLottery.getUpdatedAt(), updatedLottery.getRegistry() == '1')
+                    new LotteryResisterResponseDTO.Result(updatedLottery.getId(), updatedLottery.getUpdatedAt(), updatedLottery.getRegistry() == '0')
             );
         }
         else {
@@ -149,7 +149,7 @@ public class LotteryServiceImpl implements LotteryService {
                     false,
                     "COMMON400",
                     "등록되어있지 않은 상태입니다.",
-                    new LotteryResisterResponseDTO.Result(lottery.getId(), lottery.getUpdatedAt(), lottery.getRegistry() == '0')
+                    new LotteryResisterResponseDTO.Result(lottery.getId(), lottery.getUpdatedAt(), lottery.getRegistry() == '1')
             );
         }
 
