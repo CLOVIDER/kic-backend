@@ -34,10 +34,24 @@ public class LotteryController {
         }
     }
 
-    @PatchMapping("/api/update-registry/{lotteryId}")
-    public ResponseEntity<LotteryResisterResponseDTO> updateRegistry(@PathVariable Long lotteryId) {
+    @PatchMapping("/api/update-registry-true/{lotteryId}")
+    public ResponseEntity<LotteryResisterResponseDTO> updateRegistryTrue(@PathVariable Long lotteryId) {
         try {
-            LotteryResisterResponseDTO response = lotteryService.updateRegistry(lotteryId);
+            LotteryResisterResponseDTO response = lotteryService.updateRegistryTrue(lotteryId);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new LotteryResisterResponseDTO(false, "COMMON400", "유효하지 않은 요청입니다.", null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new LotteryResisterResponseDTO(false, "COMMON500", "서버 내부 오류", null));
+        }
+    }
+
+    @PatchMapping("/api/update-registry-false/{lotteryId}")
+    public ResponseEntity<LotteryResisterResponseDTO> updateRegistryFalse(@PathVariable Long lotteryId) {
+        try {
+            LotteryResisterResponseDTO response = lotteryService.updateRegistryFalse(lotteryId);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(

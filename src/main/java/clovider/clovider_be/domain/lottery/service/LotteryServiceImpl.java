@@ -100,22 +100,62 @@ public class LotteryServiceImpl implements LotteryService {
     }
 
     @Override
-    public LotteryResisterResponseDTO updateRegistry(Long lotteryId) {
-        log.info("Updating registry for Lottery with ID: {}", lotteryId);
+    public LotteryResisterResponseDTO updateRegistryTrue(Long lotteryId) {
 
         Lottery lottery = lotteryRepository.findById(lotteryId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid lottery ID"));
 
-        lottery.setRegistry('1');
-        Lottery updatedLottery = lotteryRepository.save(lottery);
+        if (lottery.getRegistry() == '0'){
+            lottery.setRegistry('1');
+            Lottery updatedLottery = lotteryRepository.save(lottery);
 
-        return new LotteryResisterResponseDTO(
-                true,
-                "COMMON200",
-                "Registry updated successfully.",
-                new LotteryResisterResponseDTO.Result(updatedLottery.getId(), updatedLottery.getUpdatedAt(), updatedLottery.getRegistry() == '1')
-        );
+            return new LotteryResisterResponseDTO(
+                    true,
+                    "COMMON200",
+                    "Registry updated successfully.",
+                    new LotteryResisterResponseDTO.Result(updatedLottery.getId(), updatedLottery.getUpdatedAt(), updatedLottery.getRegistry() == '1')
+            );
+        }
+        else {
+            return new LotteryResisterResponseDTO(
+                    false,
+                    "COMMON400",
+                    "이미 등록된 상태입니다.",
+                    new LotteryResisterResponseDTO.Result(lottery.getId(), lottery.getUpdatedAt(), lottery.getRegistry() == '1')
+            );
+        }
+
     }
+
+    @Override
+    public LotteryResisterResponseDTO updateRegistryFalse(Long lotteryId) {
+
+        Lottery lottery = lotteryRepository.findById(lotteryId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid lottery ID"));
+
+        if(lottery.getRegistry() == '1') {
+            lottery.setRegistry('0');
+            Lottery updatedLottery = lotteryRepository.save(lottery);
+
+            return new LotteryResisterResponseDTO(
+                    true,
+                    "COMMON200",
+                    "Registry updated successfully.",
+                    new LotteryResisterResponseDTO.Result(updatedLottery.getId(), updatedLottery.getUpdatedAt(), updatedLottery.getRegistry() == '1')
+            );
+        }
+        else {
+            return new LotteryResisterResponseDTO(
+                    false,
+                    "COMMON400",
+                    "등록되어있지 않은 상태입니다.",
+                    new LotteryResisterResponseDTO.Result(lottery.getId(), lottery.getUpdatedAt(), lottery.getRegistry() == '0')
+            );
+        }
+
+
+    }
+
 
     private double calculateWeight(Integer workYears, Character singleParent, Integer childrenCnt, Character disability, Character employeeCouple, Character sibling, Character dualIncome) {
         double weight = 1.0;
