@@ -33,6 +33,7 @@ public class LotteryController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new LotteryResponseDTO(false, "COMMON500", "서버 내부 오류", null));
         }
+
     }
 
     /*
