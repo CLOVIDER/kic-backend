@@ -37,6 +37,7 @@ public class SecurityConfig {
             //application
             "/api",
             "/api/login",
+            "/api/signup",
             "/api/emails/**",
             "/api/**",
 

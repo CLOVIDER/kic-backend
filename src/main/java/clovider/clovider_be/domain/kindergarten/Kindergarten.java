@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @NoArgsConstructor
@@ -50,4 +51,14 @@ public class Kindergarten extends BaseTimeEntity {
     @OneToMany(mappedBy = "kindergarten", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<KindergartenImage> kindergartenImages;
 
+    public void updateKindergarten(String kindergartenNm, String kindergartenAddr, String kindergartenScale,
+            String kindergartenNo, String kindergartenTime, String kindergartenInfo) {
+        this.kindergartenNm = kindergartenNm;
+        this.kindergartenAddr = kindergartenAddr;
+        this.kindergartenScale = kindergartenScale;
+        this.kindergartenNo = kindergartenNo;
+        this.kindergartenTime = kindergartenTime;
+        this.kindergartenInfo = kindergartenInfo;
+    }
 }
+

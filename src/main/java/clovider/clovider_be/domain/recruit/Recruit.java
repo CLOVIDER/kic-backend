@@ -58,4 +58,8 @@ public class Recruit extends BaseTimeEntity {
     @OneToMany(mappedBy = "recruit", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Lottery> lotteries;
 
+    public void changeKindergarten(Kindergarten kindergarten){
+        this.kindergarten = kindergarten;
+    }
+
 }
