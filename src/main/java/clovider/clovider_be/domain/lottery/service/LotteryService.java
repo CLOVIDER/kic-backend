@@ -51,9 +51,11 @@ public class LotteryService {
 
         // 신청서 ID와 weight를 포함하는 리스트 생성
         List<Map<String, Object>> applicants = new ArrayList<>();
+
         for (Application app : applications) {
             Map<String, Object> applicantData = new HashMap<>();
             applicantData.put("id", app.getId());
+            log.info("Applicant data: {}", applicantData);
 
             // 신청서의 필드에서 weight 계산
             double weight = calculateWeight(
@@ -65,15 +67,18 @@ public class LotteryService {
                     app.getIsSibling(),
                     app.getIsDualIncome()
             );
+            log.info("Applicant weight: {}", weight);
             applicantData.put("weight", weight);
             applicants.add(applicantData);
+            log.info("Applicant data: {}", applicantData);
         }
 
         // recruitCnt 가져오기
         int recruitCnt = recruit.getRecruitCnt();
-
+        log.info("RecruitCnt: {}", recruitCnt);
         // 가중치 기반 추첨 수행
         List<Integer> selectedApplicants = WeightedRandomSelection.weightedRandomSelection(applicants, recruitCnt);
+        log.info("Selected applicants: {}", selectedApplicants);
 
         // 선택된 지원자에 현재 신청자가 포함되어 있는지 확인
         boolean isSelected = selectedApplicants.contains(applicationId.intValue());
@@ -122,26 +127,33 @@ public class LotteryService {
             double totalWeight = applicants.stream()
                     .mapToDouble(applicant -> (double) applicant.get("weight"))
                     .sum();
+            log.info("Total weight: {}", totalWeight);
 
             List<Double> cumulativeWeights = new ArrayList<>();
+
             double cumulativeSum = 0;
             for (Map<String, Object> applicant : applicants) {
                 cumulativeSum += (double) applicant.get("weight");
                 cumulativeWeights.add(cumulativeSum);
             }
+            log.info("Cumulative weights: {}", cumulativeWeights);
 
             Set<Integer> selectedApplicantsSet = new HashSet<>();
+            log.info("Selected applicants: {}", selectedApplicantsSet);
             Random random = new Random();
 
             while (selectedApplicantsSet.size() < numSelected) {
                 double value = random.nextDouble() * totalWeight;
+                log.info("Selected applicant: {}", value);
                 for (int i = 0; i < cumulativeWeights.size(); i++) {
                     if (value <= cumulativeWeights.get(i)) {
                         selectedApplicantsSet.add((int) applicants.get(i).get("id"));
+                        log.info("Applicant selected: {}", applicants.get(i).get("id"));
                         break;
                     }
                 }
             }
+            log.info("Selected applicants: {}", selectedApplicantsSet);
 
             return new ArrayList<>(selectedApplicantsSet);
         }

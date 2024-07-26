@@ -53,6 +53,8 @@ public class Recruit extends BaseTimeEntity {
     @JoinColumn(name = "kindergarten_id", nullable = false)
     private Kindergarten kindergarten;
 
+
+    @JsonBackReference
     @OneToMany(mappedBy = "recruit", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Lottery> lotteries;
 
