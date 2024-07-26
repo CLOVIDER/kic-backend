@@ -71,9 +71,9 @@ public class Application extends BaseTimeEntity {
     private Employee employee;
 
 
-//     @ManyToOne
-//     @JoinColumn(name = "recruit_id")
-//     private Recruit recruit;
+     @ManyToOne
+     @JoinColumn(name = "recruit_id")
+     private Recruit recruit;
 
 //     @Builder
 //     public Application(ApplicationDto applicationDto) {

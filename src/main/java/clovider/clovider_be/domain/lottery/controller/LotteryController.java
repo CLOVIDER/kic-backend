@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/admin/lotteries")
 public class LotteryController {
 
-
     private final LotteryService lotteryService;
 
     @Autowired
@@ -33,12 +32,19 @@ public class LotteryController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new LotteryResponseDTO(false, "COMMON500", "서버 내부 오류", null));
         }
-
     }
 
-    /*
-    * 알고리즘 실행 코드
-    *
-    * */
-
+    @PostMapping("/update-registry/{lotteryId}")
+    public ResponseEntity<LotteryResponseDTO> updateRegistry(@PathVariable Long lotteryId) {
+        try {
+            LotteryResponseDTO response = lotteryService.updateRegistry(lotteryId);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new LotteryResponseDTO(false, "COMMON400", "Invalid request.", null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new LotteryResponseDTO(false, "COMMON500", "Internal server error.", null));
+        }
+    }
 }
