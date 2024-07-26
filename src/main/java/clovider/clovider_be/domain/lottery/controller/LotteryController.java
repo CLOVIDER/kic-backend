@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/admin/lotteries")
 public class LotteryController {
 
+
     private final LotteryService lotteryService;
 
     @Autowired
