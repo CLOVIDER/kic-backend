@@ -4,6 +4,7 @@ import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.application.repository.ApplicationRepository;
 import clovider.clovider_be.domain.enums.Result;
 import clovider.clovider_be.domain.lottery.Lottery;
+import clovider.clovider_be.domain.lottery.dto.LotteryResisterResponseDTO;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponseDTO;
 import clovider.clovider_be.domain.lottery.repository.LotteryRepository;
 import clovider.clovider_be.domain.recruit.Recruit;
@@ -99,7 +100,7 @@ public class LotteryServiceImpl implements LotteryService {
     }
 
     @Override
-    public LotteryResponseDTO updateRegistry(Long lotteryId) {
+    public LotteryResisterResponseDTO updateRegistry(Long lotteryId) {
         log.info("Updating registry for Lottery with ID: {}", lotteryId);
 
         Lottery lottery = lotteryRepository.findById(lotteryId)
@@ -108,11 +109,11 @@ public class LotteryServiceImpl implements LotteryService {
         lottery.setRegistry('1');
         Lottery updatedLottery = lotteryRepository.save(lottery);
 
-        return new LotteryResponseDTO(
+        return new LotteryResisterResponseDTO(
                 true,
                 "COMMON200",
                 "Registry updated successfully.",
-                new LotteryResponseDTO.Result(updatedLottery.getId(), updatedLottery.getUpdatedAt())
+                new LotteryResisterResponseDTO.Result(updatedLottery.getId(), updatedLottery.getUpdatedAt(), updatedLottery.getRegistry() == '1')
         );
     }
 

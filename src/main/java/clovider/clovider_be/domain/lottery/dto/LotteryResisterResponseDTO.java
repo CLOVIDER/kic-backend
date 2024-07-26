@@ -9,12 +9,11 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LotteryResponseDTO {
+public class LotteryResisterResponseDTO {
     private boolean isSuccess;
     private String code;
     private String message;
     private Result result;
-
 
     @Data
     @NoArgsConstructor
@@ -22,5 +21,6 @@ public class LotteryResponseDTO {
     public static class Result {
         private Long id;
         private LocalDateTime createdAt;
+        private boolean registry;  // 등록 여부 필드 추가
     }
 }
