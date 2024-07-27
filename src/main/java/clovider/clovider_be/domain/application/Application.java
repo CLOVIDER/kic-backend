@@ -4,7 +4,6 @@ import clovider.clovider_be.domain.application.dto.ApplicationUpdateDto;
 import clovider.clovider_be.domain.common.BaseTimeEntity;
 import clovider.clovider_be.domain.document.Document;
 import clovider.clovider_be.domain.employee.Employee;
-import clovider.clovider_be.domain.recruit.Recruit;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -70,21 +69,6 @@ public class Application extends BaseTimeEntity {
     @JsonIgnore
     private Employee employee;
 
-
-//     @ManyToOne
-//     @JoinColumn(name = "recruit_id")
-//     private Recruit recruit;
-
-//     @Builder
-//     public Application(ApplicationDto applicationDto) {
-//         this.workYears = applicationDto.getWorkYears();
-//         this.isSingleParent = applicationDto.getIsSingleParent();
-//         this.childrenCnt = applicationDto.getChildrenCnt();
-//         this.isDisability = applicationDto.getIsDisability();
-//         this.isDualIncome = applicationDto.getIsDualIncome();
-//         this.isEmployeeCouple = applicationDto.getIsEmployeeCouple();
-//         this.isSibling = applicationDto.getIsSibling();
-
     @OneToMany(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Document> documents = new ArrayList<>();
 
@@ -96,6 +80,5 @@ public class Application extends BaseTimeEntity {
         this.isEmployeeCouple = applicationUpdateDto.getIsEmployeeCouple();
         this.isSibling = applicationUpdateDto.getIsSibling();
         this.childName = applicationUpdateDto.getChildName();
-
     }
 }
