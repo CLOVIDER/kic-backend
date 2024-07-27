@@ -1,7 +1,7 @@
-package clovider.clovider_be.global.auth.service;
+package clovider.clovider_be.domain.auth.service;
 
+import clovider.clovider_be.domain.auth.dto.TokenVo;
 import clovider.clovider_be.domain.employee.Employee;
-import clovider.clovider_be.global.auth.dto.TokenVo;
 import clovider.clovider_be.global.jwt.JwtProvider;
 import clovider.clovider_be.global.util.RedisUtil;
 import lombok.RequiredArgsConstructor;

@@ -1,14 +1,14 @@
-package clovider.clovider_be.global.auth.controller;
+package clovider.clovider_be.domain.auth.controller;
 
 import static clovider.clovider_be.domain.common.CustomResult.toCustomResult;
 
+import clovider.clovider_be.domain.auth.dto.AuthRequest.LoginRequest;
+import clovider.clovider_be.domain.auth.dto.TokenVo;
+import clovider.clovider_be.domain.auth.service.AuthService;
 import clovider.clovider_be.domain.common.CustomResult;
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.employee.service.EmployeeCommandService;
 import clovider.clovider_be.domain.employee.service.EmployeeQueryService;
-import clovider.clovider_be.global.auth.dto.AuthRequest.LoginRequest;
-import clovider.clovider_be.global.auth.dto.TokenVo;
-import clovider.clovider_be.global.auth.service.AuthService;
 import clovider.clovider_be.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

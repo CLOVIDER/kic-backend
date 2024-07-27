@@ -1,4 +1,4 @@
-package clovider.clovider_be.global.auth.dto;
+package clovider.clovider_be.domain.auth.dto;
 
 public record TokenVo(String accessToken, String refreshToken, String role) {
 

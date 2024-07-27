@@ -1,4 +1,4 @@
-package clovider.clovider_be.global.auth.dto;
+package clovider.clovider_be.domain.auth.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
