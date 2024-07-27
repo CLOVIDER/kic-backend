@@ -29,8 +29,8 @@ public class RecruitResponse {
         @Schema(description = "모집 남은 기간", example = "7")
         private Integer remainPeriod;
 
-        @Schema(description = "사내 어린이집 이름 리스트", example = "새빛")
-        private List<String> kindergartenList;
+        @Schema(description = "사내 어린이집 이름 및 나이별 모집 리스트", example = "새빛")
+        private List<String> kindergartenClassList;
 
         @Schema(description = "각 사내 어린이집 경쟁률", example = "0.8")
         private List<Double> rateList;
@@ -43,8 +43,8 @@ public class RecruitResponse {
         LocalDateTime endDt = recruits.get(0).getRecruitEndDt();
         int dDay = (int) ChronoUnit.DAYS.between(LocalDateTime.now(), endDt);
 
-        List<String> kindergartenNames = recruits.stream()
-                .map(r -> r.getKindergarten().getKindergartenNm())
+        List<String> kindergartenClasses = recruits.stream()
+                .map(r -> r.getKindergarten().getKindergartenNm() + ":" + r.getAgeClass().getDescription())
                 .toList();
 
         List<Double> rates = competitionRates.stream()
@@ -56,7 +56,7 @@ public class RecruitResponse {
                 .recruitStartDt(startDt)
                 .recruitEndDt(endDt)
                 .remainPeriod(dDay)
-                .kindergartenList(kindergartenNames)
+                .kindergartenClassList(kindergartenClasses)
                 .rateList(rates)
                 .build();
     }
