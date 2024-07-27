@@ -1,6 +1,7 @@
 package clovider.clovider_be.domain.lottery.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,5 +15,30 @@ public class LotteryResponse {
         private Long recruitId;
         private Double competitionRate;
 
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class TotalApplication {
+
+        private String kindergartenNm;
+        private Integer totalCnt;
+        private Integer infantCnt;
+        private Integer toddlerCnt;
+        private Integer kidCnt;
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class AcceptResult {
+
+        private String kindergartenNm;
+        private Integer acceptCnt;
+        private Integer unAcceptCnt;
+        private Integer waitCnt;
     }
 }
