@@ -14,6 +14,7 @@ import clovider.clovider_be.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,7 +39,7 @@ public class QnaController {
     @PostMapping("/qnas")
     public ApiResponse<CustomResult> createQna(
             @AuthEmployee Employee employee,
-            @RequestBody QnaRequest qna) {
+            @Valid @RequestBody QnaRequest qna) {
         return ApiResponse.onSuccess(qnaCommandService.createQna(employee, qna));
     }
 
@@ -47,7 +48,7 @@ public class QnaController {
     @PatchMapping("/qnas/{qnaId}")
     public ApiResponse<QnaUpdateResponse> updateQna(
             @PathVariable Long qnaId,
-            @RequestBody QnaRequest qnaRequest) {
+            @Valid @RequestBody QnaRequest qnaRequest) {
         return ApiResponse.onSuccess(qnaCommandService.updateQna(qnaId, qnaRequest));
     }
 
@@ -81,7 +82,7 @@ public class QnaController {
     public ApiResponse<QnaUpdateResponse> updateQnaAnswer(
             @AuthEmployee Employee admin,
             @PathVariable Long qnaId,
-            @RequestBody QnaAnswerRequest qnaAnswerRequest) {
+            @Valid @RequestBody QnaAnswerRequest qnaAnswerRequest) {
         return ApiResponse.onSuccess(qnaCommandService.updateAnswer(admin, qnaId, qnaAnswerRequest));
     }
     
