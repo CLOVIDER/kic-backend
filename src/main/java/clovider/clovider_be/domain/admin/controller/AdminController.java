@@ -22,7 +22,7 @@ public class AdminController {
     private final MailService mailService;
 
     @Operation(summary = "어린이집 모집 결과 이메일 전송 API", description = "해당 모집의 추첨결과를 이메일로 전송합니다.")
-    @PostMapping("/emails/lotteries/{recruitId}")
+    @PostMapping("/emails/recruits/{recruitId}")
     @Parameter(name = "recruitId", description = "모집 ID", required = true)
     public ApiResponse<String> sendRecruitResult(@PathVariable(name = "recruitId") Long recruitId) {
 
