@@ -17,6 +17,7 @@ public class LotteryResisterResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Result {
+        //lottery_id
         private Long id;
         private boolean registry;  // 등록 여부 필드 추가
     }
