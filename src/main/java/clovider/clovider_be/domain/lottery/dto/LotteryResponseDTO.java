@@ -1,5 +1,6 @@
 package clovider.clovider_be.domain.lottery.dto;
 
+import clovider.clovider_be.domain.enums.Result;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
