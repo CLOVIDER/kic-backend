@@ -101,18 +101,34 @@ public class LotteryServiceImpl implements LotteryService {
         log.info("Updating registry for Lottery with ID: {}", lotteryId);
 
         Lottery lottery = lotteryRepository.findById(lotteryId)
-                .orElseThrow(() -> new ApiException(ErrorStatus._RECRUIT_NOT_FOUND));
+                .orElseThrow(() -> new ApiException(ErrorStatus._LOTTERY_NOT_FOUND));
+        Character registryStatus = lottery.getRegistry();
 
-        lottery.setRegistry('1');
+
         Lottery updatedLottery = lotteryRepository.save(lottery);
 
-        return new LotteryResisterResponseDTO(
-                true,
-                "COMMON200",
-                "Registry updated successfully.",
-                new LotteryResisterResponseDTO.Result(updatedLottery.getId(), updatedLottery.getUpdatedAt(), updatedLottery.getRegistry() == '1')
-        );
+
+        //등록
+        if(registryStatus == '0') {
+            lottery.setRegistry('1');
+            return new LotteryResisterResponseDTO(
+                    "등록되었습니다.",
+                    new LotteryResisterResponseDTO.Result(updatedLottery.getId(), updatedLottery.getRegistry() == '1')
+            );
+        }
+
+        //등록취소
+        else {
+
+            lottery.setRegistry('0');
+            return new LotteryResisterResponseDTO(
+                    "등록이 취소되었습니다.",
+                    new LotteryResisterResponseDTO.Result(updatedLottery.getId(), updatedLottery.getRegistry() == '1')
+            );
+        }
+
     }
+
 
     // 추첨 진행
     public static class WeightedRandomSelection {

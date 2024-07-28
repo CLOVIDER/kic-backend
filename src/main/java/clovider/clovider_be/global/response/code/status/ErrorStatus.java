@@ -53,8 +53,11 @@ public enum ErrorStatus implements BaseErrorCode {
     _QNA_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "QNA400", "qna를 찾을 수 없습니다."),
 
 
-    // 추첨 관련
-    _RECRUIT_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "LOTTERY400", "recruit를 찾을 수 없습니다."),
+    //추첨 관련
+    _LOTTERY_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "LOTTERY400", "lottery를 찾을 수 없습니다."),
+
+    // 모집 관련
+    _RECRUIT_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "RECRUIT400", "recruit를 찾을 수 없습니다."),
 
     // application 관련
     _APPLICATION_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "APPLICATION400", "application를 찾을 수 없습니다.");

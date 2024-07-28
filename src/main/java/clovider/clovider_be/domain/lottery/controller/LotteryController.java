@@ -28,6 +28,8 @@ public class LotteryController {
 
     @PatchMapping("/api/update-registry/{lotteryId}")
     public ApiResponse<LotteryResisterResponseDTO> updateRegistry(@PathVariable Long lotteryId) {
-        return ApiResponse.onSuccess(lotteryService.updateRegistry(lotteryId));
+        return  ApiResponse.onSuccess(lotteryService.updateRegistry(lotteryId));
     }
+
+
 }

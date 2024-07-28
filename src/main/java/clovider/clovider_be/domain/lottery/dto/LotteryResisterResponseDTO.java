@@ -10,8 +10,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LotteryResisterResponseDTO {
-    private boolean isSuccess;
-    private String code;
     private String message;
     private Result result;
 
@@ -20,7 +18,6 @@ public class LotteryResisterResponseDTO {
     @AllArgsConstructor
     public static class Result {
         private Long id;
-        private LocalDateTime createdAt;
         private boolean registry;  // 등록 여부 필드 추가
     }
 }
