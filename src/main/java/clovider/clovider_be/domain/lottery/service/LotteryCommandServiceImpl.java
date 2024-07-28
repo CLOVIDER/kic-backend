@@ -23,7 +23,7 @@ import java.util.*;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class LotteryServiceImpl implements LotteryService {
+public class LotteryCommandServiceImpl implements LotteryCommandService {
 
     private final LotteryRepository lotteryRepository;
     private final RecruitRepository recruitRepository;
