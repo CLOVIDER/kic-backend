@@ -71,19 +71,11 @@ public class Application extends BaseTimeEntity {
     private Employee employee;
 
 
-     @ManyToOne
-     @JoinColumn(name = "recruit_id")
-     private Recruit recruit;
+//     @ManyToOne
+//     @JoinColumn(name = "recruit_id")
+//     private Recruit recruit;
 
-//     @Builder
-//     public Application(ApplicationDto applicationDto) {
-//         this.workYears = applicationDto.getWorkYears();
-//         this.isSingleParent = applicationDto.getIsSingleParent();
-//         this.childrenCnt = applicationDto.getChildrenCnt();
-//         this.isDisability = applicationDto.getIsDisability();
-//         this.isDualIncome = applicationDto.getIsDualIncome();
-//         this.isEmployeeCouple = applicationDto.getIsEmployeeCouple();
-//         this.isSibling = applicationDto.getIsSibling();
+
 
     @OneToMany(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Document> documents = new ArrayList<>();

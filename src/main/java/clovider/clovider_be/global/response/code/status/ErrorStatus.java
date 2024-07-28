@@ -50,11 +50,20 @@ public enum ErrorStatus implements BaseErrorCode {
     _S3_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "S3400", "S3에 존재하지 않는 이미지입니다."),
 
     // qna 관련
-    _QNA_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "QNA400", "qna를 찾을 수 없습니다.");
+    _QNA_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "QNA400", "qna를 찾을 수 없습니다."),
+
+
+    // 추첨 관련
+    _RECRUIT_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "LOTTERY400", "recruit를 찾을 수 없습니다."),
+
+    // application 관련
+    _APPLICATION_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "APPLICATION400", "application를 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;
+
+
 
 
     @Override

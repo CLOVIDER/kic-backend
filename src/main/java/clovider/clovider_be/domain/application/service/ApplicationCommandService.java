@@ -7,6 +7,8 @@ import clovider.clovider_be.domain.application.dto.ApplicationWriteDto;
 import clovider.clovider_be.domain.common.CustomResult;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public interface ApplicationCommandService {
 
@@ -14,4 +16,5 @@ public interface ApplicationCommandService {
     CustomResult applicationUpdate(Long Id, ApplicationUpdateDto applicationUpdateDto);
     CustomResult applicationDelete(Long Id);
     void applicationTempSave(Application application);
+    List<Application> findAllByRecruitId(Long recruitId);
 }

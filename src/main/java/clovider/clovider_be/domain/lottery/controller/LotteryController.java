@@ -3,6 +3,7 @@ package clovider.clovider_be.domain.lottery.controller;
 import clovider.clovider_be.domain.lottery.dto.LotteryResisterResponseDTO;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponseDTO;
 import clovider.clovider_be.domain.lottery.service.LotteryService;
+import clovider.clovider_be.global.response.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,32 +20,14 @@ public class LotteryController {
     }
 
     @PostMapping("/api/admin/lotteries/create/{recruitId}/{applicationId}")
-    public ResponseEntity<LotteryResponseDTO> createLottery(
+    public ApiResponse<LotteryResponseDTO> createLottery(
             @PathVariable Long recruitId,
             @PathVariable Long applicationId) {
-        try {
-            LotteryResponseDTO response = lotteryService.createLottery(recruitId, applicationId);
-            return ResponseEntity.ok(response);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new LotteryResponseDTO(false, "COMMON400", "유효하지 않은 요청입니다.", null));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    new LotteryResponseDTO(false, "COMMON500", "서버 내부 오류", null));
-        }
+        return ApiResponse.onSuccess(lotteryService.createLottery(recruitId, applicationId));
     }
 
     @PatchMapping("/api/update-registry/{lotteryId}")
-    public ResponseEntity<LotteryResisterResponseDTO> updateRegistry(@PathVariable Long lotteryId) {
-        try {
-            LotteryResisterResponseDTO response = lotteryService.updateRegistry(lotteryId);
-            return ResponseEntity.ok(response);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new LotteryResisterResponseDTO(false, "COMMON400", "유효하지 않은 요청입니다.", null));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    new LotteryResisterResponseDTO(false, "COMMON500", "서버 내부 오류", null));
-        }
+    public ApiResponse<LotteryResisterResponseDTO> updateRegistry(@PathVariable Long lotteryId) {
+        return ApiResponse.onSuccess(lotteryService.updateRegistry(lotteryId));
     }
 }

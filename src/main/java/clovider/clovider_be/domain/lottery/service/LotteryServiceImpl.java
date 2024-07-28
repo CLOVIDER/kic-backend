@@ -6,9 +6,12 @@ import clovider.clovider_be.domain.enums.Result;
 import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.lottery.dto.LotteryResisterResponseDTO;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponseDTO;
+import clovider.clovider_be.domain.lottery.dto.WeightCalculationDTO;
 import clovider.clovider_be.domain.lottery.repository.LotteryRepository;
 import clovider.clovider_be.domain.recruit.Recruit;
 import clovider.clovider_be.domain.recruit.repository.RecruitRepository;
+import clovider.clovider_be.global.exception.ApiException;
+import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,27 +35,23 @@ public class LotteryServiceImpl implements LotteryService {
         log.info("Attempting to find Recruit with ID: {}", recruitId);
 
         Recruit recruit = recruitRepository.findById(recruitId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid recruit ID"));
+                .orElseThrow(() -> new ApiException(ErrorStatus._RECRUIT_NOT_FOUND));
         log.info("Recruit: {}", recruit);
 
         Application application = applicationRepository.findById(applicationId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid application ID"));
+                .orElseThrow(() -> new ApiException(ErrorStatus._APPLICATION_NOT_FOUND));
         log.info("Application: {}", application);
 
-        // 모집 ID로 전체 신청자 목록 가져오기
-        List<Application> applications = applicationRepository.findByRecruit(recruit);
+        List<Application> applications = applicationRepository.findAllByRecruitId(recruit.getId());
         log.info("Recruit: {} applications: {}", recruitId, applications);
 
-        // 신청서 ID와 weight를 포함하는 리스트 생성
         List<Map<String, Object>> applicants = new ArrayList<>();
 
         for (Application app : applications) {
             Map<String, Object> applicantData = new HashMap<>();
             applicantData.put("id", app.getId());
-            log.info("Applicant data: {}", applicantData);
 
-            // 신청서의 필드에서 weight 계산
-            double weight = calculateWeight(
+            WeightCalculationDTO weightDTO = new WeightCalculationDTO(
                     app.getWorkYears(),
                     app.getIsSingleParent(),
                     app.getChildrenCnt(),
@@ -61,32 +60,30 @@ public class LotteryServiceImpl implements LotteryService {
                     app.getIsSibling(),
                     app.getIsDualIncome()
             );
-            log.info("Applicant weight: {}", weight);
+
+            double weight = weightDTO.calculateWeight();
             applicantData.put("weight", weight);
             applicants.add(applicantData);
             log.info("Applicant data: {}", applicantData);
         }
 
-        // recruitCnt 가져오기
         int recruitCnt = recruit.getRecruitCnt();
         log.info("RecruitCnt: {}", recruitCnt);
-        // 가중치 기반 추첨 수행
+
         List<Integer> selectedApplicants = WeightedRandomSelection.weightedRandomSelection(applicants, recruitCnt);
         log.info("Selected applicants: {}", selectedApplicants);
 
-        // 선택된 지원자에 현재 신청자가 포함되어 있는지 확인
         boolean isSelected = selectedApplicants.contains(applicationId.intValue());
 
         String result = isSelected ? "당첨" : "낙첨";
 
-        // 추첨 생성
         Lottery lottery = Lottery.builder()
                 .recruit(recruit)
                 .application(application)
-                .rankNo(1)  // 랭크는 임시로 1로 설정 (필요시 수정)
+                .rankNo(1)
                 .result(Result.valueOf(result))
-                .registry('1')  // 등록 여부는 임시로 true로 설정 (필요시 수정)
-                .accept('1')  // 승인 여부는 임시로 true로 설정 (필요시 수정)
+                .registry('1')
+                .accept('1')
                 .build();
 
         Lottery savedLottery = lotteryRepository.save(lottery);
@@ -104,7 +101,7 @@ public class LotteryServiceImpl implements LotteryService {
         log.info("Updating registry for Lottery with ID: {}", lotteryId);
 
         Lottery lottery = lotteryRepository.findById(lotteryId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid lottery ID"));
+                .orElseThrow(() -> new ApiException(ErrorStatus._RECRUIT_NOT_FOUND));
 
         lottery.setRegistry('1');
         Lottery updatedLottery = lotteryRepository.save(lottery);
@@ -115,20 +112,6 @@ public class LotteryServiceImpl implements LotteryService {
                 "Registry updated successfully.",
                 new LotteryResisterResponseDTO.Result(updatedLottery.getId(), updatedLottery.getUpdatedAt(), updatedLottery.getRegistry() == '1')
         );
-    }
-
-    private double calculateWeight(Integer workYears, Character singleParent, Integer childrenCnt, Character disability, Character employeeCouple, Character sibling, Character dualIncome) {
-        double weight = 1.0;
-
-        if (workYears != null && workYears > 0) weight += workYears * 1.0;
-        if (singleParent != null && singleParent == '1') weight += 5.0;
-        if (childrenCnt != null && childrenCnt >= 2) weight += 1.0;
-        if (disability != null && disability == '1') weight += 4.0;
-        if (dualIncome != null && dualIncome == '1') weight += 1.0;
-        if (employeeCouple != null && employeeCouple == '1') weight += 5.0;
-        if (sibling != null && sibling == '1') weight += 2.0;
-
-        return weight;
     }
 
     // 추첨 진행
