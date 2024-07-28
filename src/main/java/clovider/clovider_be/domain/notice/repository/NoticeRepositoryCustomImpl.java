@@ -1,6 +1,7 @@
 package clovider.clovider_be.domain.notice.repository;
 
 import clovider.clovider_be.domain.enums.SearchType;
+import clovider.clovider_be.domain.notice.Notice;
 import clovider.clovider_be.domain.notice.QNotice;
 import clovider.clovider_be.domain.notice.dto.NoticeResponse;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -23,7 +24,7 @@ public class NoticeRepositoryCustomImpl implements NoticeRepositoryCustom {
                 .where(buildPredicate(searchType, keyword))
                 .fetch()
                 .stream()
-                .map(NoticeResponse::toNoticeResponse)
+                .map(Notice::toNoticeResponse)
                 .toList();
     }
 
