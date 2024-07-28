@@ -80,8 +80,6 @@ public class MailServiceImpl implements MailService {
         for (RecruitResult result : results) {
             try {
                 log.info("===================== 메일 전송: To-accountId: " + result.getAccountId());
-                log.info("run() - 현재 스레드 개수 : {}", Thread.activeCount());
-                log.info("Active Thread : " + Thread.currentThread().getName());
                 sendResult(result);
             } catch (MessagingException e) {
                 throw new ApiException(ErrorStatus._MAIL_LOTTERY_RESULT_ERROR);

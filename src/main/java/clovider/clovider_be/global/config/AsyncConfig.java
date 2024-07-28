@@ -1,5 +1,6 @@
 package clovider.clovider_be.global.config;
 
+import clovider.clovider_be.global.exception.CustomAsyncExceptionHandler;
 import java.util.concurrent.Executor;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +26,6 @@ public class AsyncConfig implements AsyncConfigurer {
 
     @Override
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
-        return AsyncConfigurer.super.getAsyncUncaughtExceptionHandler();
+        return new CustomAsyncExceptionHandler();
     }
 }
