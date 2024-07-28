@@ -1,6 +1,7 @@
 package clovider.clovider_be.domain.notice.service;
 
 import clovider.clovider_be.domain.common.CustomPage;
+import clovider.clovider_be.domain.enums.SearchType;
 import clovider.clovider_be.domain.notice.Notice;
 import clovider.clovider_be.domain.notice.dto.NoticeResponse;
 import clovider.clovider_be.domain.notice.dto.NoticeTop3;
@@ -49,4 +50,10 @@ public class NoticeQueryServiceImpl implements NoticeQueryService {
     public List<NoticeTop3> getTop3Notices() {
         return NoticeTop3.from(noticeRepository.findTop3ByOrderByIdDesc());
     }
+
+    @Override
+    public List<NoticeResponse> searchNotices(SearchType type, String keyword) {
+        return noticeRepository.searchNotices(type, keyword);
+    }
+
 }
