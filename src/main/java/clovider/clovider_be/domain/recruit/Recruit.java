@@ -32,6 +32,7 @@ public class Recruit extends BaseTimeEntity {
     @Column(nullable = false)
     private Integer recruitCnt;
 
+    @Enumerated(EnumType.STRING)
     @Column(length = 20, nullable = false)
     private AgeClass ageClass;
 
