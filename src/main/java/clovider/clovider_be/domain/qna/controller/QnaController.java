@@ -3,6 +3,7 @@ package clovider.clovider_be.domain.qna.controller;
 import clovider.clovider_be.domain.common.CustomPage;
 import clovider.clovider_be.domain.common.CustomResult;
 import clovider.clovider_be.domain.employee.Employee;
+import clovider.clovider_be.domain.enums.SearchType;
 import clovider.clovider_be.domain.qna.dto.QnaAnswerRequest;
 import clovider.clovider_be.domain.qna.dto.QnaRequest;
 import clovider.clovider_be.domain.qna.dto.QnaResponse;
@@ -13,7 +14,10 @@ import clovider.clovider_be.global.annotation.AuthEmployee;
 import clovider.clovider_be.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,7 +42,7 @@ public class QnaController {
     @PostMapping("/qnas")
     public ApiResponse<CustomResult> createQna(
             @AuthEmployee Employee employee,
-            @RequestBody QnaRequest qna) {
+            @Valid @RequestBody QnaRequest qna) {
         return ApiResponse.onSuccess(qnaCommandService.createQna(employee, qna));
     }
 
@@ -47,7 +51,7 @@ public class QnaController {
     @PatchMapping("/qnas/{qnaId}")
     public ApiResponse<QnaUpdateResponse> updateQna(
             @PathVariable Long qnaId,
-            @RequestBody QnaRequest qnaRequest) {
+            @Valid @RequestBody QnaRequest qnaRequest) {
         return ApiResponse.onSuccess(qnaCommandService.updateQna(qnaId, qnaRequest));
     }
 
@@ -81,8 +85,20 @@ public class QnaController {
     public ApiResponse<QnaUpdateResponse> updateQnaAnswer(
             @AuthEmployee Employee admin,
             @PathVariable Long qnaId,
-            @RequestBody QnaAnswerRequest qnaAnswerRequest) {
+            @Valid @RequestBody QnaAnswerRequest qnaAnswerRequest) {
         return ApiResponse.onSuccess(qnaCommandService.updateAnswer(admin, qnaId, qnaAnswerRequest));
+    }
+
+    @Operation(summary = "QNA 검색",
+            description = "검색 타입과 키워드를 기반으로 QNA를 검색합니다.",
+            parameters = {
+                    @Parameter(name = "type", description = "검색 타입을 나타내는 Enum 값", example = "TITLE", required = true, in = ParameterIn.QUERY),
+                    @Parameter(name = "keyword", description = "검색할 키워드", example = "공지", required = false, in = ParameterIn.QUERY)
+            })
+    @GetMapping("/qnas/search")
+    public ApiResponse<List<QnaResponse>> searchQnas(
+            @RequestParam SearchType type, @RequestParam(required = false) String keyword) {
+        return ApiResponse.onSuccess(qnaQueryService.searchQnas(type, keyword));
     }
     
 }

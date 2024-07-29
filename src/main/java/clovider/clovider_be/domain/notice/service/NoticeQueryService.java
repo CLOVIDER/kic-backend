@@ -1,6 +1,7 @@
 package clovider.clovider_be.domain.notice.service;
 
 import clovider.clovider_be.domain.common.CustomPage;
+import clovider.clovider_be.domain.enums.SearchType;
 import clovider.clovider_be.domain.notice.Notice;
 import clovider.clovider_be.domain.notice.dto.NoticeResponse;
 import clovider.clovider_be.domain.notice.dto.NoticeTop3;
@@ -17,4 +18,6 @@ public interface NoticeQueryService {
     CustomPage<NoticeResponse> getAllNotices(int page, int size);
 
     List<NoticeTop3> getTop3Notices();
+
+    List<NoticeResponse> searchNotices(SearchType type, String content);
 }
