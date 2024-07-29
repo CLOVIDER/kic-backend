@@ -191,6 +191,37 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
         Recruit recruit = lottery.getRecruit();
         int recruitCnt = recruit.getRecruitCnt();
 
+        List<Map<String, Object>> applicants = createApplicantsList(recruit);
+        Map<String, Object> requestBody = createRequestBody(applicants, lotteryId, recruitCnt);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
+
+
+        try {
+            ResponseEntity<Map> response = restTemplate.exchange(apiUrl, HttpMethod.POST, entity, Map.class);
+            if (response.getBody() != null) {
+                String body = (String) response.getBody().get("body");
+                ObjectMapper objectMapper = new ObjectMapper();
+                Map<String, Object> responseBody = objectMapper.readValue(body, Map.class);
+
+                if (responseBody != null && responseBody.containsKey("probability")) {
+                    return (Double) responseBody.get("probability");
+                } else {
+                    throw new ApiException(ErrorStatus._EXTERNAL_API_ERROR);
+                }
+            } else {
+                throw new ApiException(ErrorStatus._EXTERNAL_API_ERROR);
+            }
+        } catch (Exception e) {
+            log.error("Error occurred while getting percentage: ", e);
+            throw new ApiException(ErrorStatus._EXTERNAL_API_ERROR);
+        }
+    }
+
+    public List<Map<String, Object>> createApplicantsList(Recruit recruit) {
+
         List<Application> applications = lotteryRepository.findAllApplicationByRecruitId(recruit.getId());
 
         List<Map<String, Object>> applicants = new ArrayList<>();
@@ -216,37 +247,17 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
             applicants.add(applicantData);
         }
 
+        return applicants;
+    }
+
+    public Map<String, Object> createRequestBody(List<Map<String, Object>> applicants, Long lotteryId, int recruitCnt) {
+
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("applicants", applicants);
         requestBody.put("target_id", lotteryId);
         requestBody.put("num_selected", recruitCnt);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
-
-
-        try {
-            ResponseEntity<Map> response = restTemplate.exchange(apiUrl, HttpMethod.POST, entity, Map.class);
-            if (response.getBody() != null) {
-                String body = (String) response.getBody().get("body");
-                ObjectMapper objectMapper = new ObjectMapper();
-                Map<String, Object> responseBody = objectMapper.readValue(body, Map.class);
-
-                if (responseBody != null && responseBody.containsKey("probability")) {
-                    return (Double) responseBody.get("probability");
-                } else {
-                    throw new ApiException(ErrorStatus._EXTERNAL_API_ERROR);
-                }
-            } else {
-                throw new ApiException(ErrorStatus._EXTERNAL_API_ERROR);
-            }
-        } catch (Exception e) {
-            log.error("Error occurred while getting percentage: ", e);
-            throw new ApiException(ErrorStatus._EXTERNAL_API_ERROR);
-        }
+        return requestBody;
     }
-
 
 }
