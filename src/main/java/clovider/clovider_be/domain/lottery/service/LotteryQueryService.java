@@ -2,6 +2,7 @@ package clovider.clovider_be.domain.lottery.service;
 
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.AcceptResult;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
+import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitResult;
 import clovider.clovider_be.domain.recruit.Recruit;
 import java.util.List;
 
@@ -15,4 +16,5 @@ public interface LotteryQueryService {
 
     List<AcceptResult> getAcceptStatus(List<Recruit> recruits);
 
+    List<RecruitResult> getRecruitResult(Long recruitId);
 }

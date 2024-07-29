@@ -1,6 +1,8 @@
 package clovider.clovider_be.domain.lottery.dto;
 
+import clovider.clovider_be.domain.lottery.Lottery;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,5 +35,25 @@ public class LotteryResponse {
         private Integer unAcceptCnt;
         @Schema(description = "승인 대기 수")
         private Integer waitCnt;
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class RecruitResult {
+
+        private String accountId;
+        private String result;
+    }
+
+    public static List<RecruitResult> toRecruitResults(List<Lottery> lotteries) {
+
+        return lotteries.stream()
+                .map(lottery -> RecruitResult.builder()
+                        .accountId(lottery.getApplication().getEmployee().getAccountId())
+                        .result(lottery.getResult().getDescription())
+                        .build())
+                .toList();
     }
 }

@@ -1,11 +1,13 @@
 package clovider.clovider_be.domain.admin.controller;
 
-import static clovider.clovider_be.domain.admin.dto.AdminResponse.DashBoard;
 import static clovider.clovider_be.domain.admin.dto.AdminResponse.toDashBoard;
 
+import clovider.clovider_be.domain.admin.dto.AdminResponse.DashBoard;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.AcceptResult;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
+import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitResult;
 import clovider.clovider_be.domain.lottery.service.LotteryQueryService;
+import clovider.clovider_be.domain.mail.service.MailService;
 import clovider.clovider_be.domain.notice.dto.NoticeTop3;
 import clovider.clovider_be.domain.notice.service.NoticeQueryService;
 import clovider.clovider_be.domain.qna.service.QnaQueryService;
@@ -15,10 +17,13 @@ import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruitInfo;
 import clovider.clovider_be.domain.recruit.service.RecruitQueryService;
 import clovider.clovider_be.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,6 +37,7 @@ public class AdminController {
     private final NoticeQueryService noticeQueryService;
     private final RecruitQueryService recruitQueryService;
     private final LotteryQueryService lotteryQueryService;
+    private final MailService mailService;
 
 
     @Operation(summary = "관리자 대시보드 조회", description = "어린이집 모집 통계 정보를 조회합니다.")
@@ -62,5 +68,16 @@ public class AdminController {
         return ApiResponse.onSuccess(
                 toDashBoard(nowRecruitInfo, totalApplication, unAcceptApplication, acceptStatus,
                         noticeTop3, waitQna));
+    }
+
+    @Operation(summary = "어린이집 모집 결과 이메일 전송 API", description = "해당 모집의 추첨결과를 이메일로 전송합니다.")
+    @PostMapping("/emails/recruits/{recruitId}")
+    @Parameter(name = "recruitId", description = "모집 ID", required = true)
+    public ApiResponse<String> sendRecruitResult(@PathVariable(name = "recruitId") Long recruitId) {
+
+        List<RecruitResult> recruitResult = lotteryQueryService.getRecruitResult(recruitId);
+        mailService.sendRecruitResult(recruitResult);
+
+        return ApiResponse.onSuccess("성공적으로 추첨결과가 전송되었습니다.");
     }
 }
