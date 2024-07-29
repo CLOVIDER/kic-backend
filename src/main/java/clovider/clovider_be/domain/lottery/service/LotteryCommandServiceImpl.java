@@ -15,6 +15,7 @@ import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -38,6 +39,9 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
     private final RecruitRepository recruitRepository;
     private final ApplicationRepository applicationRepository;
     private final RestTemplate restTemplate = new RestTemplate();
+
+    @Value("${cloud.aws.lambda.url}")
+    private String apiUrl;
 
     @Override
     public LotteryResponseDTO createLottery(Long recruitId, Long applicationId) {
@@ -222,7 +226,6 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
 
-        String apiUrl = "https://qdvrw5date.execute-api.ap-northeast-2.amazonaws.com/v1/predict";
 
         try {
             ResponseEntity<Map> response = restTemplate.exchange(apiUrl, HttpMethod.POST, entity, Map.class);
