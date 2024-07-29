@@ -14,12 +14,15 @@ import clovider.clovider_be.domain.recruit.dto.RecruitResponse;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruitInfo;
 import clovider.clovider_be.domain.recruit.service.RecruitQueryService;
 import clovider.clovider_be.global.response.ApiResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "관리자 기능 관련 API 명세서")
 @RestController
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
@@ -31,6 +34,7 @@ public class AdminController {
     private final LotteryQueryService lotteryQueryService;
 
 
+    @Operation(summary = "관리자 대시보드 조회", description = "어린이집 모집 통계 정보를 조회합니다.")
     @GetMapping("/dashboards")
     public ApiResponse<DashBoard> getDashboard() {
 

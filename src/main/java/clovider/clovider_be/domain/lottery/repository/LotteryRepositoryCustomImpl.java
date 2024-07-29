@@ -4,10 +4,8 @@ import static clovider.clovider_be.domain.lottery.QLottery.lottery;
 import static clovider.clovider_be.domain.recruit.QRecruit.recruit;
 
 import clovider.clovider_be.domain.enums.Accept;
-import clovider.clovider_be.domain.lottery.dto.LotteryResponse;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.AcceptResult;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
-import clovider.clovider_be.domain.lottery.dto.LotteryResponse.TotalApplication;
 import clovider.clovider_be.domain.recruit.Recruit;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
@@ -78,17 +76,6 @@ public class LotteryRepositoryCustomImpl implements LotteryRepositoryCustom {
                 .fetch();
 
         return extractAcceptResult(results);
-    }
-
-    private List<TotalApplication> extractTotalApplication(List<Tuple> results) {
-
-        return results.stream()
-                .map(tuple -> {
-                    return LotteryResponse.toTotalApplication(
-                            tuple.get(recruit.kindergarten.kindergartenNm),
-                            tuple.get(lottery.count().as("cnt")).intValue());
-                })
-                .toList();
     }
 
     private List<AcceptResult> extractAcceptResult(List<Tuple> results) {
