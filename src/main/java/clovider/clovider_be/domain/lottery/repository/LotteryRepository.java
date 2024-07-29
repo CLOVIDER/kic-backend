@@ -11,8 +11,15 @@ import org.springframework.data.jpa.repository.Query;
 public interface LotteryRepository extends JpaRepository<Lottery, Long>, LotteryRepositoryCustom {
 
     List<Application> findApplicationByRecruitId(Long recruitId);
-    
+
+    @Query("select l.application from Lottery l where l.recruit.id = :recruitId")
+    List<Application> findAllApplicationByRecruitId(@Param("recruitId") Long recruitId);
+
     @Query("select l from Lottery l join fetch l.application join fetch l.application.employee " +
             "where l.recruit.id = :recruitId")
     List<Lottery> findAllByRecruitId(@Param("recruitId") Long recruitId);
+
+    @Query("select l.id from Lottery l where l.application.id = :applicationId")
+    Long findLotteryIdByApplication(@Param("applicationId") Long applicationId);
+
 }

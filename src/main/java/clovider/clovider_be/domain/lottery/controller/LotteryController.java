@@ -39,5 +39,10 @@ public class LotteryController {
         return ApiResponse.onSuccess(lotteryQueryService.getLotteryResult(lotteryId));
     }
 
+    @GetMapping("/recruits/{lotteryId}/percents")
+    public ApiResponse<Double> getPercentage(@PathVariable Long lotteryId) {
+        return ApiResponse.onSuccess(lotteryService.getPercent(lotteryId));
+    }
+
 
 }

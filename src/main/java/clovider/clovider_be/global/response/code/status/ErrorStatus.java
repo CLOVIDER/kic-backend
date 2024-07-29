@@ -61,7 +61,9 @@ public enum ErrorStatus implements BaseErrorCode {
     _RECRUIT_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "RECRUIT400", "recruit를 찾을 수 없습니다."),
 
     // application 관련
-    _APPLICATION_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "APPLICATION400", "application를 찾을 수 없습니다.");
+    _APPLICATION_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "APPLICATION400", "application를 찾을 수 없습니다."),
+
+    _EXTERNAL_API_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "LABMDA400", "LAMBDA 확률 에측 서비스에 연결할 수 없습니다");
 
     private final HttpStatus httpStatus;
     private final String code;
