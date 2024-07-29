@@ -95,5 +95,6 @@ public class Application extends BaseTimeEntity {
         this.isEmployeeCouple = applicationRequest.getIsEmployeeCouple();
         this.isSibling = applicationRequest.getIsSibling();
         this.childName = applicationRequest.getChildName();
+        this.isTemp = 0;
     }
 }

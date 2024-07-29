@@ -21,7 +21,6 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
 
     private final ApplicationRepository applicationRepository;
     private final ApplicationDocumentCommandService applicationDocumentCommandService;
-    private final EmployeeQueryService employeeQueryService;
 
     @Override
     public CustomResult applicationCreate(ApplicationRequest applicationRequest, Employee employee) {
@@ -54,7 +53,6 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
     public CustomResult applicationUpdate(Long Id, ApplicationRequest applicationRequest) {
         Application savedApplication = applicationRepository.findById(Id).orElseThrow();
         savedApplication.update(applicationRequest);
-
         applicationDocumentCommandService.createApplicationDocuments(applicationRequest.getImageUrls(), savedApplication);
 
         return CustomResult.toCustomResult(savedApplication.getId());
@@ -92,10 +90,6 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
         applicationDocumentCommandService.createApplicationDocuments(applicationRequest.getImageUrls(), savedApplication);
 
         return CustomResult.toCustomResult(savedApplication.getId());
-    }
-
-    public List<Application> findAllByRecruitId(Long recruitId) {
-        return applicationRepository.findAllByRecruitId(recruitId);
     }
 
 
