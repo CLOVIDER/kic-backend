@@ -29,7 +29,7 @@ public class QnaQueryServiceImpl implements QnaQueryService {
 
     @Override
     public QnaResponse getQna(Long qnaId) {
-        return Qna.toQnaResponse(qnaRepository.findById(qnaId)
+        return QnaResponse.toQnaResponse(qnaRepository.findById(qnaId)
                 .orElseThrow(() -> new ApiException(ErrorStatus._QNA_NOT_FOUND)));
     }
 
@@ -38,7 +38,7 @@ public class QnaQueryServiceImpl implements QnaQueryService {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<Qna> qnaPage = qnaRepository.findAll(pageRequest);
 
-        Page<QnaResponse> qnaResponsePage = qnaPage.map(Qna::toQnaResponse);
+        Page<QnaResponse> qnaResponsePage = qnaPage.map(QnaResponse::toQnaResponse);
 
         return new CustomPage<>(qnaResponsePage);
     }

@@ -23,7 +23,7 @@ public class QnaRepositoryCustomImpl implements QnaRepositoryCustom{
                 .where(buildPredicate(type,keyword))
                 .fetch()
                 .stream()
-                .map(Qna::toQnaResponse)
+                .map(QnaResponse::toQnaResponse)
                 .toList();
 
     }

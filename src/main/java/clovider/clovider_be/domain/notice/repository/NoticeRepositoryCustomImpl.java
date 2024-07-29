@@ -24,7 +24,7 @@ public class NoticeRepositoryCustomImpl implements NoticeRepositoryCustom {
                 .where(buildPredicate(searchType, keyword))
                 .fetch()
                 .stream()
-                .map(Notice::toNoticeResponse)
+                .map(NoticeResponse::toNoticeResponse)
                 .toList();
     }
 

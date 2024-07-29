@@ -34,7 +34,7 @@ public class NoticeQueryServiceImpl implements NoticeQueryService {
 
         foundNotice.incrementHits();
 
-        return Notice.toNoticeResponse(foundNotice);
+        return NoticeResponse.toNoticeResponse(foundNotice);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class NoticeQueryServiceImpl implements NoticeQueryService {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<Notice> noticePage = noticeRepository.findAll(pageRequest);
 
-        Page<NoticeResponse> noticeResponsePage = noticePage.map(Notice::toNoticeResponse);
+        Page<NoticeResponse> noticeResponsePage = noticePage.map(NoticeResponse::toNoticeResponse);
         return new CustomPage<>(noticeResponsePage);
     }
 

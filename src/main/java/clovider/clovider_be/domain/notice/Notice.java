@@ -85,18 +85,4 @@ public class Notice extends BaseTimeEntity {
         this.hits += 1;
     }
 
-    public static NoticeResponse toNoticeResponse(Notice notice) {
-        List<NoticeImageResponse> noticeImageResponseList = notice.getImages().stream()
-                .map(NoticeImageResponse::toNoticeImageResponse)
-                .toList();
-
-        return NoticeResponse.builder()
-                .noticeId(notice.getId())
-                .title(notice.getTitle())
-                .content(notice.getContent())
-                .hits(notice.getHits())
-                .noticeImageList(noticeImageResponseList)
-                .createdAt(LocalDate.from(notice.getCreatedAt()))
-                .build();
-    }
 }
