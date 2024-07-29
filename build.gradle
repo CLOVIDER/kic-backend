@@ -26,6 +26,8 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'mysql:mysql-connector-java:8.0.29'
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -36,8 +38,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     // security
-     implementation 'org.springframework.boot:spring-boot-starter-security'
-     testImplementation 'org.springframework.security:spring-security-test'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.security:spring-security-test'
 
     // jwt
     implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
@@ -55,6 +57,7 @@ dependencies {
 
     // monitor
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
 
     // mail & thymeleaf
     implementation 'org.springframework.boot:spring-boot-starter-mail'
@@ -77,6 +80,7 @@ task copyGitSubmodule(type: Copy) {
     from './application-config'
     include '*.yml'
     into 'src/main/resources'
+
 }
 
 // Querydsl 설정부

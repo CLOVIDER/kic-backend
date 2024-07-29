@@ -22,7 +22,6 @@ public class NoticeCommandServiceImpl implements NoticeCommandService {
     private final NoticeImageCommandService noticeImageCommandService;
     private final NoticeQueryService noticeQueryService;
     private final EmployeeQueryService employeeQueryService;
-    private final AuthService authService;
 
     public CustomResult createNotice(Employee employee, NoticeRequest request) {
 

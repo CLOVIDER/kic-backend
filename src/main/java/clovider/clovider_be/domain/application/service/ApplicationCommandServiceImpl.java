@@ -9,6 +9,8 @@ import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.employee.service.EmployeeQueryService;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -90,6 +92,10 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
         applicationDocumentCommandService.createApplicationDocuments(applicationRequest.getImageUrls(), savedApplication);
 
         return CustomResult.toCustomResult(savedApplication.getId());
+    }
+
+    public List<Application> findAllByRecruitId(Long recruitId) {
+        return applicationRepository.findAllByRecruitId(recruitId);
     }
 
 

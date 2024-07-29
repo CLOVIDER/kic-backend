@@ -49,16 +49,29 @@ public enum ErrorStatus implements BaseErrorCode {
     // Mail 관련
     _MAIL_CREATE_CODE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "MAIL500", "인증 코드 생성 중 서버 에러가 발생했습니다."),
     _MAIL_WRONG_CODE(HttpStatus.BAD_REQUEST, "MAIL400", "올바른 인증코드가 아닙니다."),
+    _MAIL_LOTTERY_RESULT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "MAIL501", "추첨 결과 메일 전송 중 서버 에러가 발생했습니다."),
 
     // S3 관련
     _S3_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "S3400", "S3에 존재하지 않는 이미지입니다."),
 
     // qna 관련
-    _QNA_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "QNA400", "qna를 찾을 수 없습니다.");
+    _QNA_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "QNA400", "qna를 찾을 수 없습니다."),
+
+
+    //추첨 관련
+    _LOTTERY_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "LOTTERY400", "lottery를 찾을 수 없습니다."),
+
+    // 모집 관련
+    _RECRUIT_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "RECRUIT400", "recruit를 찾을 수 없습니다."),
+
+    // application 관련
+    _APPLICATION_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "APPLICATION400", "application를 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;
+
+
 
 
     @Override
