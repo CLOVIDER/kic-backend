@@ -5,6 +5,7 @@ import static clovider.clovider_be.domain.admin.dto.AdminResponse.toDashBoard;
 import clovider.clovider_be.domain.admin.dto.AdminResponse;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.ApplicationPage;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.DashBoard;
+import clovider.clovider_be.domain.admin.dto.SearchVO;
 import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.application.service.ApplicationQueryService;
 import clovider.clovider_be.domain.lottery.Lottery;
@@ -23,11 +24,13 @@ import clovider.clovider_be.domain.recruit.service.RecruitQueryService;
 import clovider.clovider_be.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -92,21 +95,32 @@ public class AdminController {
 
 
     @Operation(summary = "진행중인 모집의 신청 현황 조회", description = "진행 중인 모집의 모든 신청 내역을 조회합니다.")
+    @Parameters({
+            @Parameter(name = "page", description = "페이지 번호"),
+            @Parameter(name = "size", description = "페이지 크기"),
+            @Parameter(name = "filter", description = "승인 여부 필터링"),
+            @Parameter(name = "q", description = "신청자 아이디 검색")
+    })
     @GetMapping("/recruits/applications")
     public ApiResponse<ApplicationPage> findRecruitsApplications(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
-            @RequestParam(name = "size", defaultValue = "10", required = false) int size) {
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size,
+            @RequestParam(name = "filter", defaultValue = "ALL", required = false) String filter,
+            @RequestParam(name = "q", required = false) String value)
+    {
 
         PageRequest pageRequest = PageRequest.of(page, size);
+        SearchVO searchVO = SearchVO.of(filter, value);
 
         List<Recruit> recruits = recruitQueryService.getNowRecruit();
 
         Page<Lottery> lotteryPage = lotteryQueryService.getNowLotteries(recruits,
-                pageRequest);
+                pageRequest, searchVO);
 
         List<Application> applications = applicationQueryService.getNowApplications(
                 lotteryPage.getContent());
 
         return ApiResponse.onSuccess(AdminResponse.toApplicationPage(lotteryPage, applications));
     }
+
 }

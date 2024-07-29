@@ -1,5 +1,6 @@
 package clovider.clovider_be.domain.lottery.service;
 
+import clovider.clovider_be.domain.admin.dto.SearchVO;
 import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.AcceptResult;
@@ -49,8 +50,8 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
     }
 
     @Override
-    public Page<Lottery> getNowLotteries(List<Recruit> recruits, Pageable pageable) {
+    public Page<Lottery> getNowLotteries(List<Recruit> recruits, Pageable pageable, SearchVO searchVO) {
 
-        return lotteryRepository.findAllByRecruits(recruits, pageable);
+        return lotteryRepository.findAllByRecruits(recruits, pageable, searchVO);
     }
 }

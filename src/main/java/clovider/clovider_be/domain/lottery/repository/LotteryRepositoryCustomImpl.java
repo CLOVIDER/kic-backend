@@ -1,10 +1,11 @@
 package clovider.clovider_be.domain.lottery.repository;
 
+import static clovider.clovider_be.domain.application.QApplication.application;
+import static clovider.clovider_be.domain.employee.QEmployee.employee;
 import static clovider.clovider_be.domain.lottery.QLottery.lottery;
 import static clovider.clovider_be.domain.recruit.QRecruit.recruit;
 
-import clovider.clovider_be.domain.application.QApplication;
-import clovider.clovider_be.domain.employee.QEmployee;
+import clovider.clovider_be.domain.admin.dto.SearchVO;
 import clovider.clovider_be.domain.enums.Accept;
 import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.AcceptResult;
@@ -12,6 +13,7 @@ import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
 import clovider.clovider_be.domain.recruit.Recruit;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -86,10 +88,8 @@ public class LotteryRepositoryCustomImpl implements LotteryRepositoryCustom {
     }
 
     @Override
-    public Page<Lottery> findAllByRecruits(List<Recruit> recruits, Pageable pageable) {
-
-        QApplication application = QApplication.application;
-        QEmployee employee = QEmployee.employee;
+    public Page<Lottery> findAllByRecruits(List<Recruit> recruits, Pageable pageable,
+            SearchVO searchVO) {
 
         // 1단계: 페이징 조회 - all 신청서 아이디로 추첨 페이징 조회
         List<Lottery> content = jpaQueryFactory
@@ -97,6 +97,8 @@ public class LotteryRepositoryCustomImpl implements LotteryRepositoryCustom {
                 .from(lottery)
                 .join(lottery.application, application).fetchJoin()
                 .join(lottery.application.employee, employee).fetchJoin()
+                .where(lottery.recruit.in(recruits), searchEmployee(searchVO.value()),
+                        filterAccept(searchVO.filter()))
                 .orderBy(lottery.id.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -108,6 +110,16 @@ public class LotteryRepositoryCustomImpl implements LotteryRepositoryCustom {
                 .from(lottery);
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
+    }
+
+    private BooleanExpression searchEmployee(String value) {
+
+        return value != null ? employee.accountId.containsIgnoreCase(value) : null;
+    }
+
+    private BooleanExpression filterAccept(String filter) {
+
+        return !filter.equals("ALL") ? lottery.isAccept.eq(Accept.valueOf(filter)) : null;
     }
 
 

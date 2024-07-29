@@ -1,5 +1,6 @@
 package clovider.clovider_be.domain.lottery.repository;
 
+import clovider.clovider_be.domain.admin.dto.SearchVO;
 import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.AcceptResult;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
@@ -20,5 +21,5 @@ public interface LotteryRepositoryCustom {
 
     List<AcceptResult> findAcceptStatus(List<Recruit> recruits);
 
-    Page<Lottery> findAllByRecruits(List<Recruit> recruits, Pageable pageable);
+    Page<Lottery> findAllByRecruits(List<Recruit> recruits, Pageable pageable, SearchVO searchVO);
 }

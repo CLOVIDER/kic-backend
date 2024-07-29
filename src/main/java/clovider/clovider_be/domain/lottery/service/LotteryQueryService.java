@@ -1,5 +1,6 @@
 package clovider.clovider_be.domain.lottery.service;
 
+import clovider.clovider_be.domain.admin.dto.SearchVO;
 import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.AcceptResult;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
@@ -21,6 +22,6 @@ public interface LotteryQueryService {
 
     List<RecruitResult> getRecruitResult(Long recruitId);
 
-    Page<Lottery> getNowLotteries(List<Recruit> recruits, Pageable pageable);
+    Page<Lottery> getNowLotteries(List<Recruit> recruits, Pageable pageable, SearchVO searchVO);
 
 }
