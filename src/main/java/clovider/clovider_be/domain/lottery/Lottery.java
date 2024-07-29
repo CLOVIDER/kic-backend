@@ -2,6 +2,7 @@ package clovider.clovider_be.domain.lottery;
 
 import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.common.BaseTimeEntity;
+import clovider.clovider_be.domain.enums.Accept;
 import clovider.clovider_be.domain.enums.Result;
 import clovider.clovider_be.domain.recruit.Recruit;
 import jakarta.persistence.*;
@@ -38,7 +39,8 @@ public class Lottery extends BaseTimeEntity {
     @Column(nullable = false, length = 1)
     private Character isRegistry;
 
-    @Column(nullable = false, length = 1)
-    private Character isAccept;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Accept isAccept;
     
 }

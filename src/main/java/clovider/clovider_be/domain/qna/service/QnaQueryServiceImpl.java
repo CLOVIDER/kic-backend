@@ -43,4 +43,8 @@ public class QnaQueryServiceImpl implements QnaQueryService {
         return new CustomPage<>(qnaResponsePage);
     }
 
+    @Override
+    public Integer getWaitQna() {
+        return qnaRepository.countAllByAnswerIsNull();
+    }
 }

@@ -3,9 +3,11 @@ package clovider.clovider_be.domain.notice.service;
 import clovider.clovider_be.domain.common.CustomPage;
 import clovider.clovider_be.domain.notice.Notice;
 import clovider.clovider_be.domain.notice.dto.NoticeResponse;
+import clovider.clovider_be.domain.notice.dto.NoticeTop3;
 import clovider.clovider_be.domain.notice.repository.NoticeRepository;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -43,4 +45,8 @@ public class NoticeQueryServiceImpl implements NoticeQueryService {
         return new CustomPage<>(noticeResponsePage);
     }
 
+    @Override
+    public List<NoticeTop3> getTop3Notices() {
+        return NoticeTop3.from(noticeRepository.findTop3ByOrderByIdDesc());
+    }
 }
