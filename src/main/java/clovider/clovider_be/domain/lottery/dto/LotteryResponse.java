@@ -25,9 +25,14 @@ public class LotteryResponse {
 
         private String kindergartenNm;
         private Integer totalCnt;
-        private Integer infantCnt;
-        private Integer toddlerCnt;
-        private Integer kidCnt;
+    }
+
+    public static TotalApplication toTotalApplication(String name, Integer count) {
+
+        return TotalApplication.builder()
+                .kindergartenNm(name)
+                .totalCnt(count)
+                .build();
     }
 
     @Builder

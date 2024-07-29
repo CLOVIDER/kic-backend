@@ -5,7 +5,6 @@ import static clovider.clovider_be.domain.admin.dto.AdminResponse.toDashBoard;
 
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.AcceptResult;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
-import clovider.clovider_be.domain.lottery.dto.LotteryResponse.TotalApplication;
 import clovider.clovider_be.domain.lottery.service.LotteryQueryService;
 import clovider.clovider_be.domain.notice.dto.NoticeTop3;
 import clovider.clovider_be.domain.notice.service.NoticeQueryService;
@@ -41,10 +40,10 @@ public class AdminController {
         NowRecruitInfo nowRecruitInfo = RecruitResponse.toNowRecruitInfo(recruits, recruitRates);
 
         // 총 신청자 수
-        List<TotalApplication> totalApplication = lotteryQueryService.getTotalApplication(recruits);
+        Long totalApplication = lotteryQueryService.getTotalApplication(recruits);
 
         // 승인 대기 수
-        List<TotalApplication> unAcceptApplication = lotteryQueryService.getUnAcceptApplication(
+        Long unAcceptApplication = lotteryQueryService.getUnAcceptApplication(
                 recruits);
 
         // 신청 현황
