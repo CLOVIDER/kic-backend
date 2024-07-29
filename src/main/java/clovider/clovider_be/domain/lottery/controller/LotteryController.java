@@ -8,6 +8,7 @@ import clovider.clovider_be.domain.lottery.service.LotteryQueryService;
 import clovider.clovider_be.global.response.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api")

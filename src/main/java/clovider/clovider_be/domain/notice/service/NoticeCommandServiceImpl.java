@@ -8,11 +8,8 @@ import clovider.clovider_be.domain.notice.dto.NoticeRequest;
 import clovider.clovider_be.domain.notice.dto.NoticeUpdateResponse;
 import clovider.clovider_be.domain.notice.repository.NoticeRepository;
 import clovider.clovider_be.domain.noticeImage.service.NoticeImageCommandService;
-import clovider.clovider_be.global.auth.service.AuthService;
-import clovider.clovider_be.global.security.CustomUserDetails;
+import clovider.clovider_be.domain.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +22,6 @@ public class NoticeCommandServiceImpl implements NoticeCommandService {
     private final NoticeImageCommandService noticeImageCommandService;
     private final NoticeQueryService noticeQueryService;
     private final EmployeeQueryService employeeQueryService;
-    private final AuthService authService;
 
     public CustomResult createNotice(Employee employee, NoticeRequest request) {
 
