@@ -4,6 +4,7 @@ import static clovider.clovider_be.domain.lottery.QLottery.lottery;
 import static clovider.clovider_be.domain.recruit.QRecruit.recruit;
 
 import clovider.clovider_be.domain.enums.Accept;
+import clovider.clovider_be.domain.lottery.dto.LotteryResponse;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.AcceptResult;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.TotalApplication;
@@ -42,35 +43,25 @@ public class LotteryRepositoryCustomImpl implements LotteryRepositoryCustom {
     }
 
     @Override
-    public List<TotalApplication> findTotalApplication(List<Recruit> recruits) {
+    public Long findTotalApplication(List<Recruit> recruits) {
 
-        List<Tuple> results = jpaQueryFactory
-                .select(recruit.kindergarten.kindergartenNm,
-                        recruit.ageClass,
-                        lottery.count().as("cnt"))
+        return jpaQueryFactory
+                .select(lottery.count().as("cnt"))
                 .from(lottery)
                 .join(lottery.recruit, recruit)
                 .where(lottery.recruit.in(recruits))
-                .groupBy(recruit.kindergarten.id, recruit.ageClass)
-                .fetch();
-
-        return extractTotalApplication(results);
+                .fetchFirst();
     }
 
     @Override
-    public List<TotalApplication> findUnAcceptApplication(List<Recruit> recruits) {
+    public Long findUnAcceptApplication(List<Recruit> recruits) {
 
-        List<Tuple> results = jpaQueryFactory
-                .select(recruit.kindergarten.kindergartenNm,
-                        recruit.ageClass,
-                        lottery.count().as("cnt"))
+        return jpaQueryFactory
+                .select(lottery.count().as("cnt"))
                 .from(lottery)
                 .join(lottery.recruit, recruit)
                 .where(lottery.recruit.in(recruits).and(lottery.isAccept.eq(Accept.WAIT)))
-                .groupBy(recruit.kindergarten.id, recruit.ageClass)
-                .fetch();
-
-        return extractTotalApplication(results);
+                .fetchFirst();
     }
 
     @Override
@@ -91,34 +82,13 @@ public class LotteryRepositoryCustomImpl implements LotteryRepositoryCustom {
 
     private List<TotalApplication> extractTotalApplication(List<Tuple> results) {
 
-        Map<String, TotalApplication> applicationMap = new HashMap<>();
-
-        for (Tuple tuple : results) {
-            String kdgNm = tuple.get(recruit.kindergarten.kindergartenNm);
-            String ageClass = tuple.get(recruit.ageClass).toString();
-            int count = tuple.get(lottery.count().as("cnt")).intValue();
-
-            TotalApplication application = applicationMap.computeIfAbsent(kdgNm, nm ->
-                    TotalApplication.builder()
-                            .kindergartenNm(nm)
-                            .totalCnt(0)
-                            .infantCnt(0)
-                            .toddlerCnt(0)
-                            .kidCnt(0)
-                            .build()
-            );
-
-            TotalApplication updatedApplication = TotalApplication.builder()
-                    .kindergartenNm(application.getKindergartenNm())
-                    .totalCnt(application.getTotalCnt() + count)
-                    .infantCnt(ageClass.equals("INFANT") ? count : application.getInfantCnt())
-                    .toddlerCnt(ageClass.equals("TODDLER") ? count : application.getToddlerCnt())
-                    .kidCnt(ageClass.equals("KID") ? count : application.getKidCnt())
-                    .build();
-            applicationMap.put(kdgNm, updatedApplication);
-        }
-
-        return new ArrayList<>(applicationMap.values());
+        return results.stream()
+                .map(tuple -> {
+                    return LotteryResponse.toTotalApplication(
+                            tuple.get(recruit.kindergarten.kindergartenNm),
+                            tuple.get(lottery.count().as("cnt")).intValue());
+                })
+                .toList();
     }
 
     private List<AcceptResult> extractAcceptResult(List<Tuple> results) {
