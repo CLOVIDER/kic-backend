@@ -36,6 +36,7 @@ public class Lottery extends BaseTimeEntity {
     @Column(length = 15, nullable = false)
     private Result result;
 
+    @Setter
     @Column(nullable = false, length = 1)
     private Character isRegistry;
 

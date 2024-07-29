@@ -12,6 +12,8 @@ import clovider.clovider_be.domain.employee.service.EmployeeQueryService;
 import jakarta.transaction.Transactional;
 import java.net.Authenticator;
 import java.time.LocalDate;
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -70,6 +72,10 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
     @Override
     public void applicationTempSave(Application application) {
 
+    }
+
+    public List<Application> findAllByRecruitId(Long recruitId) {
+        return applicationRepository.findAllByRecruitId(recruitId);
     }
 
 

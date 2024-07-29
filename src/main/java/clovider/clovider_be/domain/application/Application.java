@@ -4,6 +4,7 @@ import clovider.clovider_be.domain.application.dto.ApplicationUpdateDto;
 import clovider.clovider_be.domain.common.BaseTimeEntity;
 import clovider.clovider_be.domain.document.Document;
 import clovider.clovider_be.domain.employee.Employee;
+import clovider.clovider_be.domain.recruit.Recruit;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -91,5 +92,6 @@ public class Application extends BaseTimeEntity {
         this.isEmployeeCouple = applicationUpdateDto.getIsEmployeeCouple();
         this.isSibling = applicationUpdateDto.getIsSibling();
         this.childName = applicationUpdateDto.getChildName();
+
     }
 }
