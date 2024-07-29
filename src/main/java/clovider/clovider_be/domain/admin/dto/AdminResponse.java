@@ -53,12 +53,14 @@ public class AdminResponse {
                 .build();
     }
 
+    @Schema(description = "신청내역 페이징 DTO")
     @Builder
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
     public static class ApplicationPage {
 
+        @Schema(description = "신청내역 데이터 리스트")
         private List<ApplicationList> content;
         private int totalPage;
         private long totalElements;
@@ -75,17 +77,22 @@ public class AdminResponse {
     @NoArgsConstructor
     public static class ApplicationList {
 
+        @Schema(description = "신청서 작성일", example = "2024.07.25")
         private String createdAt;
+        @Schema(description = "신청자 아이디", example = "rlagusrua258")
         private String accountId;
+        @Schema(description = "신청자 사내 번호", example = "201930303")
         private String employeeNo;
+        @Schema(description = "신청서 ID", example = "1")
         private Long applicationId;
+        @Schema(description = "신청서 승인여부", example = "승인")
         private String isAccept;
     }
 
     public static ApplicationList toApplicationList(Lottery lottery, Application application) {
 
         return ApplicationList.builder()
-                .createdAt(TimeUtil.formattedDateTime(application.getCreatedAt()))
+                .createdAt(TimeUtil.formattedDate(application.getCreatedAt()))
                 .accountId(application.getEmployee().getAccountId())
                 .employeeNo(application.getEmployee().getEmployeeNo())
                 .applicationId(application.getId())

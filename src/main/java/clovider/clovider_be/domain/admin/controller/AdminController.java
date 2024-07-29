@@ -91,6 +91,7 @@ public class AdminController {
     }
 
 
+    @Operation(summary = "진행중인 모집의 신청 현황 조회", description = "진행 중인 모집의 모든 신청 내역을 조회합니다.")
     @GetMapping("/recruits/applications")
     public ApiResponse<ApplicationPage> findRecruitsApplications(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
