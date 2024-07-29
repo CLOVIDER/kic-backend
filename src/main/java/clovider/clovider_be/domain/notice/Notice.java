@@ -22,12 +22,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @Getter
+@DynamicInsert
 @Table(name = "notice_tb")
 public class Notice extends BaseTimeEntity {
 
@@ -46,7 +49,8 @@ public class Notice extends BaseTimeEntity {
     private String content;
 
     @Column(nullable = false)
-    private int hits = 0;
+    @ColumnDefault("'0'")
+    private int hits;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_id", nullable = false)
