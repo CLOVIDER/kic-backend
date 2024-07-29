@@ -4,6 +4,8 @@ import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.application.dto.ApplicationReadDto;
 import clovider.clovider_be.domain.application.repository.ApplicationRepository;
 import clovider.clovider_be.domain.employee.repository.EmployeeRepository;
+import clovider.clovider_be.domain.lottery.Lottery;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,4 +29,11 @@ public class ApplicationQueryServiceImpl implements ApplicationQueryService {
     @Override
     public void applicationPagination()
     {}
+
+    @Override
+    public List<Application> getNowApplications(List<Lottery> lotteries) {
+        return lotteries.stream()
+                .map(Lottery::getApplication)
+                .toList();
+    }
 }
