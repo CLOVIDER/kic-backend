@@ -44,7 +44,7 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
                 .orElseThrow(() -> new ApiException(ErrorStatus._APPLICATION_NOT_FOUND));
         log.info("Application: {}", application);
 
-        List<Application> applications = applicationRepository.findAllByRecruitId(recruit.getId());
+        List<Application> applications = lotteryRepository.findApplicationByRecruitId(recruit.getId());
         log.info("Recruit: {} applications: {}", recruitId, applications);
 
         List<Map<String, Object>> applicants = new ArrayList<>();

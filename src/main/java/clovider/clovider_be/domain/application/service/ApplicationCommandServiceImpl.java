@@ -7,10 +7,10 @@ import clovider.clovider_be.domain.application.repository.ApplicationRepository;
 import clovider.clovider_be.domain.common.CustomResult;
 import clovider.clovider_be.domain.document.service.ApplicationDocumentCommandService;
 import clovider.clovider_be.domain.employee.Employee;
-import clovider.clovider_be.domain.employee.repository.EmployeeRepository;
 import clovider.clovider_be.domain.employee.service.EmployeeQueryService;
+import clovider.clovider_be.domain.lottery.repository.LotteryRepository;
 import jakarta.transaction.Transactional;
-import java.net.Authenticator;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 public class ApplicationCommandServiceImpl implements ApplicationCommandService {
 
     private final ApplicationRepository applicationRepository;
+    private final LotteryRepository lotteryRepository;
     private final ApplicationDocumentCommandService applicationDocumentCommandService;
     private final EmployeeQueryService employeeQueryService;
 
@@ -75,7 +76,7 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
     }
 
     public List<Application> findAllByRecruitId(Long recruitId) {
-        return applicationRepository.findAllByRecruitId(recruitId);
+        return lotteryRepository.findApplicationByRecruitId(recruitId);
     }
 
 
