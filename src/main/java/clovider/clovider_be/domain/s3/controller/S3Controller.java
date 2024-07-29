@@ -29,6 +29,15 @@ public class S3Controller {
         return s3Service.uploadImage(file, domainName);
     }
 
+    @Operation(summary = "문서 업로드", description = "새로운 문서를 업로드합니다.")
+    @PostMapping("/upload/document")
+    public String createAndUploadDocument(
+        @Parameter(description = "업로드할 도큐먼트 파일", required = true, schema = @Schema(type = "string", format = "binary"))
+        @RequestParam("file") MultipartFile file,
+        @Parameter(description = "해당 도큐먼트의 신청서 아이디", required = true)
+        @RequestParam("applicationId") String applicationId) {
+        return s3Service.uploadFile(file, applicationId);
+    }
 
 
 
