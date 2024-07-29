@@ -19,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
+import static clovider.clovider_be.domain.enums.Accept.UNACCEPT;
+
 @Slf4j
 @Service
 @Transactional
@@ -82,8 +84,8 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
                 .application(application)
                 .rankNo(1)
                 .result(Result.valueOf(result))
-                .registry('1')
-                .accept('1')
+                .isRegistry('1')
+                .isAccept(UNACCEPT)
                 .build();
 
         Lottery savedLottery = lotteryRepository.save(lottery);
@@ -102,7 +104,7 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
 
         Lottery lottery = lotteryRepository.findById(lotteryId)
                 .orElseThrow(() -> new ApiException(ErrorStatus._LOTTERY_NOT_FOUND));
-        Character registryStatus = lottery.getRegistry();
+        Character registryStatus = lottery.getIsRegistry();
 
 
         Lottery updatedLottery = lotteryRepository.save(lottery);
@@ -110,20 +112,20 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
 
         //등록
         if(registryStatus == '0') {
-            lottery.setRegistry('1');
+            lottery.setIsRegistry('1');
             return new LotteryResisterResponseDTO(
                     "등록되었습니다.",
-                    new LotteryResisterResponseDTO.Result(updatedLottery.getId(), updatedLottery.getRegistry() == '1')
+                    new LotteryResisterResponseDTO.Result(updatedLottery.getId(), updatedLottery.getIsRegistry() == '1')
             );
         }
 
         //등록취소
         else {
 
-            lottery.setRegistry('0');
+            lottery.setIsRegistry('0');
             return new LotteryResisterResponseDTO(
                     "등록이 취소되었습니다.",
-                    new LotteryResisterResponseDTO.Result(updatedLottery.getId(), updatedLottery.getRegistry() == '1')
+                    new LotteryResisterResponseDTO.Result(updatedLottery.getId(), updatedLottery.getIsRegistry() == '1')
             );
         }
 
