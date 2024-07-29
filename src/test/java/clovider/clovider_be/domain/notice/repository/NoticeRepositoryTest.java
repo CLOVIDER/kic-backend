@@ -6,8 +6,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.employee.repository.EmployeeRepository;
 import clovider.clovider_be.domain.enums.Role;
+import clovider.clovider_be.domain.enums.SearchType;
 import clovider.clovider_be.domain.notice.Notice;
 import clovider.clovider_be.domain.notice.dto.NoticeRequest;
+import clovider.clovider_be.domain.notice.dto.NoticeResponse;
 import clovider.clovider_be.domain.noticeImage.NoticeImage;
 import clovider.clovider_be.domain.noticeImage.repository.NoticeImageRepository;
 import clovider.clovider_be.global.config.QuerydslConfig;
@@ -15,6 +17,7 @@ import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -159,6 +162,64 @@ class NoticeRepositoryTest {
         assertFalse(noticeRepository.findById(savedNotice.getId()).isPresent());
     }
 
+    @Test
+    @DisplayName("공지사항 검색 테스트")
+    public void searchNoticeTest() {
+        // given
+        Notice notice1 = Notice.builder()
+                .title("공지사항 제목")
+                .content("공지사항 내용")
+                .admin(admin)
+                .build();
+        Notice savedNotice = noticeRepository.save(notice1);
+
+        NoticeImage image1 = NoticeImage.builder()
+                .image("http://example.com/image1.jpg")
+                .notice(savedNotice)
+                .build();
+        NoticeImage image2 = NoticeImage.builder()
+                .image("http://example.com/image2.jpg")
+                .notice(savedNotice)
+                .build();
+
+        savedNotice.getImages().add(image1);
+        savedNotice.getImages().add(image2);
+
+        Notice notice2 = Notice.builder()
+                .title("공지사항 제목2")
+                .content("공지사항 내용2")
+                .admin(admin)
+                .build();
+        Notice savedNotice2 = noticeRepository.save(notice2);
+
+        NoticeImage image3 = NoticeImage.builder()
+                .image("http://example.com/image3.jpg")
+                .notice(savedNotice)
+                .build();
+        NoticeImage image4 = NoticeImage.builder()
+                .image("http://example.com/image4.jpg")
+                .notice(savedNotice)
+                .build();
+
+        savedNotice2.getImages().add(image3);
+        savedNotice2.getImages().add(image4);
+
+        // when
+        List<NoticeResponse> searchedNotices = noticeRepository.searchNotices(SearchType.TITLE, "공지사항");
+
+        // then
+        assertThat(searchedNotices).isNotEmpty();
+        assertThat(searchedNotices).hasSize(2);
+
+        List<String> titles = searchedNotices.stream()
+                .map(NoticeResponse::getTitle)
+                .collect(Collectors.toList());
+
+        assertThat(titles).contains("공지사항 제목");
+
+        assertThat(searchedNotices.stream().anyMatch(n -> n.getNoticeImageList().size() == 2)).isTrue();
+
+    }
 
 
 }
