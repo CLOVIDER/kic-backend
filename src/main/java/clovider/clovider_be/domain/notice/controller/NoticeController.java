@@ -58,6 +58,7 @@ public class NoticeController {
             @Valid @RequestBody NoticeRequest noticeRequest) {
         return ApiResponse.onSuccess(noticeCommandService.createNotice(employee, noticeRequest));
     }
+
     @Operation(summary = "공지사항 수정", description = "특정 공지사항을 수정합니다.")
     @Parameter(name = "noticeId", description = "수정할 공지사항 ID", required = true, example = "1")
     @PatchMapping("/admin/notices/{noticeId}")
