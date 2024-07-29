@@ -1,15 +1,12 @@
 package clovider.clovider_be.domain.lottery.service;
 
-import clovider.clovider_be.domain.application.repository.ApplicationRepository;
 import clovider.clovider_be.domain.lottery.Lottery;
-import clovider.clovider_be.domain.lottery.dto.LotteryResponseDTO;
 import clovider.clovider_be.domain.lottery.dto.LotteryResultResponseDTO;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.AcceptResult;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitResult;
 import clovider.clovider_be.domain.lottery.repository.LotteryRepository;
-import clovider.clovider_be.domain.recruit.repository.RecruitRepository;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import clovider.clovider_be.domain.recruit.Recruit;
