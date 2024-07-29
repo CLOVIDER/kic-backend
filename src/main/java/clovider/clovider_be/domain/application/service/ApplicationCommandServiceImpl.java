@@ -22,10 +22,8 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
     private final EmployeeQueryService employeeQueryService;
 
     @Override
-    public CustomResult applicationCreate(ApplicationRequest applicationRequest) {
+    public CustomResult applicationCreate(ApplicationRequest applicationRequest, Employee employee) {
 
-        // TODO: 토큰으로 유저정보 사용하기
-        Employee employee = employeeQueryService.getEmployee(1L);
 
         Application savedApplication = applicationRepository.save(
                 Application.builder()
@@ -44,7 +42,8 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
 
         applicationDocumentCommandService.createApplicationDocuments(applicationRequest.getImageUrls(), savedApplication);
 
-        //TODO: 추첨 테이블에 들어가는 로직 cnrk해야함
+        //추첨 테이블에 들어가는 메소드 호출, 이후 주석 풀고 적용 예정
+//        applicationRequest.getRecruitList().forEach(item -> createLottery(savedApplication.getId(), item));
 
         return CustomResult.toCustomResult(savedApplication.getId());
     }
@@ -64,13 +63,14 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
         Application savedApplication = applicationRepository.findById(Id).orElseThrow();
         applicationRepository.delete(savedApplication);
 
+        //TODO: 추첨 테이블에서 값 삭제되는 메소드 불러와야함
+
         return CustomResult.toCustomResult(savedApplication.getId());
     }
 
     @Override
-    public CustomResult applicationTempSave(ApplicationRequest applicationRequest) {
-        // TODO: 토큰으로 유저정보 사용하기
-        Employee employee = employeeQueryService.getEmployee(1L);
+    public CustomResult applicationTempSave(ApplicationRequest applicationRequest, Employee employee) {
+
 
         Application savedApplication = applicationRepository.save(
                 Application.builder()

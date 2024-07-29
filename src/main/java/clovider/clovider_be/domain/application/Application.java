@@ -4,6 +4,7 @@ import clovider.clovider_be.domain.application.dto.ApplicationRequest;
 import clovider.clovider_be.domain.common.BaseTimeEntity;
 import clovider.clovider_be.domain.document.Document;
 import clovider.clovider_be.domain.employee.Employee;
+import clovider.clovider_be.domain.lottery.Lottery;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -79,6 +80,9 @@ public class Application extends BaseTimeEntity {
     @JoinColumn(name = "employee_id", nullable = false)
     @JsonIgnore
     private Employee employee;
+
+    @OneToMany(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Lottery> lotteries;
 
     @OneToMany(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Document> documents = new ArrayList<>();

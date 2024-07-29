@@ -49,8 +49,7 @@ public class ApplicationResponse {
         return ApplicationResponse.builder()
                 .id(application.getId())
                 .employee(application.getEmployee())
-                //TODO: 수정
-//                .lotteries(application.getLotteries())
+                .lotteries(application.getLotteries())
                 .workYears(application.getWorkYears())
                 .isSingleParent(application.getIsSingleParent())
                 .isChildrenCnt(application.getChildrenCnt())

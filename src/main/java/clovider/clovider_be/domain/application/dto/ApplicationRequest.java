@@ -1,5 +1,6 @@
 package clovider.clovider_be.domain.application.dto;
 
+import clovider.clovider_be.domain.recruit.Recruit;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,5 +19,6 @@ public class ApplicationRequest {
     private Character isSibling;
     private String childName;
 
+    private List<Recruit> recruitList;
     private List<String> imageUrls;
 }

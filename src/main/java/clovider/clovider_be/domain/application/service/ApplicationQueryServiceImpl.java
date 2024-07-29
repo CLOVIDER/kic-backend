@@ -4,6 +4,7 @@ import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.application.dto.ApplicationResponse;
 import clovider.clovider_be.domain.application.repository.ApplicationRepository;
 import clovider.clovider_be.domain.common.CustomPage;
+import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.employee.repository.EmployeeRepository;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
@@ -19,11 +20,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class ApplicationQueryServiceImpl implements ApplicationQueryService {
 
     private final ApplicationRepository applicationRepository;
-    private final EmployeeRepository employeeRepository;
+
+    @Override
+    public ApplicationResponse applicationRead(Employee employee){
+        Application savedApplication = applicationRepository.findFirstByEmployeeOrderByCreatedAtDesc(employee).orElseThrow(
+                () -> new ApiException(ErrorStatus._APPLICATION_NOT_FOUND)
+        );
+
+        return ApplicationResponse.toEntity(savedApplication);
+    }
 
 
     @Override
-    public ApplicationResponse applicationRead(Long Id){ //applicationId 기반 말고 유저 기반 정보를 가져오는 것이 필요
+    public ApplicationResponse applicationIdRead(Long Id){ //applicationId 기반 말고 유저 기반 정보를 가져오는 것이 필요
         Application savedApplication = applicationRepository.findById(Id).orElseThrow(
                 () -> new ApiException(ErrorStatus._APPLICATION_NOT_FOUND)
         );

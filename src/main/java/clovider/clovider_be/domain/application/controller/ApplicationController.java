@@ -6,8 +6,9 @@ import clovider.clovider_be.domain.application.service.ApplicationCommandService
 import clovider.clovider_be.domain.application.service.ApplicationQueryService;
 import clovider.clovider_be.domain.common.CustomPage;
 import clovider.clovider_be.domain.common.CustomResult;
+import clovider.clovider_be.domain.employee.Employee;
+import clovider.clovider_be.global.annotation.AuthEmployee;
 import clovider.clovider_be.global.response.ApiResponse;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,23 +33,26 @@ public class ApplicationController {
     private ApplicationQueryService applicationQueryService;
 
     @PostMapping("/applications")
-    public ApiResponse<CustomResult> createApplication(@RequestBody ApplicationRequest dto) {
-        return ApiResponse.onSuccess(applicationCommandService.applicationCreate(dto));
+    public ApiResponse<CustomResult> createApplication(@RequestBody ApplicationRequest dto, @AuthEmployee
+            Employee employee) {
+        return ApiResponse.onSuccess(applicationCommandService.applicationCreate(dto, employee));
     }
 
     @PatchMapping("/applications/{applicationId}")
-    public ApiResponse<CustomResult> updateApplication(@PathVariable Long applicationId, @RequestBody ApplicationRequest dto) {
+    public ApiResponse<CustomResult> updateApplication(@PathVariable Long applicationId, @RequestBody ApplicationRequest dto, @AuthEmployee
+    Employee employee) {
         return ApiResponse.onSuccess(applicationCommandService.applicationUpdate(applicationId, dto));
     }
 
     @DeleteMapping("/applications/{applicationId}")
-    public ApiResponse<CustomResult> deleteApplication(@PathVariable Long applicationId) {
+    public ApiResponse<CustomResult> deleteApplication(@PathVariable Long applicationId, @AuthEmployee
+    Employee employee) {
         return ApiResponse.onSuccess(applicationCommandService.applicationDelete(applicationId));
     }
 
     @GetMapping("/applications/{applicationId}")
     public ApiResponse<ApplicationResponse> getApplication(@PathVariable Long applicationId) {
-        return ApiResponse.onSuccess(applicationQueryService.applicationRead(applicationId));
+        return ApiResponse.onSuccess(applicationQueryService.applicationIdRead(1L));
     }
 
     @GetMapping("/applications")
@@ -59,7 +63,8 @@ public class ApplicationController {
     }
 
     @PostMapping("/applications/tmp")
-    public ApiResponse<CustomResult> createApplicationTmp(@RequestBody ApplicationRequest dto) {
-        return ApiResponse.onSuccess(applicationCommandService.applicationTempSave(dto));
+    public ApiResponse<CustomResult> createApplicationTmp(@RequestBody ApplicationRequest dto, @AuthEmployee
+    Employee employee) {
+        return ApiResponse.onSuccess(applicationCommandService.applicationTempSave(dto, employee));
     }
 }
