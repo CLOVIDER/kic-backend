@@ -43,6 +43,11 @@ public class LotteryController {
     public ApiResponse<Double> getPercentage(@PathVariable Long lotteryId) {
         return ApiResponse.onSuccess(lotteryService.getPercent(lotteryId));
     }
+    @DeleteMapping("/delete/{lotteryId}")
+    public ApiResponse<String> deleteLottery(@PathVariable Long lotteryId) {
+        lotteryService.deleteLottery(lotteryId);
+        return ApiResponse.onSuccess("추첨이 삭제되었습니다.");
+    }
 
 
 }

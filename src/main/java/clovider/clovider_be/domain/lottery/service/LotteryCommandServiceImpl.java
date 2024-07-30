@@ -28,6 +28,7 @@ import java.util.*;
 import org.springframework.web.client.RestTemplate;
 
 import static clovider.clovider_be.domain.enums.Accept.UNACCEPT;
+import static clovider.clovider_be.domain.enums.Result.*;
 
 @Slf4j
 @Service
@@ -140,6 +141,19 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
             );
         }
 
+    }
+
+    @Override
+    public void deleteLottery(Long lotteryId) {
+        Lottery lottery = lotteryRepository.findById(lotteryId)
+                .orElseThrow(() -> new ApiException(ErrorStatus._LOTTERY_NOT_FOUND));
+
+        if(lottery.getResult()==WAIT){
+            lotteryRepository.delete(lottery);
+        }
+        else if (lottery.getResult()==WIN || lottery.getResult()==LOSE){
+            throw new ApiException(ErrorStatus._RECRUIT_CANNOT_CANCEL);
+        }
     }
 
 

@@ -8,4 +8,6 @@ public interface LotteryCommandService {
     LotteryResisterResponseDTO updateRegistry(Long lotteryId);
 
     Double getPercent(Long lotteryId);
+
+    void deleteLottery(Long lotteryId);
 }
