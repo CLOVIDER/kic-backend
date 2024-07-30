@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RecruitRepositoryCustom {
 
-    List<Recruit> findNowRecruit(LocalDateTime now);
+    List<Recruit> findNowRecruitOrderByClass(LocalDateTime now);
 
 }

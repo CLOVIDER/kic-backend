@@ -1,8 +1,10 @@
 package clovider.clovider_be.domain.admin.dto;
 
+import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.AcceptResult;
 import clovider.clovider_be.domain.notice.dto.NoticeTop3;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruitInfo;
+import clovider.clovider_be.global.util.TimeUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -47,4 +49,52 @@ public class AdminResponse {
                 .waitQnaCnt(waitQnaCnt)
                 .build();
     }
+
+    @Schema(description = "신청내역 페이징 DTO")
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ApplicationPage {
+
+        @Schema(description = "신청내역 데이터 리스트")
+        private List<ApplicationList> content;
+        private int totalPage;
+        private long totalElements;
+        private int size;
+        private int currPage;
+        private Boolean hasNext;
+        private Boolean isFirst;
+        private Boolean isLast;
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ApplicationList {
+
+        @Schema(description = "신청서 작성일", example = "2024.07.25")
+        private String createdAt;
+        @Schema(description = "신청자 아이디", example = "rlagusrua258")
+        private String accountId;
+        @Schema(description = "신청자 사내 번호", example = "201930303")
+        private String employeeNo;
+        @Schema(description = "신청서 ID", example = "1")
+        private Long applicationId;
+        @Schema(description = "신청서 승인여부", example = "승인")
+        private String isAccept;
+    }
+
+    public static ApplicationList toApplicationList(Application application) {
+
+        return ApplicationList.builder()
+                .createdAt(TimeUtil.formattedDate(application.getCreatedAt()))
+                .accountId(application.getEmployee().getAccountId())
+                .employeeNo(application.getEmployee().getEmployeeNo())
+                .applicationId(application.getId())
+                .isAccept(application.getIsAccept().getDescription())
+                .build();
+    }
+
 }

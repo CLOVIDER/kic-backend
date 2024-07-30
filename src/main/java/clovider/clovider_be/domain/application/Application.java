@@ -80,9 +80,11 @@ public class Application extends BaseTimeEntity {
     private String childNm;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    @ColumnDefault("'WAIT'")
+    @Column(nullable = false, length = 15)
+    @ColumnDefault("'WAIT")
     private Accept isAccept;
+
+    private String childName;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id", nullable = false)

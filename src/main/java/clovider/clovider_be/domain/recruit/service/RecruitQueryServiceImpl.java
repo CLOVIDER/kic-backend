@@ -23,8 +23,13 @@ public class RecruitQueryServiceImpl implements RecruitQueryService {
     }
 
     @Override
-    public List<Recruit> getNowRecruitPeriod() {
+    public List<Recruit> getNowRecruitOrderByClass() {
 
+        return recruitRepository.findNowRecruitOrderByClass(LocalDateTime.now());
+    }
+
+    @Override
+    public List<Recruit> getNowRecruit() {
         return recruitRepository.findNowRecruit(LocalDateTime.now());
     }
 
