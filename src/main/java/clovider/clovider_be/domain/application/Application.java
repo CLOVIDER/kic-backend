@@ -1,10 +1,11 @@
 package clovider.clovider_be.domain.application;
 
-import clovider.clovider_be.domain.application.dto.ApplicationUpdateDto;
+import clovider.clovider_be.domain.application.dto.ApplicationRequest;
 import clovider.clovider_be.domain.common.BaseTimeEntity;
 import clovider.clovider_be.domain.document.Document;
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.enums.Accept;
+import clovider.clovider_be.domain.lottery.Lottery;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -76,6 +77,8 @@ public class Application extends BaseTimeEntity {
     @ColumnDefault("'0'")
     private Character isTemp; //default : 임시저장이 아닌 일반 저장 상태
 
+    private String childNm;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 15)
     @ColumnDefault("'WAIT")
@@ -89,15 +92,19 @@ public class Application extends BaseTimeEntity {
     private Employee employee;
 
     @OneToMany(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Lottery> lotteries;
+
+    @OneToMany(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Document> documents = new ArrayList<>();
 
-    public void update(ApplicationUpdateDto applicationUpdateDto) {
-        this.isSingleParent = applicationUpdateDto.getIsSingleParent();
-        this.childrenCnt = applicationUpdateDto.getChildrenCnt();
-        this.isDisability = applicationUpdateDto.getIsDisability();
-        this.isDualIncome = applicationUpdateDto.getIsDualIncome();
-        this.isEmployeeCouple = applicationUpdateDto.getIsEmployeeCouple();
-        this.isSibling = applicationUpdateDto.getIsSibling();
-        this.childName = applicationUpdateDto.getChildName();
+    public void update(ApplicationRequest applicationRequest) {
+        this.isSingleParent = applicationRequest.getIsSingleParent();
+        this.childrenCnt = applicationRequest.getChildrenCnt();
+        this.isDisability = applicationRequest.getIsDisability();
+        this.isDualIncome = applicationRequest.getIsDualIncome();
+        this.isEmployeeCouple = applicationRequest.getIsEmployeeCouple();
+        this.isSibling = applicationRequest.getIsSibling();
+        this.childNm = applicationRequest.getChildNm();
+        this.isTemp = 0;
     }
 }

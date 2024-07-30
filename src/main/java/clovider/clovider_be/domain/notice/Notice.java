@@ -3,7 +3,9 @@ package clovider.clovider_be.domain.notice;
 import clovider.clovider_be.domain.common.BaseTimeEntity;
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.notice.dto.NoticeRequest;
+import clovider.clovider_be.domain.notice.dto.NoticeResponse;
 import clovider.clovider_be.domain.noticeImage.NoticeImage;
+import clovider.clovider_be.domain.noticeImage.dto.NoticeImageResponse;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,6 +17,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -81,4 +84,5 @@ public class Notice extends BaseTimeEntity {
     public void incrementHits() {
         this.hits += 1;
     }
+
 }

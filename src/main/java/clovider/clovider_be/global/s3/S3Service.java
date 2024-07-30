@@ -100,7 +100,7 @@ public class S3Service {
         return imageList;
     }
 
-    // 이미지 삭제
+    // 이미지, 문서 삭제
     public void deleteObject(String objectName) {
         try {
             String s3File = extractImageFromUrl(objectName);

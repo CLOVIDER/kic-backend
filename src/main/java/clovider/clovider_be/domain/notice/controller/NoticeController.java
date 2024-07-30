@@ -3,6 +3,7 @@ package clovider.clovider_be.domain.notice.controller;
 import clovider.clovider_be.domain.common.CustomPage;
 import clovider.clovider_be.domain.common.CustomResult;
 import clovider.clovider_be.domain.employee.Employee;
+import clovider.clovider_be.domain.enums.SearchType;
 import clovider.clovider_be.domain.notice.dto.NoticeRequest;
 import clovider.clovider_be.domain.notice.dto.NoticeResponse;
 import clovider.clovider_be.domain.notice.dto.NoticeUpdateResponse;
@@ -12,7 +13,10 @@ import clovider.clovider_be.global.annotation.AuthEmployee;
 import clovider.clovider_be.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,14 +55,14 @@ public class NoticeController {
     @Operation(summary = "공지사항 생성", description = "새로운 공지사항을 생성합니다.")
     @PostMapping("/admin/notices")
     public ApiResponse<CustomResult> createNotice(@AuthEmployee Employee employee,
-            @RequestBody NoticeRequest noticeRequest) {
+            @Valid @RequestBody NoticeRequest noticeRequest) {
         return ApiResponse.onSuccess(noticeCommandService.createNotice(employee, noticeRequest));
     }
     @Operation(summary = "공지사항 수정", description = "특정 공지사항을 수정합니다.")
     @Parameter(name = "noticeId", description = "수정할 공지사항 ID", required = true, example = "1")
     @PatchMapping("/admin/notices/{noticeId}")
     public ApiResponse<NoticeUpdateResponse> updateNotice(@PathVariable Long noticeId,
-            @RequestBody NoticeRequest noticeRequest) {
+            @Valid @RequestBody NoticeRequest noticeRequest) {
         return ApiResponse.onSuccess(noticeCommandService.updateNotice(noticeId, noticeRequest));
     }
 
@@ -68,6 +72,18 @@ public class NoticeController {
     @DeleteMapping("/admin/notices/{noticeId}")
     public ApiResponse<String> deleteNotice(@PathVariable Long noticeId) {
         return ApiResponse.onSuccess(noticeCommandService.deleteNotice(noticeId));
+    }
+
+    @Operation(summary = "공지사항 검색",
+            description = "검색 타입과 키워드를 기반으로 공지사항을 검색합니다.",
+            parameters = {
+            @Parameter(name = "type", description = "검색 타입을 나타내는 Enum 값", example = "TITLE", required = true, in = ParameterIn.QUERY),
+            @Parameter(name = "keyword", description = "검색할 키워드", example = "공지", required = false, in = ParameterIn.QUERY)
+    })
+    @GetMapping("/notices/search")
+    public ApiResponse<List<NoticeResponse>> searchNotices(
+            @RequestParam SearchType type, @RequestParam(required = false) String keyword) {
+        return ApiResponse.onSuccess(noticeQueryService.searchNotices(type, keyword));
     }
 
 }
