@@ -7,6 +7,8 @@ public interface RecruitQueryService {
 
     List<Recruit> getRecruitByKindergarten(Long kindergartenId);
 
-    List<Recruit> getNowRecruitPeriod();
+    List<Recruit> getNowRecruitOrderByClass();
+
+    List<Recruit> getNowRecruit();
 
 }

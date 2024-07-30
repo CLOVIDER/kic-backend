@@ -2,7 +2,11 @@ package clovider.clovider_be.domain.admin.controller;
 
 import static clovider.clovider_be.domain.admin.dto.AdminResponse.toDashBoard;
 
+import clovider.clovider_be.domain.admin.dto.AdminResponse.ApplicationList;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.DashBoard;
+import clovider.clovider_be.domain.admin.dto.SearchVO;
+import clovider.clovider_be.domain.application.service.ApplicationQueryService;
+import clovider.clovider_be.domain.common.CustomPage;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.AcceptResult;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitResult;
@@ -18,13 +22,17 @@ import clovider.clovider_be.domain.recruit.service.RecruitQueryService;
 import clovider.clovider_be.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "관리자 기능 관련 API 명세서")
@@ -38,6 +46,7 @@ public class AdminController {
     private final RecruitQueryService recruitQueryService;
     private final LotteryQueryService lotteryQueryService;
     private final MailService mailService;
+    private final ApplicationQueryService applicationQueryService;
 
 
     @Operation(summary = "관리자 대시보드 조회", description = "어린이집 모집 통계 정보를 조회합니다.")
@@ -45,7 +54,7 @@ public class AdminController {
     public ApiResponse<DashBoard> getDashboard() {
 
         // 진행 중인 모집 정보, 기간, 경쟁률
-        List<Recruit> recruits = recruitQueryService.getNowRecruitPeriod();
+        List<Recruit> recruits = recruitQueryService.getNowRecruitOrderByClass();
         List<CompetitionRate> recruitRates = lotteryQueryService.getRecruitRates(recruits);
         NowRecruitInfo nowRecruitInfo = RecruitResponse.toNowRecruitInfo(recruits, recruitRates);
 
@@ -80,4 +89,34 @@ public class AdminController {
 
         return ApiResponse.onSuccess("성공적으로 추첨결과가 전송되었습니다.");
     }
+
+
+    @Operation(summary = "진행중인 모집의 신청 현황 조회", description = "진행 중인 모집의 모든 신청 내역을 조회합니다.")
+    @Parameters({
+            @Parameter(name = "page", description = "페이지 번호"),
+            @Parameter(name = "size", description = "페이지 크기"),
+            @Parameter(name = "filter", description = "승인 여부 필터링"),
+            @Parameter(name = "q", description = "신청자 아이디 검색")
+    })
+    @GetMapping("/recruits/applications")
+    public ApiResponse<CustomPage<ApplicationList>> findRecruitsApplications(
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size,
+            @RequestParam(name = "filter", defaultValue = "ALL", required = false) String filter,
+            @RequestParam(name = "q", required = false) String value) {
+
+        PageRequest pageRequest = PageRequest.of(page, size);
+        SearchVO searchVO = SearchVO.of(filter, value);
+
+        List<Recruit> recruits = recruitQueryService.getNowRecruit();
+
+        List<Long> applicationIds = lotteryQueryService.getApplicationsByLotteries(
+                recruits);
+
+        Page<ApplicationList> applicationPage = applicationQueryService.getNowApplications(
+                applicationIds, pageRequest, searchVO);
+
+        return ApiResponse.onSuccess(new CustomPage<>(applicationPage));
+    }
+
 }

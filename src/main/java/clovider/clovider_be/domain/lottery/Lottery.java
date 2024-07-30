@@ -39,9 +39,5 @@ public class Lottery extends BaseTimeEntity {
     @Setter
     @Column(nullable = false, length = 1)
     private Character isRegistry;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Accept isAccept;
     
 }

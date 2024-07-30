@@ -85,7 +85,6 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
                 .rankNo(1)
                 .result(Result.valueOf(result))
                 .isRegistry('1')
-                .isAccept(UNACCEPT)
                 .build();
 
         Lottery savedLottery = lotteryRepository.save(lottery);
