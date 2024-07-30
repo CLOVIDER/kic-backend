@@ -1,6 +1,7 @@
 package clovider.clovider_be.domain.lottery.dto;
 
 import clovider.clovider_be.domain.lottery.Lottery;
+import clovider.clovider_be.domain.recruit.Recruit;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -56,4 +57,23 @@ public class LotteryResponse {
                         .build())
                 .toList();
     }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class RecruitInfo {
+
+        private String kindergartenNm;
+        private String ageClass;
+    }
+
+    public static RecruitInfo toRecruitInfo(Recruit recruit) {
+
+        return RecruitInfo.builder()
+                .kindergartenNm(recruit.getKindergarten().getKindergartenNm())
+                .ageClass(recruit.getAgeClass().getDescription())
+                .build();
+    }
+
 }
