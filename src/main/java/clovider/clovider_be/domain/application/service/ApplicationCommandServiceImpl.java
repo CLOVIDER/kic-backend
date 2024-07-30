@@ -6,6 +6,7 @@ import clovider.clovider_be.domain.application.repository.ApplicationRepository;
 import clovider.clovider_be.domain.common.CustomResult;
 import clovider.clovider_be.domain.document.service.ApplicationDocumentCommandService;
 import clovider.clovider_be.domain.employee.Employee;
+import clovider.clovider_be.domain.enums.Accept;
 import clovider.clovider_be.domain.lottery.service.LotteryCommandService;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
@@ -60,9 +61,9 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
     }
 
     @Override
-    public CustomResult applicationDelete(Long applicationId) {
-        Application savedApplication = applicationRepository.findById(applicationId).orElseThrow();
-        lotteryCommandService.deleteLottery(applicationId);
+    public CustomResult applicationDelete(Long Id) {
+        Application savedApplication = applicationRepository.findById(Id).orElseThrow();
+        lotteryCommandService.deleteLottery(Id);
         applicationRepository.delete(savedApplication);
 
         return CustomResult.toCustomResult(savedApplication.getId());
@@ -92,5 +93,12 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
         return CustomResult.toCustomResult(savedApplication.getId());
     }
 
+    @Override
+    public CustomResult applicationAccept(Long Id, Accept accept) {
+        Application savedApplication = applicationRepository.findById(Id).orElseThrow();
+        savedApplication.isAccept(accept);
+
+        return CustomResult.toCustomResult(savedApplication.getId());
+    }
 
 }

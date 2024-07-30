@@ -35,7 +35,7 @@ public class ApplicationResponse {
 
     private Integer workYears;
     private Character isSingleParent;
-    private Integer isChildrenCnt;
+    private Integer ChildrenCnt;
     private Character isDisability;
     private Character isDualIncome;
     private Character isEmployeeCouple;
@@ -52,7 +52,7 @@ public class ApplicationResponse {
                 .employee(application.getEmployee())
                 .workYears(application.getWorkYears())
                 .isSingleParent(application.getIsSingleParent())
-                .isChildrenCnt(application.getChildrenCnt())
+                .ChildrenCnt(application.getChildrenCnt())
                 .isDisability(application.getIsDisability())
                 .isDualIncome(application.getIsDualIncome())
                 .isEmployeeCouple(application.getIsEmployeeCouple())

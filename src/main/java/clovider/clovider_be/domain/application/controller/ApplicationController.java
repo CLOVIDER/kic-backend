@@ -7,8 +7,11 @@ import clovider.clovider_be.domain.application.service.ApplicationQueryService;
 import clovider.clovider_be.domain.common.CustomPage;
 import clovider.clovider_be.domain.common.CustomResult;
 import clovider.clovider_be.domain.employee.Employee;
+import clovider.clovider_be.domain.enums.Accept;
 import clovider.clovider_be.global.annotation.AuthEmployee;
 import clovider.clovider_be.global.response.ApiResponse;
+import jakarta.validation.Valid;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -67,4 +70,21 @@ public class ApplicationController {
     Employee employee) {
         return ApiResponse.onSuccess(applicationCommandService.applicationTempSave(dto, employee));
     }
+
+    @PatchMapping("/admin/applications/{applicationId}")
+    public ApiResponse<CustomResult> acceptApplication(@PathVariable Long applicationId, @RequestBody Map<String, String> acceptRequest) {
+
+        String acceptStatus = acceptRequest.get("acceptRequest");
+        Accept accept = Accept.WAIT;
+
+        if ("1".equals(acceptStatus)) {
+            accept = Accept.ACCEPT;
+        } else if ("0".equals(acceptStatus)) {
+            accept = Accept.UNACCEPT;
+        }
+
+        return ApiResponse.onSuccess(applicationCommandService.applicationAccept(applicationId, accept));
+    }
+
+
 }
