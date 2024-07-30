@@ -6,11 +6,9 @@ import clovider.clovider_be.domain.application.repository.ApplicationRepository;
 import clovider.clovider_be.domain.common.CustomResult;
 import clovider.clovider_be.domain.document.service.ApplicationDocumentCommandService;
 import clovider.clovider_be.domain.employee.Employee;
-import clovider.clovider_be.domain.employee.service.EmployeeQueryService;
 import clovider.clovider_be.domain.lottery.service.LotteryCommandService;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
-import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +21,8 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
     private final ApplicationRepository applicationRepository;
     private final ApplicationDocumentCommandService applicationDocumentCommandService;
     private final LotteryCommandService lotteryCommandService;
+
+
 
     @Override
     public CustomResult applicationCreate(ApplicationRequest applicationRequest, Employee employee) {

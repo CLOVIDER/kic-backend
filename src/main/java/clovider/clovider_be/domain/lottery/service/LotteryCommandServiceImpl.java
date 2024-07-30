@@ -3,8 +3,6 @@ package clovider.clovider_be.domain.lottery.service;
 import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.application.repository.ApplicationRepository;
 import clovider.clovider_be.domain.application.service.ApplicationQueryService;
-import clovider.clovider_be.domain.common.CustomResult;
-import clovider.clovider_be.domain.enums.Accept;
 import clovider.clovider_be.domain.enums.Result;
 import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.lottery.dto.LotteryResisterResponseDTO;
@@ -29,9 +27,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+
 import org.springframework.web.client.RestTemplate;
 
-import static clovider.clovider_be.domain.enums.Accept.UNACCEPT;
 import static clovider.clovider_be.domain.enums.Result.WAIT;
 
 @Slf4j
@@ -159,15 +157,13 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
         for (Long recruitId : recruitIdList) {
             Recruit recruit = recruitQueryService.getRecruit(recruitId);
 
-            Lottery savedLottery = lotteryRepository.save(
-                    // TODO: 이후 컬럼값 정리 후 builder 수정
+            lotteryRepository.save(
                     Lottery.builder()
                             .application(application)
                             .recruit(recruit)
                             .rankNo(1)
                             .result(WAIT)
                             .isRegistry('1')
-                            .isAccept(UNACCEPT)
                             .build()
             );
         }
