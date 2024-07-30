@@ -74,7 +74,7 @@ public class Application extends BaseTimeEntity {
     @ColumnDefault("'0'")
     private Character isTemp; //default : 임시저장이 아닌 일반 저장 상태
 
-    private String childName;
+    private String childNm;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id", nullable = false)
@@ -94,7 +94,7 @@ public class Application extends BaseTimeEntity {
         this.isDualIncome = applicationRequest.getIsDualIncome();
         this.isEmployeeCouple = applicationRequest.getIsEmployeeCouple();
         this.isSibling = applicationRequest.getIsSibling();
-        this.childName = applicationRequest.getChildName();
+        this.childNm = applicationRequest.getChildNm();
         this.isTemp = 0;
     }
 }

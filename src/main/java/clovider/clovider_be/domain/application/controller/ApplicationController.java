@@ -52,7 +52,7 @@ public class ApplicationController {
 
     @GetMapping("/applications/{applicationId}")
     public ApiResponse<ApplicationResponse> getApplication(@PathVariable Long applicationId) {
-        return ApiResponse.onSuccess(applicationQueryService.applicationIdRead(1L));
+        return ApiResponse.onSuccess(applicationQueryService.applicationIdRead(applicationId));
     }
 
     @GetMapping("/applications")

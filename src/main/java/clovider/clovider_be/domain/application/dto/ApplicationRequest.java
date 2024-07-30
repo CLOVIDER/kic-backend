@@ -17,8 +17,8 @@ public class ApplicationRequest {
     private Character isDualIncome;
     private Character isEmployeeCouple;
     private Character isSibling;
-    private String childName;
+    private String childNm;
 
-    private List<Recruit> recruitList;
+    private List<Long> recruitIdList;
     private List<String> imageUrls;
 }

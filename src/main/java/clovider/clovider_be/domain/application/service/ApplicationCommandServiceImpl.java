@@ -7,6 +7,7 @@ import clovider.clovider_be.domain.common.CustomResult;
 import clovider.clovider_be.domain.document.service.ApplicationDocumentCommandService;
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.employee.service.EmployeeQueryService;
+import clovider.clovider_be.domain.lottery.service.LotteryCommandService;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
@@ -21,6 +22,7 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
 
     private final ApplicationRepository applicationRepository;
     private final ApplicationDocumentCommandService applicationDocumentCommandService;
+    private final LotteryCommandService lotteryCommandService;
 
     @Override
     public CustomResult applicationCreate(ApplicationRequest applicationRequest, Employee employee) {
@@ -36,15 +38,14 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
                 .isDualIncome(applicationRequest.getIsDualIncome())
                 .isEmployeeCouple(applicationRequest.getIsEmployeeCouple())
                 .isSibling(applicationRequest.getIsSibling())
-                .childName(applicationRequest.getChildName())
+                .childNm(applicationRequest.getChildNm())
                 .isTemp('0')
                 .build()
         );
 
         applicationDocumentCommandService.createApplicationDocuments(applicationRequest.getImageUrls(), savedApplication);
 
-        //추첨 테이블에 들어가는 메소드 호출, 이후 주석 풀고 적용 예정
-//        applicationRequest.getRecruitList().forEach(item -> createLottery(savedApplication.getId(), item));
+//        applicationRequest.getRecruitIdList().forEach(item -> lotteryCommandService.createLottery(savedApplication.getId(), item));
 
         return CustomResult.toCustomResult(savedApplication.getId());
     }
@@ -82,7 +83,7 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
                 .isDualIncome(applicationRequest.getIsDualIncome())
                 .isEmployeeCouple(applicationRequest.getIsEmployeeCouple())
                 .isSibling(applicationRequest.getIsSibling())
-                .childName(applicationRequest.getChildName())
+                .childNm(applicationRequest.getChildNm())
                 .isTemp('1')
                 .build()
         );

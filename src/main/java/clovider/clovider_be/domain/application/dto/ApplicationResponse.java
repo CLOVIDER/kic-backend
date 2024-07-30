@@ -26,7 +26,6 @@ public class ApplicationResponse {
 //     신청서 하나 당 여러 모집에 해당되고 결과도 여러개니 List로 저장
 //    private List<Result> ResultList;
 //    private List<Integer> rankNoList;
-    private List<Lottery> lotteries;
 
     // 어린이집, 모집 도메인 구현 후 사용
     // (신청서 - 추첨 테이블끼리 조인 -> 추첨 테이블 내 모집ID 를 사용해서 모집 테이블에서 어린이집 ID 얻어옴 -> 어린이집 이름 가져옴)
@@ -40,7 +39,7 @@ public class ApplicationResponse {
     private Character isDualIncome;
     private Character isEmployeeCouple;
     private Character isSibling;
-    private String childName;
+    private String childNm;
 
     private List<Document> documents;
 
@@ -49,7 +48,6 @@ public class ApplicationResponse {
         return ApplicationResponse.builder()
                 .id(application.getId())
                 .employee(application.getEmployee())
-                .lotteries(application.getLotteries())
                 .workYears(application.getWorkYears())
                 .isSingleParent(application.getIsSingleParent())
                 .isChildrenCnt(application.getChildrenCnt())
@@ -57,7 +55,7 @@ public class ApplicationResponse {
                 .isDualIncome(application.getIsDualIncome())
                 .isEmployeeCouple(application.getIsEmployeeCouple())
                 .isSibling(application.getIsSibling())
-                .childName(application.getChildName())
+                .childNm(application.getChildNm())
                 .documents(application.getDocuments())
                 .build();
     }
