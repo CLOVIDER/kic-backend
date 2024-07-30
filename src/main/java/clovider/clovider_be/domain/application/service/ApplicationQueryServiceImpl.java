@@ -1,12 +1,15 @@
 package clovider.clovider_be.domain.application.service;
 
+import clovider.clovider_be.domain.admin.dto.AdminResponse.ApplicationList;
+import clovider.clovider_be.domain.admin.dto.SearchVO;
 import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.application.dto.ApplicationReadDto;
 import clovider.clovider_be.domain.application.repository.ApplicationRepository;
 import clovider.clovider_be.domain.employee.repository.EmployeeRepository;
-import clovider.clovider_be.domain.lottery.Lottery;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,20 +23,20 @@ public class ApplicationQueryServiceImpl implements ApplicationQueryService {
 
 
     @Override
-    public ApplicationReadDto applicationRead(Long Id){
+    public ApplicationReadDto applicationRead(Long Id) {
         Application savedApplication = applicationRepository.findById(Id).orElseThrow();
 
         return ApplicationReadDto.toEntity(savedApplication);
     }
 
     @Override
-    public void applicationPagination()
-    {}
+    public void applicationPagination() {
+    }
 
     @Override
-    public List<Application> getNowApplications(List<Lottery> lotteries) {
-        return lotteries.stream()
-                .map(Lottery::getApplication)
-                .toList();
+    public Page<ApplicationList> getNowApplications(List<Long> applicationIds, Pageable pageable,
+            SearchVO searchVO) {
+
+        return applicationRepository.getApplicationPage(applicationIds, pageable, searchVO);
     }
 }

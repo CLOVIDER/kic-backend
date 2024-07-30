@@ -1,19 +1,16 @@
 package clovider.clovider_be.domain.admin.dto;
 
 import clovider.clovider_be.domain.application.Application;
-import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.AcceptResult;
 import clovider.clovider_be.domain.notice.dto.NoticeTop3;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruitInfo;
 import clovider.clovider_be.global.util.TimeUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
-import java.util.stream.IntStream;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.domain.Page;
 
 public class AdminResponse {
 
@@ -89,34 +86,15 @@ public class AdminResponse {
         private String isAccept;
     }
 
-    public static ApplicationList toApplicationList(Lottery lottery, Application application) {
+    public static ApplicationList toApplicationList(Application application) {
 
         return ApplicationList.builder()
                 .createdAt(TimeUtil.formattedDate(application.getCreatedAt()))
                 .accountId(application.getEmployee().getAccountId())
                 .employeeNo(application.getEmployee().getEmployeeNo())
                 .applicationId(application.getId())
-                .isAccept(lottery.getIsAccept().getDescription())
+                .isAccept(application.getIsAccept().getDescription())
                 .build();
     }
 
-    public static ApplicationPage toApplicationPage(Page<Lottery> lotteries,
-            List<Application> applications) {
-
-        List<ApplicationList> applicationLists = IntStream.range(0, applications.size())
-                .mapToObj(
-                        i -> toApplicationList(lotteries.getContent().get(i), applications.get(i)))
-                .toList();
-
-        return ApplicationPage.builder()
-                .content(applicationLists)
-                .totalPage(lotteries.getTotalPages())
-                .totalElements(lotteries.getTotalElements())
-                .size(lotteries.getSize())
-                .currPage(lotteries.getNumber())
-                .hasNext(lotteries.hasNext())
-                .isFirst(lotteries.isFirst())
-                .isLast(lotteries.isLast())
-                .build();
-    }
 }
