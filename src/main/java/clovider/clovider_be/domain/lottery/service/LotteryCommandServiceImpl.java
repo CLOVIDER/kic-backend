@@ -63,7 +63,7 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
                     app.getIsDualIncome()
             );
 
-            double weight = weightDTO.calculateWeight();
+            double weight =  weightDTO.calculateWeight();
             applicantData.put("weight", weight);
             applicants.add(applicantData);
             log.info("Applicant data: {}", applicantData);
