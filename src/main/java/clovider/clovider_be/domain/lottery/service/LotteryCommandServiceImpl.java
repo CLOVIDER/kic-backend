@@ -151,6 +151,7 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
         if(lottery.getResult()==WAIT){
             lotteryRepository.delete(lottery);
         }
+        //모집이 이미 진행완료일때에는 취소 불가 메시지 반환
         else if (lottery.getResult()==WIN || lottery.getResult()==LOSE){
             throw new ApiException(ErrorStatus._RECRUIT_CANNOT_CANCEL);
         }
