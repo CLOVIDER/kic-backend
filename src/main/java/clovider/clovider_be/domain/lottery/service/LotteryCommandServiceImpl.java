@@ -12,12 +12,20 @@ import clovider.clovider_be.domain.recruit.Recruit;
 import clovider.clovider_be.domain.recruit.repository.RecruitRepository;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import org.springframework.web.client.RestTemplate;
 
 import static clovider.clovider_be.domain.enums.Accept.UNACCEPT;
 
@@ -30,6 +38,10 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
     private final LotteryRepository lotteryRepository;
     private final RecruitRepository recruitRepository;
     private final ApplicationRepository applicationRepository;
+    private final RestTemplate restTemplate = new RestTemplate();
+
+    @Value("${cloud.aws.lambda.url}")
+    private String apiUrl;
 
     @Override
     public LotteryResponseDTO createLottery(Long recruitId, Long applicationId) {
@@ -169,4 +181,82 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
             return new ArrayList<>(selectedApplicantsSet);
         }
     }
+
+    // 추첨 확률 받기
+    public Double getPercent(Long lotteryId) {
+        Lottery lottery = lotteryRepository.findById(lotteryId)
+            .orElseThrow(() -> new ApiException(ErrorStatus._LOTTERY_NOT_FOUND));
+
+        Recruit recruit = lottery.getRecruit();
+        int recruitCnt = recruit.getRecruitCnt();
+
+        List<Map<String, Object>> applicants = createApplicantsList(recruit);
+        Map<String, Object> requestBody = createRequestBody(applicants, lotteryId, recruitCnt);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
+
+
+        try {
+            ResponseEntity<Map> response = restTemplate.exchange(apiUrl, HttpMethod.POST, entity, Map.class);
+            if (response.getBody() != null) {
+                String body = (String) response.getBody().get("body");
+                ObjectMapper objectMapper = new ObjectMapper();
+                Map<String, Object> responseBody = objectMapper.readValue(body, Map.class);
+
+                if (responseBody != null && responseBody.containsKey("probability")) {
+                    return (Double) responseBody.get("probability");
+                } else {
+                    throw new ApiException(ErrorStatus._EXTERNAL_API_ERROR);
+                }
+            } else {
+                throw new ApiException(ErrorStatus._EXTERNAL_API_ERROR);
+            }
+        } catch (Exception e) {
+            log.error("Error occurred while getting percentage: ", e);
+            throw new ApiException(ErrorStatus._EXTERNAL_API_ERROR);
+        }
+    }
+
+    public List<Map<String, Object>> createApplicantsList(Recruit recruit) {
+
+        List<Application> applications = lotteryRepository.findAllApplicationByRecruitId(recruit.getId());
+
+        List<Map<String, Object>> applicants = new ArrayList<>();
+        for (Application app : applications) {
+            Map<String, Object> applicantData = new HashMap<>();
+
+            Long applicationId = app.getId();
+            Long RestLotteryId = lotteryRepository.findLotteryIdByApplication(applicationId);
+            applicantData.put("id", RestLotteryId);
+
+            WeightCalculationDTO weightDTO = new WeightCalculationDTO(
+                app.getWorkYears(),
+                app.getIsSingleParent(),
+                app.getChildrenCnt(),
+                app.getIsDisability(),
+                app.getIsEmployeeCouple(),
+                app.getIsSibling(),
+                app.getIsDualIncome()
+            );
+
+            double weight = weightDTO.calculateWeight();
+            applicantData.put("weight", weight);
+            applicants.add(applicantData);
+        }
+
+        return applicants;
+    }
+
+    public Map<String, Object> createRequestBody(List<Map<String, Object>> applicants, Long lotteryId, int recruitCnt) {
+
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("applicants", applicants);
+        requestBody.put("target_id", lotteryId);
+        requestBody.put("num_selected", recruitCnt);
+
+        return requestBody;
+    }
+
 }

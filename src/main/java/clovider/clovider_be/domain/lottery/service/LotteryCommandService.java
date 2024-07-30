@@ -7,5 +7,5 @@ public interface LotteryCommandService {
     LotteryResponseDTO createLottery(Long recruitId, Long applicationId);
     LotteryResisterResponseDTO updateRegistry(Long lotteryId);
 
-
+    Double getPercent(Long lotteryId);
 }
