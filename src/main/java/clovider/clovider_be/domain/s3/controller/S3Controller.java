@@ -1,5 +1,6 @@
 package clovider.clovider_be.domain.s3.controller;
 
+import clovider.clovider_be.global.response.ApiResponse;
 import clovider.clovider_be.global.s3.S3Service;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -21,22 +22,22 @@ public class S3Controller {
 
     @Operation(summary = "이미지 업로드", description = "새로운 이미지를 업로드합니다.")
     @PostMapping("/upload/image")
-    public String createAndUploadImage(
+    public ApiResponse<String> createAndUploadImage(
         @Parameter(description = "업로드할 이미지 파일", required = true, schema = @Schema(type = "string", format = "binary"))
         @RequestParam("file") MultipartFile file,
         @Parameter(description = "이미지가 업로드될 도메인 이름(notice or kindergarten)", required = true)
         @RequestParam("domainName") String domainName) {
-        return s3Service.uploadImage(file, domainName);
+        return ApiResponse.onSuccess(s3Service.uploadImage(file, domainName));
     }
 
     @Operation(summary = "문서 업로드", description = "새로운 문서를 업로드합니다.")
     @PostMapping("/upload/document")
-    public String createAndUploadDocument(
+    public ApiResponse<String> createAndUploadDocument(
         @Parameter(description = "업로드할 도큐먼트 파일", required = true, schema = @Schema(type = "string", format = "binary"))
         @RequestParam("file") MultipartFile file,
         @Parameter(description = "해당 도큐먼트의 신청서 아이디", required = true)
         @RequestParam("applicationId") String applicationId) {
-        return s3Service.uploadFile(file, applicationId);
+        return ApiResponse.onSuccess(s3Service.uploadFile(file, applicationId));
     }
 
     
