@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,7 @@ public class NoticeQueryServiceImpl implements NoticeQueryService {
                 .orElseThrow(() -> new ApiException(ErrorStatus._NOTICE_NOT_FOUND));
     }
 
+    @Cacheable(value = "notices", key = "#noticeId")
     @Transactional
     public NoticeResponse getNotice(Long noticeId, HttpServletRequest request, HttpServletResponse response) {
         Notice foundNotice = noticeRepository.findById(noticeId)

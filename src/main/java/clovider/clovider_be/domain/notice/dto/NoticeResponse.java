@@ -3,6 +3,8 @@ package clovider.clovider_be.domain.notice.dto;
 
 import clovider.clovider_be.domain.notice.Notice;
 import clovider.clovider_be.domain.noticeImage.dto.NoticeImageResponse;
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -15,7 +17,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class NoticeResponse {
+public class NoticeResponse implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private Long noticeId;
     private String title;
