@@ -9,4 +9,6 @@ public interface RecruitQueryService {
 
     List<Recruit> getNowRecruitPeriod();
 
+    Recruit getRecruit(Long id);
+
 }

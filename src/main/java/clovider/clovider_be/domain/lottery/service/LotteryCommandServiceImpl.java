@@ -2,6 +2,9 @@ package clovider.clovider_be.domain.lottery.service;
 
 import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.application.repository.ApplicationRepository;
+import clovider.clovider_be.domain.application.service.ApplicationQueryService;
+import clovider.clovider_be.domain.common.CustomResult;
+import clovider.clovider_be.domain.enums.Accept;
 import clovider.clovider_be.domain.enums.Result;
 import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.lottery.dto.LotteryResisterResponseDTO;
@@ -10,6 +13,7 @@ import clovider.clovider_be.domain.lottery.dto.WeightCalculationDTO;
 import clovider.clovider_be.domain.lottery.repository.LotteryRepository;
 import clovider.clovider_be.domain.recruit.Recruit;
 import clovider.clovider_be.domain.recruit.repository.RecruitRepository;
+import clovider.clovider_be.domain.recruit.service.RecruitQueryService;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 import static clovider.clovider_be.domain.enums.Accept.UNACCEPT;
+import static clovider.clovider_be.domain.enums.Result.WAIT;
 
 @Slf4j
 @Service
@@ -30,6 +35,9 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
     private final LotteryRepository lotteryRepository;
     private final RecruitRepository recruitRepository;
     private final ApplicationRepository applicationRepository;
+
+    private final ApplicationQueryService applicationQueryService;
+    private final RecruitQueryService recruitQueryService;
 
     @Override
     public LotteryResponseDTO createLottery(Long recruitId, Long applicationId) {
@@ -129,6 +137,37 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
             );
         }
 
+    }
+
+    //추첨 테이블에 값 입력
+    @Override
+    public void insertLottery(List<Long> recruitIdList, Long applicationId)
+    {
+        Application application = applicationQueryService.getApplication(applicationId);
+
+        for (Long recruitId : recruitIdList) {
+            Recruit recruit = recruitQueryService.getRecruit(recruitId);
+
+            Lottery savedLottery = lotteryRepository.save(
+                    // TODO: 이후 컬럼값 정리 후 builder 수정
+                    Lottery.builder()
+                            .application(application)
+                            .recruit(recruit)
+                            .rankNo(1)
+                            .result(WAIT)
+                            .isRegistry('1')
+                            .isAccept(UNACCEPT)
+                            .build()
+            );
+        }
+    }
+
+    //추첨 테이블 값 일괄 삭제
+    @Override
+    public void deleteLottery(Long applicationId) {
+        Application application = applicationQueryService.getApplication(applicationId);
+        List<Lottery> savedLotteries = lotteryRepository.findAllByApplication(application);
+        lotteryRepository.deleteAll(savedLotteries);
     }
 
 

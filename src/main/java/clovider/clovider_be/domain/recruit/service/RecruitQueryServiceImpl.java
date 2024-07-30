@@ -2,6 +2,8 @@ package clovider.clovider_be.domain.recruit.service;
 
 import clovider.clovider_be.domain.recruit.Recruit;
 import clovider.clovider_be.domain.recruit.repository.RecruitRepository;
+import clovider.clovider_be.global.exception.ApiException;
+import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -24,5 +26,12 @@ public class RecruitQueryServiceImpl implements RecruitQueryService {
     public List<Recruit> getNowRecruitPeriod() {
 
         return recruitRepository.findNowRecruit(LocalDateTime.now());
+    }
+
+    @Override
+    public Recruit getRecruit(Long id){
+        return recruitRepository.findById(id).orElseThrow(
+                () -> new ApiException(ErrorStatus._RECRUIT_NOT_FOUND)
+        );
     }
 }

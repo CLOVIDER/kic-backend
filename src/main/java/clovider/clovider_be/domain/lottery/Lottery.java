@@ -7,6 +7,7 @@ import clovider.clovider_be.domain.enums.Result;
 import clovider.clovider_be.domain.recruit.Recruit;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @AllArgsConstructor
@@ -30,6 +31,7 @@ public class Lottery extends BaseTimeEntity {
     private Application application;
 
     @Column(nullable = false)
+    @ColumnDefault("'0'")
     private Integer rankNo;
 
     @Enumerated(EnumType.STRING)
@@ -38,10 +40,12 @@ public class Lottery extends BaseTimeEntity {
 
     @Setter
     @Column(nullable = false, length = 1)
+    @ColumnDefault("'0'")
     private Character isRegistry;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @ColumnDefault("'WAIT'")
     private Accept isAccept;
     
 }

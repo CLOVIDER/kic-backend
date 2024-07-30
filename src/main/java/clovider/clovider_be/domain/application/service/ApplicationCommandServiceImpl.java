@@ -45,7 +45,7 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
 
         applicationDocumentCommandService.createApplicationDocuments(applicationRequest.getImageUrls(), savedApplication);
 
-//        applicationRequest.getRecruitIdList().forEach(item -> lotteryCommandService.createLottery(savedApplication.getId(), item));
+        lotteryCommandService.insertLottery(applicationRequest.getRecruitIdList(), savedApplication.getId());
 
         return CustomResult.toCustomResult(savedApplication.getId());
     }
@@ -60,11 +60,10 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
     }
 
     @Override
-    public CustomResult applicationDelete(Long Id) {
-        Application savedApplication = applicationRepository.findById(Id).orElseThrow();
+    public CustomResult applicationDelete(Long applicationId) {
+        Application savedApplication = applicationRepository.findById(applicationId).orElseThrow();
+        lotteryCommandService.deleteLottery(applicationId);
         applicationRepository.delete(savedApplication);
-
-        //TODO: 추첨 테이블에서 값 삭제되는 메소드 불러와야함
 
         return CustomResult.toCustomResult(savedApplication.getId());
     }
