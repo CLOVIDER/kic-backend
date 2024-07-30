@@ -4,10 +4,13 @@ import clovider.clovider_be.domain.application.dto.ApplicationUpdateDto;
 import clovider.clovider_be.domain.common.BaseTimeEntity;
 import clovider.clovider_be.domain.document.Document;
 import clovider.clovider_be.domain.employee.Employee;
+import clovider.clovider_be.domain.enums.Accept;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -72,6 +75,11 @@ public class Application extends BaseTimeEntity {
     @Column(length = 1)
     @ColumnDefault("'0'")
     private Character isTemp; //default : 임시저장이 아닌 일반 저장 상태
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 15)
+    @ColumnDefault("'WAIT")
+    private Accept isAccept;
 
     private String childName;
 
