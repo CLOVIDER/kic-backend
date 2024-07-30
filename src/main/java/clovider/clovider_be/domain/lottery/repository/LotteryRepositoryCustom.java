@@ -21,5 +21,5 @@ public interface LotteryRepositoryCustom {
 
     List<AcceptResult> findAcceptStatus(List<Recruit> recruits);
 
-    Page<Lottery> findAllByRecruits(List<Recruit> recruits, Pageable pageable, SearchVO searchVO);
+    List<Long> findApplicationsAllByRecruits(List<Recruit> recruits);
 }

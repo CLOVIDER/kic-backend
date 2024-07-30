@@ -22,6 +22,6 @@ public interface LotteryQueryService {
 
     List<RecruitResult> getRecruitResult(Long recruitId);
 
-    Page<Lottery> getNowLotteries(List<Recruit> recruits, Pageable pageable, SearchVO searchVO);
+    List<Long> getApplicationsByLotteries(List<Recruit> recruits);
 
 }

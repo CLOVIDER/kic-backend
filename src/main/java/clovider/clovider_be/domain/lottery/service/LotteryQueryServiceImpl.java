@@ -50,8 +50,8 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
     }
 
     @Override
-    public Page<Lottery> getNowLotteries(List<Recruit> recruits, Pageable pageable, SearchVO searchVO) {
+    public List<Long> getApplicationsByLotteries(List<Recruit> recruits) {
 
-        return lotteryRepository.findAllByRecruits(recruits, pageable, searchVO);
+        return lotteryRepository.findApplicationsAllByRecruits(recruits);
     }
 }
