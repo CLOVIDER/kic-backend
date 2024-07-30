@@ -20,7 +20,7 @@ public class RecruitRepositoryCustomImpl implements RecruitRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<Recruit> findNowRecruit(LocalDateTime now) {
+    public List<Recruit> findNowRecruitOrderByClass(LocalDateTime now) {
 
         return jpaQueryFactory
                 .selectFrom(recruit)

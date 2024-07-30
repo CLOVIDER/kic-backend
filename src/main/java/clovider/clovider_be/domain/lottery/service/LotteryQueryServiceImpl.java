@@ -1,15 +1,15 @@
 package clovider.clovider_be.domain.lottery.service;
 
 import clovider.clovider_be.domain.lottery.Lottery;
-import clovider.clovider_be.domain.lottery.dto.LotteryResultResponseDTO;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.AcceptResult;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitResult;
+import clovider.clovider_be.domain.lottery.dto.LotteryResultResponseDTO;
 import clovider.clovider_be.domain.lottery.repository.LotteryRepository;
+import clovider.clovider_be.domain.recruit.Recruit;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
-import clovider.clovider_be.domain.recruit.Recruit;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,8 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
 
         return new LotteryResultResponseDTO(
                 "추첨 결과가 성공적으로 조회되었습니다.",
-                new LotteryResultResponseDTO.Result(lottery.getId(), lottery.getCreatedAt(), lottery.getResult())
+                new LotteryResultResponseDTO.Result(lottery.getId(), lottery.getCreatedAt(),
+                        lottery.getResult())
         );
     }
 
@@ -59,5 +60,11 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
     public List<RecruitResult> getRecruitResult(Long recruitId) {
 
         return LotteryResponse.toRecruitResults(lotteryRepository.findAllByRecruitId(recruitId));
+    }
+
+    @Override
+    public List<Long> getApplicationsByLotteries(List<Recruit> recruits) {
+
+        return lotteryRepository.findApplicationsAllByRecruits(recruits);
     }
 }

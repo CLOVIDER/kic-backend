@@ -28,7 +28,7 @@ public class RecruitController {
     @GetMapping
     public ApiResponse<NowRecruitInfo> getRecruitInfo() {
 
-        List<Recruit> recruits = recruitQueryService.getNowRecruitPeriod();
+        List<Recruit> recruits = recruitQueryService.getNowRecruitOrderByClass();
         List<CompetitionRate> recruitRates = lotteryQueryService.getRecruitRates(recruits);
 
         return ApiResponse.onSuccess(RecruitResponse.toNowRecruitInfo(recruits, recruitRates));

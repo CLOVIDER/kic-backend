@@ -75,7 +75,7 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
                     app.getIsDualIncome()
             );
 
-            double weight = weightDTO.calculateWeight();
+            double weight =  weightDTO.calculateWeight();
             applicantData.put("weight", weight);
             applicants.add(applicantData);
             log.info("Applicant data: {}", applicantData);
@@ -97,7 +97,6 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
                 .rankNo(1)
                 .result(Result.valueOf(result))
                 .isRegistry('1')
-                .isAccept(UNACCEPT)
                 .build();
 
         Lottery savedLottery = lotteryRepository.save(lottery);

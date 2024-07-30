@@ -12,6 +12,12 @@ public class TimeUtil {
         return time.format(formatter);
     }
 
+    public static String formattedDate(LocalDateTime time) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+
+        return time.format(formatter);
+    }
+
     public static int formattedRemain(LocalDateTime now, LocalDateTime end) {
         return (int) ChronoUnit.DAYS.between(now, end);
     }

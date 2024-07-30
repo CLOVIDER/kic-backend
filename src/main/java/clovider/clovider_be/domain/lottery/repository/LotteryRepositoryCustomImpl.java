@@ -1,5 +1,6 @@
 package clovider.clovider_be.domain.lottery.repository;
 
+import static clovider.clovider_be.domain.application.QApplication.application;
 import static clovider.clovider_be.domain.lottery.QLottery.lottery;
 import static clovider.clovider_be.domain.recruit.QRecruit.recruit;
 
@@ -58,7 +59,8 @@ public class LotteryRepositoryCustomImpl implements LotteryRepositoryCustom {
                 .select(lottery.count().as("cnt"))
                 .from(lottery)
                 .join(lottery.recruit, recruit)
-                .where(lottery.recruit.in(recruits).and(lottery.isAccept.eq(Accept.WAIT)))
+                .join(lottery.application, application)
+                .where(lottery.recruit.in(recruits).and(application.isAccept.eq(Accept.WAIT)))
                 .fetchFirst();
     }
 
@@ -67,15 +69,26 @@ public class LotteryRepositoryCustomImpl implements LotteryRepositoryCustom {
 
         List<Tuple> results = jpaQueryFactory
                 .select(recruit.kindergarten.kindergartenNm,
-                        lottery.isAccept,
-                        lottery.isAccept.count().as("cnt"))
+                        application.isAccept,
+                        application.isAccept.count().as("cnt"))
                 .from(lottery)
                 .join(lottery.recruit, recruit)
+                .join(lottery.application, application)
                 .where(lottery.recruit.in(recruits))
-                .groupBy(recruit.kindergarten.id, lottery.isAccept)
+                .groupBy(recruit.kindergarten.id, application.isAccept)
                 .fetch();
 
         return extractAcceptResult(results);
+    }
+
+    @Override
+    public List<Long> findApplicationsAllByRecruits(List<Recruit> recruits) {
+
+        return jpaQueryFactory
+                .selectDistinct(lottery.application.id)
+                .from(lottery)
+                .where(lottery.recruit.in(recruits))
+                .fetch();
     }
 
     private List<AcceptResult> extractAcceptResult(List<Tuple> results) {
@@ -84,8 +97,8 @@ public class LotteryRepositoryCustomImpl implements LotteryRepositoryCustom {
 
         for (Tuple tuple : results) {
             String kdgNm = tuple.get(recruit.kindergarten.kindergartenNm);
-            String accept = tuple.get(lottery.isAccept).toString();
-            int count = tuple.get(lottery.isAccept.count().as("cnt")).intValue();
+            String accept = tuple.get(application.isAccept).toString();
+            int count = tuple.get(application.isAccept.count().as("cnt")).intValue();
 
             AcceptResult acceptResult = acceptMap.computeIfAbsent(kdgNm, nm ->
                     AcceptResult.builder()
