@@ -39,8 +39,6 @@ public class SecurityConfig {
             "/api/login",
             "/api/signup",
             "/api/emails/**",
-            //pr시 수정
-            "/api/delete/**",
 
             // swagger
             "/v3/api-docs/**",
