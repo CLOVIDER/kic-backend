@@ -8,6 +8,7 @@ import clovider.clovider_be.domain.document.Document;
 import clovider.clovider_be.domain.document.repository.ApplicationDocumentRepository;
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.employee.repository.EmployeeRepository;
+import clovider.clovider_be.domain.enums.Accept;
 import clovider.clovider_be.domain.enums.Role;
 import clovider.clovider_be.domain.lottery.repository.LotteryRepository;
 import clovider.clovider_be.global.config.QuerydslConfig;
@@ -42,7 +43,7 @@ class ApplicationRepositoryTest {
     private Employee employee;
 
     @BeforeEach
-    public void before(){
+    void setUp(){
         employee = Employee.builder()
                 .nameKo("홍길동")
                 .accountId("abc")
@@ -210,10 +211,32 @@ class ApplicationRepositoryTest {
     @DisplayName("관리자 신청서 승인 테스트")
     public void applicationAcceptTest(){
         //GIVEN
+        ApplicationRequest applicationRequest = ApplicationRequest.builder()
+                .isSingleParent('1')
+                .childrenCnt(2)
+                .isDisability('0')
+                .isDualIncome('1')
+                .isEmployeeCouple('0')
+                .isSibling('1')
+                .childNm("KIM")
+                .build();
+
+        Application application = createApplication(applicationRequest);
+
+        List<String> imageUrls = List.of("http://example.com/image1.jpg", "http://example.com/image2.jpg");
+        createApplicationDocuments(imageUrls, application);
+
+        Accept accept = Accept.ACCEPT;
+
 
         //WHEN
+        Application savedApplication = applicationRepository.findById(application.getId()).orElseThrow();
+        savedApplication.isAccept(accept);
+        applicationRepository.save(savedApplication);
 
         //THEN
+        Application updatedApplication = applicationRepository.findById(application.getId()).orElseThrow();
+        assertEquals(accept, updatedApplication.getIsAccept());
     }
 
 }
