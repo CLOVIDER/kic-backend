@@ -84,8 +84,6 @@ public class Application extends BaseTimeEntity {
     @ColumnDefault("'WAIT")
     private Accept isAccept;
 
-    private String childName;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id", nullable = false)
     @JsonIgnore
@@ -106,5 +104,9 @@ public class Application extends BaseTimeEntity {
         this.isSibling = applicationRequest.getIsSibling();
         this.childNm = applicationRequest.getChildNm();
         this.isTemp = 0;
+    }
+
+    public void isAccept(Accept accept) {
+        this.isAccept = accept;
     }
 }

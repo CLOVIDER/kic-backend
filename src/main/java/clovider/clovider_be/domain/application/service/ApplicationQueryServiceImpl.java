@@ -61,5 +61,12 @@ public class ApplicationQueryServiceImpl implements ApplicationQueryService {
         return new CustomPage<>(applicationListResponsePage);
     }
 
+    @Override
+    public Application getApplication(Long Id){
+        return applicationRepository.findById(Id).orElseThrow(
+                () -> new ApiException(ErrorStatus._APPLICATION_NOT_FOUND)
+        );
+    }
+
     //
 }

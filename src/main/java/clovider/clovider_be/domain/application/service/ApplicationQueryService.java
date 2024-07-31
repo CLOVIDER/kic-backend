@@ -1,5 +1,6 @@
 package clovider.clovider_be.domain.application.service;
 
+import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.ApplicationList;
 import clovider.clovider_be.domain.admin.dto.SearchVO;
 import clovider.clovider_be.domain.application.dto.ApplicationResponse;
@@ -15,8 +16,8 @@ public interface ApplicationQueryService {
             SearchVO searchVO);
 
     ApplicationResponse applicationRead(Employee employee);
-
     ApplicationResponse applicationIdRead(Long Id);
-
     CustomPage<ApplicationResponse> applicationListRead(int page, int size);
+
+    Application getApplication(Long Id);
 }

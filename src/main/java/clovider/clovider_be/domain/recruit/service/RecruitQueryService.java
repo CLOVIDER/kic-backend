@@ -11,4 +11,6 @@ public interface RecruitQueryService {
 
     List<Recruit> getNowRecruit();
 
+    Recruit getRecruit(Long id);
+
 }
