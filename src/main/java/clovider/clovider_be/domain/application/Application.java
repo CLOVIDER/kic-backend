@@ -81,7 +81,7 @@ public class Application extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 15)
-    @ColumnDefault("'WAIT")
+    @ColumnDefault("'WAIT'")
     private Accept isAccept;
 
     @ManyToOne(fetch = FetchType.LAZY)
