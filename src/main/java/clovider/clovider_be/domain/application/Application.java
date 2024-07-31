@@ -32,7 +32,7 @@ import org.hibernate.annotations.DynamicInsert;
 
 @Entity
 @Getter
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
@@ -93,7 +93,7 @@ public class Application extends BaseTimeEntity {
     private List<Lottery> lotteries;
 
     @OneToMany(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Document> documents = new ArrayList<>();
+    private List<Document> documents;
 
     public void update(ApplicationRequest applicationRequest) {
         this.isSingleParent = applicationRequest.getIsSingleParent();

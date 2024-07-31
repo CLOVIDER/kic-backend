@@ -1,15 +1,20 @@
 package clovider.clovider_be.domain.application.dto;
 
+import clovider.clovider_be.domain.document.Document;
 import clovider.clovider_be.domain.recruit.Recruit;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Builder
 @Schema(description = "신청서 요청 DTO")
 public class ApplicationRequest {
 
@@ -39,6 +44,6 @@ public class ApplicationRequest {
     @Schema(description = "지원한 모집 ID 리스트", example = "[1, 2, 5]")
     private List<Long> recruitIdList;
 
-    @Schema(description = "증빙 서류 URL 리스트", example = "['s3-1', 's3-2']")
-    private List<String> imageUrls;
+    @Schema(description = "증빙 서류 리스트", example = "['s3-1', 's3-2']")
+    private List<String> documents;
 }
