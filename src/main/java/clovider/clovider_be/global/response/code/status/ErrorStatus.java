@@ -56,16 +56,20 @@ public enum ErrorStatus implements BaseErrorCode {
     _S3_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "S3400", "S3에 존재하지 않는 이미지입니다."),
 
     // qna 관련
-    _QNA_NOT_FOUND(HttpStatus.NOT_FOUND, "QNA400", "qna를 찾을 수 없습니다."),
+    _QNA_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "QNA400", "qna를 찾을 수 없습니다."),
 
-    // 추첨 관련
-    _LOTTERY_NOT_FOUND(HttpStatus.NOT_FOUND, "LOTTERY400", "lottery를 찾을 수 없습니다."),
+
+    //추첨 관련
+    _LOTTERY_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "LOTTERY400", "lottery를 찾을 수 없습니다."),
 
     // 모집 관련
     _RECRUIT_NOT_FOUND(HttpStatus.NOT_FOUND, "RECRUIT400", "recruit를 찾을 수 없습니다."),
     _RECRUIT_EXPORT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "RECRUIT500",
-            "모집 결과 다운 중 서버 에러가 발생했습니다.");
+            "모집 결과 다운 중 서버 에러가 발생했습니다."),
 
+
+    _EXTERNAL_API_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "LABMDA400",
+            "LAMBDA 확률 에측 서비스에 연결할 수 없습니다");
 
     private final HttpStatus httpStatus;
     private final String code;

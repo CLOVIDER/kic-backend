@@ -59,17 +59,6 @@ public class SecurityConfig {
         http
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(corsCustom -> corsCustom.configurationSource(request -> {
-                    CorsConfiguration cors = new CorsConfiguration();
-                    cors.setAllowedOrigins(
-                            List.of("http://localhost:3000"));
-                    cors.setAllowedMethods(
-                            List.of("GET", "POST", "PATCH", "DELETE"));
-                    cors.setAllowCredentials(true);
-                    cors.addExposedHeader("Authorization");
-                    cors.addExposedHeader("RefreshToken");
-                    return cors;
-                }))
                 .sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize ->

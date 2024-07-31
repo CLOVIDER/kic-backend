@@ -44,4 +44,11 @@ public class RecruitQueryServiceImpl implements RecruitQueryService {
 
         return LotteryResponse.toRecruitInfo(recruit);
     }
+
+    @Override
+    public Recruit getRecruit(Long id) {
+        return recruitRepository.findById(id).orElseThrow(
+                () -> new ApiException(ErrorStatus._RECRUIT_NOT_FOUND)
+        );
+    }
 }

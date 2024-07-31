@@ -14,4 +14,6 @@ public interface RecruitQueryService {
 
     RecruitInfo getRecruitInfo(Long recruitId);
 
+    Recruit getRecruit(Long id);
+
 }

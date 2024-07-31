@@ -7,6 +7,7 @@ import clovider.clovider_be.domain.enums.Result;
 import clovider.clovider_be.domain.recruit.Recruit;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @AllArgsConstructor

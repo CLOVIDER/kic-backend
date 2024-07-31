@@ -12,4 +12,6 @@ public enum Accept {
     WAIT("승인대기");
 
     private final String description;
+
+
 }
