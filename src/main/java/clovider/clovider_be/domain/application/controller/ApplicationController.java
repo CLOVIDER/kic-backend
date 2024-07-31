@@ -11,6 +11,7 @@ import clovider.clovider_be.domain.enums.Accept;
 import clovider.clovider_be.global.annotation.AuthEmployee;
 import clovider.clovider_be.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.Map;
@@ -82,7 +83,8 @@ public class ApplicationController {
 
     @Operation(summary = "관리자 신청서 승인 API", description = "acceptRequest 값을 body로 '0' 또는 '1로' 입력받습니다. 0 이면 미승인 처리, 1 이면 승인 처리로 수정됩니다.")
     @PatchMapping("/admin/applications/{applicationId}")
-    public ApiResponse<CustomResult> acceptApplication(@PathVariable Long applicationId, @RequestBody Map<String, String> acceptRequest) {
+    public ApiResponse<CustomResult> acceptApplication(@PathVariable Long applicationId, @RequestBody
+    @Schema(description = "신청서 승인 여부", example = "{'accessRequest' : '0'}") Map<String, String> acceptRequest) {
 
         String acceptStatus = acceptRequest.get("acceptRequest");
         Accept accept = Accept.WAIT;

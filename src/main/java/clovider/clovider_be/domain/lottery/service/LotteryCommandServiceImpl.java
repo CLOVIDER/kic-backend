@@ -161,9 +161,9 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
                     Lottery.builder()
                             .application(application)
                             .recruit(recruit)
-                            .rankNo(1)
+                            .rankNo(0)
                             .result(WAIT)
-                            .isRegistry('1')
+                            .isRegistry('0')
                             .build()
             );
         }
