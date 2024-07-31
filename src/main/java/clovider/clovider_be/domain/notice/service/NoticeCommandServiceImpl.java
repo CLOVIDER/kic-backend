@@ -7,9 +7,12 @@ import clovider.clovider_be.domain.notice.Notice;
 import clovider.clovider_be.domain.notice.dto.NoticeRequest;
 import clovider.clovider_be.domain.notice.dto.NoticeUpdateResponse;
 import clovider.clovider_be.domain.notice.repository.NoticeRepository;
+import clovider.clovider_be.domain.noticeImage.NoticeImage;
 import clovider.clovider_be.domain.noticeImage.service.NoticeImageCommandService;
 import clovider.clovider_be.domain.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class NoticeCommandServiceImpl implements NoticeCommandService {
 
     private final NoticeRepository noticeRepository;
-    private final NoticeImageCommandService noticeImageCommandService;
     private final NoticeQueryService noticeQueryService;
     private final EmployeeQueryService employeeQueryService;
 
@@ -28,11 +30,18 @@ public class NoticeCommandServiceImpl implements NoticeCommandService {
         Notice savedNotice = noticeRepository.save(
                 NoticeRequest.toNotice(request, employeeQueryService.getEmployee(employee.getId())));
 
-        noticeImageCommandService.createNoticeImages(request.getImageUrls(), savedNotice);
+        request.getImageUrls().forEach(url -> {
+            NoticeImage image = NoticeImage.builder()
+                    .image(url)
+                    .notice(savedNotice)
+                    .build();
+            savedNotice.getImages().add(image);
+        });
 
         return CustomResult.toCustomResult(savedNotice.getId());
     }
 
+    @CacheEvict(value = "notices", key = "#noticeId")
     public NoticeUpdateResponse updateNotice(Long noticeId, NoticeRequest request) {
 
         Notice foundNotice = noticeQueryService.findById(noticeId);
@@ -42,6 +51,7 @@ public class NoticeCommandServiceImpl implements NoticeCommandService {
         return NoticeUpdateResponse.of(foundNotice.getId());
     }
 
+    @CacheEvict(value = "notices", key = "#noticeId")
     public String deleteNotice(Long noticeId) {
         noticeRepository.deleteById(noticeId);
         return "공지사항 삭제에 성공했습니다.";

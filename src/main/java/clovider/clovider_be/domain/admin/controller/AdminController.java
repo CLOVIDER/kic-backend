@@ -17,8 +17,11 @@ import clovider.clovider_be.domain.notice.dto.NoticeTop3;
 import clovider.clovider_be.domain.notice.service.NoticeQueryService;
 import clovider.clovider_be.domain.qna.service.QnaQueryService;
 import clovider.clovider_be.domain.recruit.Recruit;
+import clovider.clovider_be.domain.recruit.dto.RecruitCreateRequestDTO;
+import clovider.clovider_be.domain.recruit.dto.RecruitCreateResponseDTO;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruitInfo;
+import clovider.clovider_be.domain.recruit.service.RecruitCommandService;
 import clovider.clovider_be.domain.recruit.service.RecruitQueryService;
 import clovider.clovider_be.global.response.ApiResponse;
 import clovider.clovider_be.global.util.PdfUtil;
@@ -37,6 +40,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -54,6 +58,7 @@ public class AdminController {
     private final MailService mailService;
     private final ApplicationQueryService applicationQueryService;
     private final PdfUtil pdfUtil;
+    private final RecruitCommandService recruitCommandService;
 
 
     @Operation(summary = "관리자 대시보드 조회", description = "어린이집 모집 통계 정보를 조회합니다.")
@@ -145,4 +150,10 @@ public class AdminController {
         return new ResponseEntity<>(resource, headers, HttpStatus.OK);
     }
 
+    @PostMapping("/create/recruit")
+    public ApiResponse<RecruitCreateResponseDTO> createRecruit(
+            @RequestBody RecruitCreateRequestDTO requestDTO) {
+        RecruitCreateResponseDTO responseDTO = recruitCommandService.createRecruit(requestDTO);
+        return ApiResponse.onSuccess(responseDTO);
+    }
 }

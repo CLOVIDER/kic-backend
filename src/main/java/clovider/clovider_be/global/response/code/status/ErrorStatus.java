@@ -66,6 +66,7 @@ public enum ErrorStatus implements BaseErrorCode {
     _RECRUIT_NOT_FOUND(HttpStatus.NOT_FOUND, "RECRUIT400", "recruit를 찾을 수 없습니다."),
     _RECRUIT_EXPORT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "RECRUIT500",
             "모집 결과 다운 중 서버 에러가 발생했습니다."),
+    _RECRUIT_CANNOT_CANCEL(HttpStatus.INTERNAL_SERVER_ERROR, "RECRUIT400", "모집을 취소 할 수 없습니다."),
 
 
     _EXTERNAL_API_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "LABMDA400",

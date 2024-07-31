@@ -8,8 +8,12 @@ import clovider.clovider_be.domain.notice.dto.NoticeTop3;
 import clovider.clovider_be.domain.notice.repository.NoticeRepository;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -27,12 +31,13 @@ public class NoticeQueryServiceImpl implements NoticeQueryService {
                 .orElseThrow(() -> new ApiException(ErrorStatus._NOTICE_NOT_FOUND));
     }
 
+    @Cacheable(value = "notices", key = "#noticeId")
     @Transactional
-    public NoticeResponse getNotice(Long noticeId) {
+    public NoticeResponse getNotice(Long noticeId, HttpServletRequest request, HttpServletResponse response) {
         Notice foundNotice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new ApiException(ErrorStatus._NOTICE_NOT_FOUND));
 
-        foundNotice.incrementHits();
+        handleViewCookie(foundNotice, noticeId, request, response);
 
         return NoticeResponse.toNoticeResponse(foundNotice);
     }
@@ -54,6 +59,37 @@ public class NoticeQueryServiceImpl implements NoticeQueryService {
     @Override
     public List<NoticeResponse> searchNotices(SearchType type, String keyword) {
         return noticeRepository.searchNotices(type, keyword);
+    }
+
+    private void handleViewCookie(Notice foundNotice, Long noticeId, HttpServletRequest request, HttpServletResponse response) {
+        Cookie oldCookie = getCookie(request.getCookies());
+
+        if (oldCookie != null) {
+            if (!oldCookie.getValue().contains("[" + noticeId.toString() + "]")) {
+                foundNotice.incrementHits();
+                oldCookie.setValue(oldCookie.getValue() + "_[" + noticeId + "]");
+                oldCookie.setPath("/");
+                oldCookie.setMaxAge(60 * 60 * 24);
+                response.addCookie(oldCookie);
+            }
+        } else {
+            foundNotice.incrementHits();
+            Cookie newCookie = new Cookie("noticeView", "[" + noticeId + "]");
+            newCookie.setPath("/");
+            newCookie.setMaxAge(60 * 60 * 24);
+            response.addCookie(newCookie);
+        }
+    }
+
+    private Cookie getCookie(Cookie[] cookies) {
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("noticeView")) {
+                    return cookie;
+                }
+            }
+        }
+        return null;
     }
 
 }

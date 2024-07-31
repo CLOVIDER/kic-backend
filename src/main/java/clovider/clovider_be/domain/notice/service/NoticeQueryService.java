@@ -5,6 +5,8 @@ import clovider.clovider_be.domain.enums.SearchType;
 import clovider.clovider_be.domain.notice.Notice;
 import clovider.clovider_be.domain.notice.dto.NoticeResponse;
 import clovider.clovider_be.domain.notice.dto.NoticeTop3;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +15,7 @@ public interface NoticeQueryService {
 
     Notice findById(Long id);
 
-    NoticeResponse getNotice(Long id);
+    NoticeResponse getNotice(Long id, HttpServletRequest request, HttpServletResponse response);
 
     CustomPage<NoticeResponse> getAllNotices(int page, int size);
 

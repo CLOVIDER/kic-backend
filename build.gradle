@@ -71,6 +71,11 @@ dependencies {
 
     // pdf
     implementation("org.xhtmlrenderer:flying-saucer-pdf:9.1.20")
+
+    // test h2
+    testRuntimeOnly 'com.h2database:h2'
+
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3'
 }
 
 tasks.named('test') {

@@ -4,8 +4,10 @@ import clovider.clovider_be.domain.common.BaseTimeEntity;
 import clovider.clovider_be.domain.enums.AgeClass;
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import clovider.clovider_be.domain.lottery.Lottery;
+import clovider.clovider_be.domain.recruit.dto.RecruitCreateRequestDTO;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -55,8 +57,59 @@ public class Recruit extends BaseTimeEntity {
     @OneToMany(mappedBy = "recruit", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Lottery> lotteries;
 
+    @Column(nullable = false)
+    @ColumnDefault("'0'")
+    private Integer workYearsUsage;
+
+    @Column(nullable = false, length = 1)
+    @ColumnDefault("'0'")
+    private Character isSingleParentUsage;
+
+    @Column(nullable = false)
+    @ColumnDefault("'0'")
+    private Integer childrenCntUsage;
+
+    @Column(nullable = false, length = 1)
+    @ColumnDefault("'0'")
+    private Character isDisabilityUsage;
+
+    @Column(nullable = false, length = 1)
+    @ColumnDefault("'0'")
+    private Character isDualIncomeUsage;
+
+    @Column(nullable = false, length = 1)
+    @ColumnDefault("'0'")
+    private Character isEmployeeCoupleUsage;
+
+    @Column(nullable = false, length = 1)
+    @ColumnDefault("'0'")
+    private Character isSiblingUsage;
+
     public void changeKindergarten(Kindergarten kindergarten){
         this.kindergarten = kindergarten;
     }
 
+
+
+    // 정적 팩토리 메서드 추가
+    public static Recruit createRecruit(RecruitCreateRequestDTO requestDTO, Kindergarten kindergarten) {
+        Recruit recruit = new Recruit();
+        recruit.recruitStartDt = requestDTO.getRecruitStartDt();
+        recruit.recruitEndDt = requestDTO.getRecruitEndDt();
+        recruit.recruitCnt = requestDTO.getRecruitCnt();
+        recruit.ageClass = requestDTO.getAgeClass();
+        recruit.firstStartDt = requestDTO.getFirstStartDt();
+        recruit.firstEndDt = requestDTO.getFirstEndDt();
+        recruit.secondStartDt = requestDTO.getSecondStartDt();
+        recruit.secondEndDt = requestDTO.getSecondEndDt();
+        recruit.kindergarten = kindergarten;
+        recruit.workYearsUsage = requestDTO.getWorkYearsUsage();
+        recruit.isSingleParentUsage = requestDTO.getIsSingleParentUsage();
+        recruit.childrenCntUsage = requestDTO.getChildrenCntUsage();
+        recruit.isDisabilityUsage = requestDTO.getIsDisabilityUsage();
+        recruit.isDualIncomeUsage = requestDTO.getIsDualIncomeUsage();
+        recruit.isEmployeeCoupleUsage = requestDTO.getIsEmployeeCoupleUsage();
+        recruit.isSiblingUsage = requestDTO.getIsSiblingUsage();
+        return recruit;
+    }
 }
