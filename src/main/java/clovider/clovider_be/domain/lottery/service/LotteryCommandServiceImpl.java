@@ -2,6 +2,7 @@ package clovider.clovider_be.domain.lottery.service;
 
 import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.application.repository.ApplicationRepository;
+import clovider.clovider_be.domain.application.service.ApplicationQueryService;
 import clovider.clovider_be.domain.enums.Result;
 import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.lottery.dto.LotteryResisterResponseDTO;
@@ -10,6 +11,7 @@ import clovider.clovider_be.domain.lottery.dto.WeightCalculationDTO;
 import clovider.clovider_be.domain.lottery.repository.LotteryRepository;
 import clovider.clovider_be.domain.recruit.Recruit;
 import clovider.clovider_be.domain.recruit.repository.RecruitRepository;
+import clovider.clovider_be.domain.recruit.service.RecruitQueryService;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,10 +27,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+
 import org.springframework.web.client.RestTemplate;
+
 
 import static clovider.clovider_be.domain.enums.Accept.UNACCEPT;
 import static clovider.clovider_be.domain.enums.Result.*;
+import static clovider.clovider_be.domain.enums.Result.WAIT;
 
 @Slf4j
 @Service
@@ -43,6 +48,9 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
 
     @Value("${cloud.aws.lambda.url}")
     private String apiUrl;
+
+    private final ApplicationQueryService applicationQueryService;
+    private final RecruitQueryService recruitQueryService;
 
     @Override
     public LotteryResponseDTO createLottery(Long recruitId, Long applicationId) {
@@ -124,7 +132,7 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
 
         //등록
         if(registryStatus == '0') {
-            lottery.setIsRegistry('1');
+            lottery.serIsRegistry('1');
             return new LotteryResisterResponseDTO(
                     "등록되었습니다.",
                     new LotteryResisterResponseDTO.Result(updatedLottery.getId(), updatedLottery.getIsRegistry() == '1')
@@ -134,7 +142,7 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
         //등록취소
         else {
 
-            lottery.setIsRegistry('0');
+            lottery.serIsRegistry('0');
             return new LotteryResisterResponseDTO(
                     "등록이 취소되었습니다.",
                     new LotteryResisterResponseDTO.Result(updatedLottery.getId(), updatedLottery.getIsRegistry() == '1')
@@ -155,6 +163,35 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
         else if (lottery.getResult()==WIN || lottery.getResult()==LOSE){
             throw new ApiException(ErrorStatus._RECRUIT_CANNOT_CANCEL);
         }
+    }
+
+    //추첨 테이블에 값 입력
+    @Override
+    public void insertLottery(List<Long> recruitIdList, Long applicationId)
+    {
+        Application application = applicationQueryService.getApplication(applicationId);
+
+        for (Long recruitId : recruitIdList) {
+            Recruit recruit = recruitQueryService.getRecruit(recruitId);
+
+            lotteryRepository.save(
+                    Lottery.builder()
+                            .application(application)
+                            .recruit(recruit)
+                            .rankNo(0)
+                            .result(WAIT)
+                            .isRegistry('0')
+                            .build()
+            );
+        }
+    }
+
+    //추첨 테이블 값 일괄 삭제
+    @Override
+    public void deleteLottery(Long applicationId) {
+        Application application = applicationQueryService.getApplication(applicationId);
+        List<Lottery> savedLotteries = lotteryRepository.findAllByApplication(application);
+        lotteryRepository.deleteAll(savedLotteries);
     }
 
 

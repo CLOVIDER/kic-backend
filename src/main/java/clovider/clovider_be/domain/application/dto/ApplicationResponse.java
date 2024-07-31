@@ -3,8 +3,10 @@ package clovider.clovider_be.domain.application.dto;
 import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.document.Document;
 import clovider.clovider_be.domain.employee.Employee;
+import clovider.clovider_be.domain.enums.Accept;
 import clovider.clovider_be.domain.lottery.Lottery;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,6 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Getter
+@Schema(description = "신청서 응답 DTO")
 public class ApplicationResponse {
 
     private Long id; //신청서 id
@@ -34,12 +37,13 @@ public class ApplicationResponse {
 
     private Integer workYears;
     private Character isSingleParent;
-    private Integer isChildrenCnt;
+    private Integer ChildrenCnt;
     private Character isDisability;
     private Character isDualIncome;
     private Character isEmployeeCouple;
     private Character isSibling;
     private String childNm;
+    private Accept isAccept;
 
     private List<Document> documents;
 
@@ -50,12 +54,13 @@ public class ApplicationResponse {
                 .employee(application.getEmployee())
                 .workYears(application.getWorkYears())
                 .isSingleParent(application.getIsSingleParent())
-                .isChildrenCnt(application.getChildrenCnt())
+                .ChildrenCnt(application.getChildrenCnt())
                 .isDisability(application.getIsDisability())
                 .isDualIncome(application.getIsDualIncome())
                 .isEmployeeCouple(application.getIsEmployeeCouple())
                 .isSibling(application.getIsSibling())
                 .childNm(application.getChildNm())
+                .isAccept(application.getIsAccept())
                 .documents(application.getDocuments())
                 .build();
     }

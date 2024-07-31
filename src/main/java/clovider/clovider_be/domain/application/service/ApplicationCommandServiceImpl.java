@@ -6,11 +6,10 @@ import clovider.clovider_be.domain.application.repository.ApplicationRepository;
 import clovider.clovider_be.domain.common.CustomResult;
 import clovider.clovider_be.domain.document.service.ApplicationDocumentCommandService;
 import clovider.clovider_be.domain.employee.Employee;
-import clovider.clovider_be.domain.employee.service.EmployeeQueryService;
+import clovider.clovider_be.domain.enums.Accept;
 import clovider.clovider_be.domain.lottery.service.LotteryCommandService;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
-import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +22,8 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
     private final ApplicationRepository applicationRepository;
     private final ApplicationDocumentCommandService applicationDocumentCommandService;
     private final LotteryCommandService lotteryCommandService;
+
+
 
     @Override
     public CustomResult applicationCreate(ApplicationRequest applicationRequest, Employee employee) {
@@ -45,7 +46,7 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
 
         applicationDocumentCommandService.createApplicationDocuments(applicationRequest.getImageUrls(), savedApplication);
 
-//        applicationRequest.getRecruitIdList().forEach(item -> lotteryCommandService.createLottery(savedApplication.getId(), item));
+        lotteryCommandService.insertLottery(applicationRequest.getRecruitIdList(), savedApplication.getId());
 
         return CustomResult.toCustomResult(savedApplication.getId());
     }
@@ -62,9 +63,8 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
     @Override
     public CustomResult applicationDelete(Long Id) {
         Application savedApplication = applicationRepository.findById(Id).orElseThrow();
+        lotteryCommandService.deleteLottery(Id);
         applicationRepository.delete(savedApplication);
-
-        //TODO: 추첨 테이블에서 값 삭제되는 메소드 불러와야함
 
         return CustomResult.toCustomResult(savedApplication.getId());
     }
@@ -93,5 +93,12 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
         return CustomResult.toCustomResult(savedApplication.getId());
     }
 
+    @Override
+    public CustomResult applicationAccept(Long Id, Accept accept) {
+        Application savedApplication = applicationRepository.findById(Id).orElseThrow();
+        savedApplication.isAccept(accept);
+
+        return CustomResult.toCustomResult(savedApplication.getId());
+    }
 
 }

@@ -81,10 +81,8 @@ public class Application extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 15)
-    @ColumnDefault("'WAIT")
+    @ColumnDefault("'WAIT'")
     private Accept isAccept;
-
-    private String childName;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id", nullable = false)
@@ -106,5 +104,9 @@ public class Application extends BaseTimeEntity {
         this.isSibling = applicationRequest.getIsSibling();
         this.childNm = applicationRequest.getChildNm();
         this.isTemp = 0;
+    }
+
+    public void isAccept(Accept accept) {
+        this.isAccept = accept;
     }
 }
