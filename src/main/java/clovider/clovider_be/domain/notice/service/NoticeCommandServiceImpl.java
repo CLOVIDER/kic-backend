@@ -8,11 +8,8 @@ import clovider.clovider_be.domain.notice.dto.NoticeRequest;
 import clovider.clovider_be.domain.notice.dto.NoticeUpdateResponse;
 import clovider.clovider_be.domain.notice.repository.NoticeRepository;
 import clovider.clovider_be.domain.noticeImage.NoticeImage;
-import clovider.clovider_be.domain.noticeImage.service.NoticeImageCommandService;
-import clovider.clovider_be.domain.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
