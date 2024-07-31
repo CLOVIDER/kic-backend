@@ -45,7 +45,7 @@ public class LotteryController {
     }
     @DeleteMapping("/delete/{lotteryId}")
     public ApiResponse<String> deleteLottery(@PathVariable Long lotteryId) {
-        lotteryService.deleteLottery(lotteryId);
+        lotteryService.deleteLotteryBylotteryId(lotteryId);
         return ApiResponse.onSuccess("추첨이 삭제되었습니다.");
     }
 

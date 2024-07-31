@@ -9,5 +9,5 @@ public interface LotteryCommandService {
 
     Double getPercent(Long lotteryId);
 
-    void deleteLottery(Long lotteryId);
+    void deleteLotteryBylotteryId(Long lotteryId);
 }

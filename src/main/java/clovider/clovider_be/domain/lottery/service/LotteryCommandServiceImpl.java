@@ -144,7 +144,7 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
     }
 
     @Override
-    public void deleteLottery(Long lotteryId) {
+    public void deleteLotteryBylotteryId(Long lotteryId) {
         Lottery lottery = lotteryRepository.findById(lotteryId)
                 .orElseThrow(() -> new ApiException(ErrorStatus._LOTTERY_NOT_FOUND));
 
