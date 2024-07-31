@@ -80,13 +80,13 @@ tasks.named('test') {
 }
 
 // submodule
-//processResources.dependsOn('copyGitSubmodule')
-//task copyGitSubmodule(type: Copy) {
-//    from './application-config'
-//    include '*.yml'
-//    into 'src/main/resources'
-//
-//}
+processResources.dependsOn('copyGitSubmodule')
+task copyGitSubmodule(type: Copy) {
+    from './application-config'
+    include '*.yml'
+    into 'src/main/resources'
+
+}
 
 // Querydsl 설정부
 def generated = 'src/main/generated'
