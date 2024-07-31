@@ -64,22 +64,29 @@ class NoticeCommandServiceImplTest {
                 .build();
     }
 
+    private NoticeRequest createNoticeRequest(String title, String content, List<String> imageUrls) throws NoSuchFieldException, IllegalAccessException {
+        NoticeRequest noticeRequest = new NoticeRequest();
+        setField(noticeRequest, "title", title);
+        setField(noticeRequest, "content", content);
+        setField(noticeRequest, "imageUrls", imageUrls);
+        return noticeRequest;
+    }
+
+    private void setField(Object obj, String fieldName, Object value) throws NoSuchFieldException, IllegalAccessException {
+        Field field = obj.getClass().getDeclaredField(fieldName);
+        field.setAccessible(true);
+        field.set(obj, value);
+    }
+
     @Test
     @DisplayName("공지사항 작성 테스트")
     void createNotice() throws NoSuchFieldException, IllegalAccessException {
         // given
-        NoticeRequest noticeRequest = new NoticeRequest();
-        Field titleField = NoticeRequest.class.getDeclaredField("title");
-        Field contentField = NoticeRequest.class.getDeclaredField("content");
-        Field imageUrlsField = NoticeRequest.class.getDeclaredField("imageUrls");
-
-        titleField.setAccessible(true);
-        contentField.setAccessible(true);
-        imageUrlsField.setAccessible(true);
-
-        titleField.set(noticeRequest, "공지사항 제목");
-        contentField.set(noticeRequest, "공지사항 내용");
-        imageUrlsField.set(noticeRequest, List.of("http://example.com/new_image1.jpg", "http://example.com/new_image2.jpg"));
+        NoticeRequest noticeRequest = createNoticeRequest(
+                "공지사항 제목",
+                "공지사항 내용",
+                List.of("http://example.com/new_image1.jpg", "http://example.com/new_image2.jpg")
+        );
 
         when(noticeRepository.save(any(Notice.class))).thenReturn(notice);
 
@@ -95,18 +102,11 @@ class NoticeCommandServiceImplTest {
     @DisplayName("공지사항 수정 테스트")
     void updateNotice() throws NoSuchFieldException, IllegalAccessException {
         // given
-        NoticeRequest noticeRequest = new NoticeRequest();
-        Field titleField = NoticeRequest.class.getDeclaredField("title");
-        Field contentField = NoticeRequest.class.getDeclaredField("content");
-        Field imageUrlsField = NoticeRequest.class.getDeclaredField("imageUrls");
-
-        titleField.setAccessible(true);
-        contentField.setAccessible(true);
-        imageUrlsField.setAccessible(true);
-
-        titleField.set(noticeRequest, "수정된 제목");
-        contentField.set(noticeRequest, "수정된 내용");
-        imageUrlsField.set(noticeRequest, List.of("http://example.com/new_image1.jpg", "http://example.com/new_image2.jpg"));
+        NoticeRequest noticeRequest = createNoticeRequest(
+                "수정된 제목",
+                "수정된 내용",
+                List.of("http://example.com/new_image1.jpg", "http://example.com/new_image2.jpg")
+        );
 
         when(noticeQueryService.findById(1L)).thenReturn(notice);
 
@@ -131,5 +131,4 @@ class NoticeCommandServiceImplTest {
         assertEquals("공지사항 삭제에 성공했습니다.", result);
         verify(noticeRepository).deleteById(noticeId);
     }
-
 }
