@@ -43,5 +43,16 @@ public class Lottery extends BaseTimeEntity {
     public void serIsRegistry(Character isRegistry) {
         this.isRegistry = isRegistry;
     }
-    
+
+    public void setResult(Result result) {
+        this.result = result;
+    }
+
+    public void setRankNo(int i) {
+        this.rankNo = i;
+    }
+
+    public void setIsRegistry(char c) {
+        this.isRegistry = c;
+    }
 }

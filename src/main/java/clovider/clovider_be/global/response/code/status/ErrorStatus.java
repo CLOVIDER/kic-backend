@@ -60,6 +60,7 @@ public enum ErrorStatus implements BaseErrorCode {
 
     //추첨 관련
     _LOTTERY_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "LOTTERY400", "lottery를 찾을 수 없습니다."),
+    _LOTTERY_ALREADY_DONE(HttpStatus.INTERNAL_SERVER_ERROR, "LOTTERY400", "이미 추첨이 진행된 lottery입니다."),
 
     // 모집 관련
     _RECRUIT_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "RECRUIT400", "recruit를 찾을 수 없습니다."),

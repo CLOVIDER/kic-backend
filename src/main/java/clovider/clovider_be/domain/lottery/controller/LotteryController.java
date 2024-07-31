@@ -23,11 +23,10 @@ public class LotteryController {
         this.lotteryQueryService = lotteryQueryService;
     }
 
-    @PostMapping("/admin/lotteries/create/{recruitId}/{applicationId}")
+    @PostMapping("/admin/lotteries/create/{recruitId}")
     public ApiResponse<LotteryResponseDTO> createLottery(
-            @PathVariable Long recruitId,
-            @PathVariable Long applicationId) {
-        return ApiResponse.onSuccess(lotteryService.createLottery(recruitId, applicationId));
+            @PathVariable Long recruitId) {
+        return ApiResponse.onSuccess(lotteryService.createLottery(recruitId));
     }
 
     @PatchMapping("/update-registry/{lotteryId}")
