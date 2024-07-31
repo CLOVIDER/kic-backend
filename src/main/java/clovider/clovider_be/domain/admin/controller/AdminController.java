@@ -16,8 +16,12 @@ import clovider.clovider_be.domain.notice.dto.NoticeTop3;
 import clovider.clovider_be.domain.notice.service.NoticeQueryService;
 import clovider.clovider_be.domain.qna.service.QnaQueryService;
 import clovider.clovider_be.domain.recruit.Recruit;
+import clovider.clovider_be.domain.recruit.dto.RecruitCreateRequestDTO;
+import clovider.clovider_be.domain.recruit.dto.RecruitCreateResponseDTO;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruitInfo;
+import clovider.clovider_be.domain.recruit.service.RecruitCommandService;
+import clovider.clovider_be.domain.recruit.service.RecruitCommandServiceImpl;
 import clovider.clovider_be.domain.recruit.service.RecruitQueryService;
 import clovider.clovider_be.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,12 +32,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "관리자 기능 관련 API 명세서")
 @RestController
@@ -47,6 +46,7 @@ public class AdminController {
     private final LotteryQueryService lotteryQueryService;
     private final MailService mailService;
     private final ApplicationQueryService applicationQueryService;
+    private final RecruitCommandService recruitCommandService;
 
 
     @Operation(summary = "관리자 대시보드 조회", description = "어린이집 모집 통계 정보를 조회합니다.")
@@ -119,4 +119,10 @@ public class AdminController {
         return ApiResponse.onSuccess(new CustomPage<>(applicationPage));
     }
 
+
+    @PostMapping("/create/recruit")
+    public ApiResponse<RecruitCreateResponseDTO> createRecruit(@RequestBody RecruitCreateRequestDTO requestDTO) {
+        RecruitCreateResponseDTO responseDTO = recruitCommandService.createRecruit(requestDTO);
+        return ApiResponse.onSuccess(responseDTO);
+    }
 }

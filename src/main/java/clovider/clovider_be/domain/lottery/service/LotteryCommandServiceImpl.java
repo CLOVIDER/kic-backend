@@ -129,7 +129,7 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
 
         //등록
         if(registryStatus == '0') {
-            lottery.setIsRegistry('1');
+            lottery.serIsRegistry('1');
             return new LotteryResisterResponseDTO(
                     "등록되었습니다.",
                     new LotteryResisterResponseDTO.Result(updatedLottery.getId(), updatedLottery.getIsRegistry() == '1')
@@ -139,7 +139,7 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
         //등록취소
         else {
 
-            lottery.setIsRegistry('0');
+            lottery.serIsRegistry('0');
             return new LotteryResisterResponseDTO(
                     "등록이 취소되었습니다.",
                     new LotteryResisterResponseDTO.Result(updatedLottery.getId(), updatedLottery.getIsRegistry() == '1')
