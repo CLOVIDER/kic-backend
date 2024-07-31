@@ -31,7 +31,6 @@ import java.util.*;
 import org.springframework.web.client.RestTemplate;
 
 
-import static clovider.clovider_be.domain.enums.Accept.UNACCEPT;
 import static clovider.clovider_be.domain.enums.Result.*;
 import static clovider.clovider_be.domain.enums.Result.WAIT;
 
@@ -55,8 +54,6 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
     @Override
     public LotteryResponseDTO createLottery(Long recruitId) {
 
-        Lottery lottery_check = lotteryRepository.findLotteryByRecruitID(recruitId);
-        if(lottery_check.getResult()==WAIT) {
 
 
             log.info("Creating lottery");
@@ -121,10 +118,8 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
                     "추첨이 생성 및 저장되었습니다.",
                     new LotteryResponseDTO.Result(recruit.getId(), recruit.getCreatedAt())
             );
-        }
-        else{
-            throw new ApiException(ErrorStatus._LOTTERY_ALREADY_DONE);
-        }
+        
+
     }
 
 

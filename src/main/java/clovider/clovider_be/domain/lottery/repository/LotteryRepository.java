@@ -26,5 +26,5 @@ public interface LotteryRepository extends JpaRepository<Lottery, Long>, Lottery
 
     Lottery findLotteryByApplicationId(Long applicationId);
 
-    Lottery findLotteryByRecruitID(Long recruitId);
+    Lottery findLotteryByRecruitId(Long recruitId);
 }
