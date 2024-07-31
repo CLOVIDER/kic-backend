@@ -16,9 +16,14 @@ public class NoticeImageCommandServiceImpl implements NoticeImageCommandService 
     private final NoticeImageRepository noticeImageRepository;
 
     public void createNoticeImages(List<String> imageUrls, Notice notice) {
-        imageUrls.forEach(imageUrl -> noticeImageRepository.save(NoticeImage.builder()
-                .image(imageUrl)
-                .notice(notice).build())
-        );
+        imageUrls.forEach(imageUrl -> {
+            NoticeImage image = NoticeImage.builder()
+                    .image(imageUrl)
+                    .notice(notice)
+                    .build();
+            noticeImageRepository.save(image);
+
+            notice.getImages().add(image);
+        });
     }
 }

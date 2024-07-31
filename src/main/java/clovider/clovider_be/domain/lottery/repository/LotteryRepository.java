@@ -19,6 +19,8 @@ public interface LotteryRepository extends JpaRepository<Lottery, Long>, Lottery
             "where l.recruit.id = :recruitId")
     List<Lottery> findAllByRecruitId(@Param("recruitId") Long recruitId);
 
+    List<Lottery> findAllByApplication(Application application);
+
     @Query("select l.id from Lottery l where l.application.id = :applicationId")
     Long findLotteryIdByApplication(@Param("applicationId") Long applicationId);
 

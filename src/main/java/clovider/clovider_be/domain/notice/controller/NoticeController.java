@@ -15,6 +15,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -40,8 +42,8 @@ public class NoticeController {
     @Operation(summary = "공지사항 조회", description = "특정 공지사항의 정보를 조회합니다.")
     @Parameter(name = "noticeId", description = "공지사항 ID", required = true, example = "1")
     @GetMapping("/notices/{noticeId}")
-    public ApiResponse<NoticeResponse> getNotice(@PathVariable Long noticeId) {
-        return ApiResponse.onSuccess(noticeQueryService.getNotice(noticeId));
+    public ApiResponse<NoticeResponse> getNotice(@PathVariable Long noticeId, HttpServletRequest request, HttpServletResponse response) {
+        return ApiResponse.onSuccess(noticeQueryService.getNotice(noticeId, request, response));
     }
 
     @GetMapping("/notices")
@@ -58,6 +60,7 @@ public class NoticeController {
             @Valid @RequestBody NoticeRequest noticeRequest) {
         return ApiResponse.onSuccess(noticeCommandService.createNotice(employee, noticeRequest));
     }
+
     @Operation(summary = "공지사항 수정", description = "특정 공지사항을 수정합니다.")
     @Parameter(name = "noticeId", description = "수정할 공지사항 ID", required = true, example = "1")
     @PatchMapping("/admin/notices/{noticeId}")

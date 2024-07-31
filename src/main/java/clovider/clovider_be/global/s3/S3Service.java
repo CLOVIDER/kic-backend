@@ -6,13 +6,17 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.ListObjectsV2Request;
+import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -119,5 +123,42 @@ public class S3Service {
             throw new ApiException(ErrorStatus._S3_IMAGE_NOT_FOUND);
         }
     }
+
+    // 특정 폴더의 모든 이미지 URL 추출
+    public List<String> getImageUrls(String folderName) {
+        List<String> imageUrls = new ArrayList<>();
+
+        try {
+            // ListObjectsV2Request를 사용하여 객체 목록 가져오기
+            ListObjectsV2Request listObjects = new ListObjectsV2Request()
+                    .withBucketName(bucket)
+                    .withPrefix(folderName);
+
+            ListObjectsV2Result result;
+            do {
+                result = amazonS3Client.listObjectsV2(listObjects);
+
+                // 객체 목록에서 각 객체의 URL 생성
+                for (S3ObjectSummary objectSummary : result.getObjectSummaries()) {
+                    String objectKey = objectSummary.getKey();
+                    // 빈 문자열인 경우 무시
+                    if (!objectKey.isEmpty() && !objectKey.equals(folderName)) {
+                        String url = amazonS3Client.getUrl(bucket, objectKey).toString();
+                        imageUrls.add(url);
+                    }
+                }
+
+                // 다음 페이지가 있는 경우, 다음 페이지로 이동
+                listObjects.setContinuationToken(result.getNextContinuationToken());
+            } while (result.isTruncated()); // 페이지가 끝날 때까지 반복
+
+        } catch (AmazonS3Exception e) {
+            throw new ApiException(ErrorStatus._S3_IMAGE_NOT_FOUND);
+        }
+
+        return imageUrls;
+    }
+
+
 }
 
