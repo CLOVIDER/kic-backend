@@ -1,8 +1,6 @@
 package clovider.clovider_be.domain.noticeImage.dto;
 
 import clovider.clovider_be.domain.noticeImage.NoticeImage;
-import java.io.Serial;
-import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,9 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class NoticeImageResponse implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class NoticeImageResponse {
 
     private Long noticeImageId;
     private String image;

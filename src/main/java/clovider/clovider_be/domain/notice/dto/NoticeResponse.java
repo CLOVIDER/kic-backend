@@ -3,9 +3,14 @@ package clovider.clovider_be.domain.notice.dto;
 
 import clovider.clovider_be.domain.notice.Notice;
 import clovider.clovider_be.domain.noticeImage.dto.NoticeImageResponse;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,17 +22,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class NoticeResponse implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class NoticeResponse {
 
     private Long noticeId;
     private String title;
     private String content;
     private int hits;
     private List<NoticeImageResponse> noticeImageList;
-    private LocalDate createdAt;
+
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    private LocalDateTime createdAt;
 
     public static NoticeResponse toNoticeResponse(Notice notice) {
         List<NoticeImageResponse> noticeImageResponseList = notice.getImages().stream()
@@ -40,7 +45,7 @@ public class NoticeResponse implements Serializable {
                 .content(notice.getContent())
                 .hits(notice.getHits())
                 .noticeImageList(noticeImageResponseList)
-                .createdAt(LocalDate.from(notice.getCreatedAt()))
+                .createdAt(notice.getCreatedAt())
                 .build();
     }
 }
