@@ -11,4 +11,6 @@ public interface LotteryCommandService {
     void insertLottery(List<Long> recruitIdList, Long applicationId);
     void deleteLottery(Long applicationId);
     Double getPercent(Long lotteryId);
+
+    void deleteLotteryBylotteryId(Long lotteryId);
 }

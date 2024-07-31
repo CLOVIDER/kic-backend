@@ -63,6 +63,7 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 모집 관련
     _RECRUIT_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "RECRUIT400", "recruit를 찾을 수 없습니다."),
+    _RECRUIT_CANNOT_CANCEL(HttpStatus.INTERNAL_SERVER_ERROR, "RECRUIT400", "모집을 취소 할 수 없습니다."),
 
 
     _EXTERNAL_API_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "LABMDA400", "LAMBDA 확률 에측 서비스에 연결할 수 없습니다");

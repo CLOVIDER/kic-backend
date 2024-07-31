@@ -30,6 +30,9 @@ import java.util.*;
 
 import org.springframework.web.client.RestTemplate;
 
+
+import static clovider.clovider_be.domain.enums.Accept.UNACCEPT;
+import static clovider.clovider_be.domain.enums.Result.*;
 import static clovider.clovider_be.domain.enums.Result.WAIT;
 
 @Slf4j
@@ -146,6 +149,20 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
             );
         }
 
+    }
+
+    @Override
+    public void deleteLotteryBylotteryId(Long lotteryId) {
+        Lottery lottery = lotteryRepository.findById(lotteryId)
+                .orElseThrow(() -> new ApiException(ErrorStatus._LOTTERY_NOT_FOUND));
+
+        if(lottery.getResult()==WAIT){
+            lotteryRepository.delete(lottery);
+        }
+        //모집이 이미 진행완료일때에는 취소 불가 메시지 반환
+        else if (lottery.getResult()==WIN || lottery.getResult()==LOSE){
+            throw new ApiException(ErrorStatus._RECRUIT_CANNOT_CANCEL);
+        }
     }
 
     //추첨 테이블에 값 입력
