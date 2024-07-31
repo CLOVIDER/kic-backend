@@ -6,6 +6,7 @@ import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.enums.Accept;
 import clovider.clovider_be.domain.lottery.Lottery;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,6 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Getter
+@Schema(description = "신청서 응답 DTO")
 public class ApplicationResponse {
 
     private Long id; //신청서 id
