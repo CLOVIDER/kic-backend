@@ -11,6 +11,6 @@ public interface ApplicationRepository extends JpaRepository<Application, Long>,
 
     Optional<Application> findFirstByEmployeeOrderByCreatedAtDesc(Employee employee);
 
-    @Query("SELECT a FROM Application a JOIN FETCH a.employee WHERE a.id = :applicationId")
+    @Query("select a from Application a join fetch a.employee where a.id = :applicationId")
     Application findApplicationWithEmployee(Long applicationId);
 }
