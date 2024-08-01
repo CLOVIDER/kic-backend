@@ -33,3 +33,4 @@ jobs:
       - name: 카카오 컨테이너 레지스트리에 푸시중..
         run: |
           docker push kids-in-company.kr-central-2.kcr.dev/clovider-registry/clovider-be-app:latest
+
