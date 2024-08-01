@@ -50,6 +50,16 @@ public class AdminResponse {
                 .build();
     }
 
+    public static DashBoard toNotDashBoard(NowRecruitInfo recruitInfo, List<NoticeTop3> noticeTop3s,
+            Integer waitQnaCnt) {
+
+        return DashBoard.builder()
+                .recruitInfo(recruitInfo)
+                .noticeTop3(noticeTop3s)
+                .waitQnaCnt(waitQnaCnt)
+                .build();
+    }
+
     @Schema(description = "신청내역 페이징 DTO")
     @Builder
     @Getter

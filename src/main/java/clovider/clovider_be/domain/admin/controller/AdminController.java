@@ -2,6 +2,7 @@ package clovider.clovider_be.domain.admin.controller;
 
 import static clovider.clovider_be.domain.admin.dto.AdminResponse.toDashBoard;
 
+import clovider.clovider_be.domain.admin.dto.AdminResponse;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.ApplicationList;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.DashBoard;
 import clovider.clovider_be.domain.admin.dto.SearchVO;
@@ -67,9 +68,23 @@ public class AdminController {
 
         // 진행 중인 모집 정보, 기간, 경쟁률
         List<Recruit> recruits = recruitQueryService.getNowRecruitOrderByClass();
-        List<CompetitionRate> recruitRates = lotteryQueryService.getRecruitRates(recruits);
-        NowRecruitInfo nowRecruitInfo = RecruitResponse.toNowRecruitInfo(recruits, recruitRates);
 
+        // Top3 공지글
+        List<NoticeTop3> noticeTop3 = noticeQueryService.getTop3Notices();
+
+        // 답변 대기 수
+        Integer waitQna = qnaQueryService.getWaitQna();
+
+        NowRecruitInfo nowRecruitInfo;
+
+        if (recruits.isEmpty()) {
+            nowRecruitInfo = RecruitResponse.toNotRecruitInfo();
+            return ApiResponse.onSuccess(
+                    AdminResponse.toNotDashBoard(nowRecruitInfo, noticeTop3, waitQna));
+        }
+
+        List<CompetitionRate> recruitRates = lotteryQueryService.getRecruitRates(recruits);
+        nowRecruitInfo = RecruitResponse.toNowRecruitInfo(recruits, recruitRates);
         // 총 신청자 수
         Long totalApplication = lotteryQueryService.getTotalApplication(recruits);
 
@@ -80,15 +95,10 @@ public class AdminController {
         // 신청 현황
         List<AcceptResult> acceptStatus = lotteryQueryService.getAcceptStatus(recruits);
 
-        // Top3 공지글
-        List<NoticeTop3> noticeTop3 = noticeQueryService.getTop3Notices();
-
-        // 답변 대기 수
-        Integer waitQna = qnaQueryService.getWaitQna();
-
         return ApiResponse.onSuccess(
                 toDashBoard(nowRecruitInfo, totalApplication, unAcceptApplication, acceptStatus,
                         noticeTop3, waitQna));
+
     }
 
     @Operation(summary = "어린이집 모집 결과 이메일 전송 API", description = "해당 모집의 추첨결과를 이메일로 전송합니다.")
