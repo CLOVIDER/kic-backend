@@ -3,6 +3,8 @@ package clovider.clovider_be.domain.employee.controller;
 import clovider.clovider_be.domain.common.CustomResult;
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.employee.dto.EmployeeRequest.ChangePassword;
+import clovider.clovider_be.domain.employee.dto.EmployeeResponse;
+import clovider.clovider_be.domain.employee.dto.EmployeeResponse.EmployeeInfo;
 import clovider.clovider_be.domain.employee.service.EmployeeCommandService;
 import clovider.clovider_be.global.annotation.AuthEmployee;
 import clovider.clovider_be.global.response.ApiResponse;
@@ -10,6 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,4 +36,9 @@ public class EmployeeController {
 
     }
 
+    @GetMapping("/employees")
+    public ApiResponse<EmployeeInfo> getEmployeeInfo(@AuthEmployee Employee employee) {
+
+        return ApiResponse.onSuccess(EmployeeResponse.toEmployeeInfo(employee));
+    }
 }
