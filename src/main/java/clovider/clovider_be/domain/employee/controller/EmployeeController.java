@@ -49,8 +49,8 @@ public class EmployeeController {
     @Operation(summary = "직원 정보 조회 - 관리자 신청 승인 페이지", description = "특정 신청서를 제출한 직원 정보를 조회합니다.")
     @Parameter(name = "applicationId", description = "신청서 ID", required = true, example = "1")
     @GetMapping("/admin/employees/{applicationId}")
-    public ApiResponse<EmployeeInfo> getEmployeeInfoByApplicationId(@PathVariable Long applicationId) {
-        return ApiResponse.onSuccess(employeeQueryService.getEmployeeInfoByApplicationId(applicationId));
+    public ApiResponse<EmployeeInfo> getEmployeeInfo(@PathVariable Long applicationId) {
+        return ApiResponse.onSuccess(employeeQueryService.getEmployeeInfo(applicationId));
     }
 
 }

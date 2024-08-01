@@ -23,7 +23,7 @@ public class DocumentController {
     @Operation(summary = "증빙서류 리스트 조회 - 관리자 신청 승인 페이지", description = "특정 신청서에 제출된 증빙서류 리스트 정보를 조회합니다.")
     @Parameter(name = "applicationId", description = "신청서 ID", required = true, example = "1")
     @GetMapping("/admin/documents/{applicationId}")
-    public ApiResponse<List<DocumentInfo>> getDocumentInfoByApplicationId(@PathVariable Long applicationId) {
-        return ApiResponse.onSuccess(documentQueryService.getDocumentInfoByApplicationId(applicationId));
+    public ApiResponse<List<DocumentInfo>> getDocumentInfos(@PathVariable Long applicationId) {
+        return ApiResponse.onSuccess(documentQueryService.getDocumentInfos(applicationId));
     }
 }
