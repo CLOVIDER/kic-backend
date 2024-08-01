@@ -56,15 +56,10 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
 
 
 
-            log.info("Creating lottery");
-            log.info("Attempting to find Recruit with ID: {}", recruitId);
-
             Recruit recruit = recruitRepository.findById(recruitId)
                     .orElseThrow(() -> new ApiException(ErrorStatus._RECRUIT_NOT_FOUND));
-            log.info("Recruit: {}", recruit);
 
             List<Application> applications = lotteryRepository.findAllApplicationByRecruitId(recruit.getId());
-            log.info("Recruit: {} applications: {}", recruitId, applications);
 
             List<Map<String, Object>> applicants = new ArrayList<>();
 
@@ -79,20 +74,18 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
                         app.getIsDisability(),
                         app.getIsEmployeeCouple(),
                         app.getIsSibling(),
-                        app.getIsDualIncome()
+                        app.getIsDualIncome(),
+                        recruit
                 );
 
                 double weight = weightDTO.calculateWeight();
                 applicantData.put("weight", weight);
                 applicants.add(applicantData);
-                log.info("Applicant data: {}", applicantData);
             }
 
             int recruitCnt = recruit.getRecruitCnt();
-            log.info("RecruitCnt: {}", recruitCnt);
 
             List<Map<String, Object>> selectedApplicants = WeightedRandomSelection.weightedRandomSelection(applicants, recruitCnt);
-            log.info("Selected applicants: {}", selectedApplicants);
 
         // 순서대로 업데이트
         int rank = 1;
@@ -141,7 +134,6 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
 
     @Override
     public LotteryResisterResponseDTO updateRegistry(Long lotteryId) {
-        log.info("Updating registry for Lottery with ID: {}", lotteryId);
 
         Lottery lottery = lotteryRepository.findById(lotteryId)
                 .orElseThrow(() -> new ApiException(ErrorStatus._LOTTERY_NOT_FOUND));
@@ -230,7 +222,6 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
             double totalWeight = applicants.stream()
                     .mapToDouble(applicant -> ((Number) applicant.get("weight")).doubleValue())
                     .sum();
-            log.info("Total weight: {}", totalWeight);
 
             // 누적 가중치 계산
             List<Double> cumulativeWeights = new ArrayList<>();
@@ -239,12 +230,11 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
                 cumulativeSum += ((Number) applicant.get("weight")).doubleValue();
                 cumulativeWeights.add(cumulativeSum);
             }
-            log.info("Cumulative weights: {}", cumulativeWeights);
 
             // 추첨된 신청자 집합
             Set<Integer> selectedApplicantsSet = new HashSet<>();
             List<Map<String, Object>> selectedApplicantsList = new ArrayList<>();
-            log.info("Selected applicants: {}", selectedApplicantsSet);
+
             Random random = new Random();
 
             // 추첨 진행
@@ -256,13 +246,11 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
                         if (!selectedApplicantsSet.contains(((Number) applicants.get(i).get("id")).intValue())) {
                             selectedApplicantsSet.add(((Number) applicants.get(i).get("id")).intValue());
                             selectedApplicantsList.add(applicants.get(i));
-                            log.info("Applicant selected: {}", applicants.get(i).get("id"));
                         }
                         break;
                     }
                 }
             }
-            log.info("Selected applicants: {}", selectedApplicantsList);
 
             return selectedApplicantsList;
         }
@@ -300,7 +288,6 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
                 throw new ApiException(ErrorStatus._EXTERNAL_API_ERROR);
             }
         } catch (Exception e) {
-            log.error("Error occurred while getting percentage: ", e);
             throw new ApiException(ErrorStatus._EXTERNAL_API_ERROR);
         }
     }
@@ -324,7 +311,8 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
                 app.getIsDisability(),
                 app.getIsEmployeeCouple(),
                 app.getIsSibling(),
-                app.getIsDualIncome()
+                app.getIsDualIncome(),
+                recruit
             );
 
             double weight = weightDTO.calculateWeight();

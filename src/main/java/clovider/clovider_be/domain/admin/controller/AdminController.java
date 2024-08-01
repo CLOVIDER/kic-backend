@@ -84,7 +84,7 @@ public class AdminController {
         }
 
         List<CompetitionRate> recruitRates = lotteryQueryService.getRecruitRates(recruits);
-        NowRecruitInfo nowRecruitInfo = RecruitResponse.toNowRecruitInfo(recruits, recruitRates);
+        nowRecruitInfo = RecruitResponse.toNowRecruitInfo(recruits, recruitRates);
 
         // 총 신청자 수
         Long totalApplication = lotteryQueryService.getTotalApplication(recruits);
@@ -161,6 +161,7 @@ public class AdminController {
         return new ResponseEntity<>(resource, headers, HttpStatus.OK);
     }
 
+    @Operation(summary = "모집 생성" ,description = "관리자가 모집을 생성합니다.")
     @PostMapping("/recruit")
     public ApiResponse<RecruitCreateResponseDTO> createRecruit(@RequestBody RecruitCreateRequestDTO requestDTO) {
         RecruitCreateResponseDTO responseDTO = recruitCommandService.createRecruit(requestDTO);
