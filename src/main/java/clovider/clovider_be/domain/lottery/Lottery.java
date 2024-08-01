@@ -40,10 +40,13 @@ public class Lottery extends BaseTimeEntity {
     @Column(nullable = false, length = 1)
     private Character isRegistry;
 
+    @Column(nullable = false)
+    private String childNm;
+
+
     public void setIsRegistry(Character isRegistry) {
         this.isRegistry = isRegistry;
-    }
-
+}
     public void setResult(Result result) {
         this.result = result;
     }

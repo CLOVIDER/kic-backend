@@ -188,22 +188,28 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
 
     //추첨 테이블에 값 입력
     @Override
-    public void insertLottery(List<Long> recruitIdList, Long applicationId)
-    {
+    public void insertLottery(List<Map<String, Object>> childrenRecruitList, Long applicationId) {
         Application application = applicationQueryService.getApplication(applicationId);
 
-        for (Long recruitId : recruitIdList) {
-            Recruit recruit = recruitQueryService.getRecruit(recruitId);
 
-            lotteryRepository.save(
-                    Lottery.builder()
-                            .application(application)
-                            .recruit(recruit)
-                            .rankNo(0)
-                            .result(WAIT)
-                            .isRegistry('0')
-                            .build()
-            );
+        for (Map<String, Object> childRecruitData : childrenRecruitList) {
+            String childName = (String) childRecruitData.get("childNm");
+            List<Integer> recruitIds = (List<Integer>) childRecruitData.get("recruitIds");
+
+            for (Integer recruitId : recruitIds) {
+                Recruit recruit = recruitQueryService.getRecruit(Long.valueOf(recruitId));
+
+                lotteryRepository.save(
+                        Lottery.builder()
+                                .application(application)
+                                .recruit(recruit)
+                                .rankNo(0)
+                                .result(WAIT)
+                                .isRegistry('0')
+                                .childNm(childName)
+                                .build()
+                );
+            }
         }
     }
 

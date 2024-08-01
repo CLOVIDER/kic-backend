@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Kids In Company</title>
+  <style>
+    body {
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: NanumGothic, serif;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      font-weight: bold;
+      color: #FFAB2D;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 1.2em;
+      margin: 0 0 20px 0;
+      color: #333;
+    }
+
+    table {
+      width: 80%;
+      border-collapse: collapse;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      font-size: 14px;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: center;
+      border: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #f2f2f2;
+      color: #333;
+      font-weight: bold;
+    }
+
+    .result-winner {
+      color: red;
+    }
+
+  </style>
+</head>
+<body>
+<h1>Kids In Company</h1>
+<p th:text="${info.kindergartenNm} + '어린이집:' + ${info.ageClass} + ' 모집 결과'"></p>
+<table>
+  <thead>
+  <tr>
+    <th>신청자 아이디</th>
+    <th>당첨 여부</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="result : ${results}">
+    <td th:text="${result.accountId}"></td>
+    <td th:text="${result.result}"
+        th:classappend="${result.result == '당첨'} ? 'result-winner' : ''"></td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

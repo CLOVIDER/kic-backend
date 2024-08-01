@@ -77,8 +77,6 @@ public class Application extends BaseTimeEntity {
     @ColumnDefault("'0'")
     private Character isTemp; //default : 임시저장이 아닌 일반 저장 상태
 
-    private String childNm;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 15)
     @ColumnDefault("'WAIT'")
@@ -102,7 +100,6 @@ public class Application extends BaseTimeEntity {
         this.isDualIncome = applicationRequest.getIsDualIncome();
         this.isEmployeeCouple = applicationRequest.getIsEmployeeCouple();
         this.isSibling = applicationRequest.getIsSibling();
-        this.childNm = applicationRequest.getChildNm();
         this.isTemp = 0;
     }
 

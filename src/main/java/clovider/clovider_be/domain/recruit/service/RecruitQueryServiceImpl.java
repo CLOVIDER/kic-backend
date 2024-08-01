@@ -1,5 +1,7 @@
 package clovider.clovider_be.domain.recruit.service;
 
+import clovider.clovider_be.domain.lottery.dto.LotteryResponse;
+import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitInfo;
 import clovider.clovider_be.domain.recruit.Recruit;
 import clovider.clovider_be.domain.recruit.repository.RecruitRepository;
 import clovider.clovider_be.global.exception.ApiException;
@@ -34,7 +36,17 @@ public class RecruitQueryServiceImpl implements RecruitQueryService {
     }
 
     @Override
-    public Recruit getRecruit(Long id){
+    public RecruitInfo getRecruitInfo(Long recruitId) {
+
+        Recruit recruit = recruitRepository.findRecruitInfoById(recruitId)
+                .orElseThrow(() -> new ApiException(
+                        ErrorStatus._RECRUIT_NOT_FOUND));
+
+        return LotteryResponse.toRecruitInfo(recruit);
+    }
+
+    @Override
+    public Recruit getRecruit(Long id) {
         return recruitRepository.findById(id).orElseThrow(
                 () -> new ApiException(ErrorStatus._RECRUIT_NOT_FOUND)
         );

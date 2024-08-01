@@ -26,13 +26,12 @@ public enum ErrorStatus implements BaseErrorCode {
     // 어린이집 관련
     _KDG_NOT_FOUND(HttpStatus.NOT_FOUND, "KDG400", "해당 어린이집을 찾을 수 없습니다."),
 
-    //신청서 관련
+    // 신청서 관련
     _APPLICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "APPLICATION001", "해당 신청서를 찾을 수 없습니다."),
-
 
     // 공사사항 관련
     _NOTICE_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "NOTICE400", "공지사항을 찾을 수 없습니다."),
-  
+
     // JWT 관련
     _JWT_NOT_FOUND(HttpStatus.UNAUTHORIZED, "JWT400", "Header에 AccessToken 이 존재하지 않습니다."),
     _JWT_INVALID(HttpStatus.UNAUTHORIZED, "JWT401", "검증되지 않는 AccessToken 입니다."),
@@ -47,9 +46,11 @@ public enum ErrorStatus implements BaseErrorCode {
     _AUTH_INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "AUTH400", "잘못된 비밀번호입니다. 다시 입력해주세요."),
 
     // Mail 관련
-    _MAIL_CREATE_CODE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "MAIL500", "인증 코드 생성 중 서버 에러가 발생했습니다."),
+    _MAIL_CREATE_CODE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "MAIL500",
+            "인증 코드 생성 중 서버 에러가 발생했습니다."),
     _MAIL_WRONG_CODE(HttpStatus.BAD_REQUEST, "MAIL400", "올바른 인증코드가 아닙니다."),
-    _MAIL_LOTTERY_RESULT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "MAIL501", "추첨 결과 메일 전송 중 서버 에러가 발생했습니다."),
+    _MAIL_LOTTERY_RESULT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "MAIL501",
+            "추첨 결과 메일 전송 중 서버 에러가 발생했습니다."),
 
     // S3 관련
     _S3_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "S3400", "S3에 존재하지 않는 이미지입니다."),
@@ -63,22 +64,18 @@ public enum ErrorStatus implements BaseErrorCode {
     _LOTTERY_ALREADY_DONE(HttpStatus.INTERNAL_SERVER_ERROR, "LOTTERY400", "이미 추첨이 진행된 lottery입니다."),
 
     // 모집 관련
-    _RECRUIT_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "RECRUIT400", "recruit를 찾을 수 없습니다."),
+    _RECRUIT_NOT_FOUND(HttpStatus.NOT_FOUND, "RECRUIT400", "recruit를 찾을 수 없습니다."),
+    _RECRUIT_EXPORT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "RECRUIT500",
+            "모집 결과 다운 중 서버 에러가 발생했습니다."),
     _RECRUIT_CANNOT_CANCEL(HttpStatus.INTERNAL_SERVER_ERROR, "RECRUIT400", "모집을 취소 할 수 없습니다."),
 
 
-    _EXTERNAL_API_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "LABMDA400", "LAMBDA 확률 에측 서비스에 연결할 수 없습니다");
-
-//    // application 관련
-//    _APPLICATION_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "APPLICATION400", "application를 찾을 수 없습니다.");
-
+    _EXTERNAL_API_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "LABMDA400",
+            "LAMBDA 확률 에측 서비스에 연결할 수 없습니다");
 
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;
-
-
-
 
     @Override
     public ErrorReasonDto getReason() {
