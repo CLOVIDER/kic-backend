@@ -5,6 +5,7 @@ import static clovider.clovider_be.domain.recruit.QRecruit.recruit;
 
 import clovider.clovider_be.domain.enums.AgeClass;
 import clovider.clovider_be.domain.recruit.Recruit;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -26,9 +27,19 @@ public class RecruitRepositoryCustomImpl implements RecruitRepositoryCustom {
                 .selectFrom(recruit)
                 .join(recruit.kindergarten, kindergarten)
                 .fetchJoin()
-                .where(recruit.recruitStartDt.loe(now).and(recruit.recruitEndDt.goe(now)))
+                .where(recruiting(now).or(scheduledRecruit(now)))
                 .orderBy(recruit.kindergarten.id.asc(), ageOrder().asc())
                 .fetch();
+    }
+
+    private BooleanExpression recruiting(LocalDateTime now) {
+
+        return recruit.recruitStartDt.loe(now).and(recruit.secondEndDt.goe(now));
+    }
+
+    private BooleanExpression scheduledRecruit(LocalDateTime now) {
+
+        return recruit.recruitStartDt.gt(now);
     }
 
     private NumberExpression<Integer> ageOrder() {

@@ -32,14 +32,12 @@ public class RecruitController {
     public ApiResponse<NowRecruitInfo> getRecruitInfo() {
 
         List<Recruit> recruits = recruitQueryService.getNowRecruitOrderByClass();
+        if (recruits.isEmpty()) {
+            return ApiResponse.onSuccess(RecruitResponse.toNotRecruitInfo());
+        }
         List<CompetitionRate> recruitRates = lotteryQueryService.getRecruitRates(recruits);
 
         return ApiResponse.onSuccess(RecruitResponse.toNowRecruitInfo(recruits, recruitRates));
     }
 
-//    @PostMapping("/create")
-//    public ApiResponse<RecruitCreateResponseDTO> createRecruit(@RequestBody RecruitCreateRequestDTO requestDTO) {
-//        RecruitCreateResponseDTO responseDTO = recruitCommandService.createRecruit(requestDTO);
-//        return ApiResponse.onSuccess(responseDTO);
-//    }
 }
