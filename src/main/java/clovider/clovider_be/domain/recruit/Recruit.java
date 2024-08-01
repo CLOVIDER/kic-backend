@@ -59,7 +59,7 @@ public class Recruit extends BaseTimeEntity {
 
     @Column(nullable = false)
     @ColumnDefault("'0'")
-    private Integer workYearsUsage;
+    private Character workYearsUsage;
 
     @Column(nullable = false, length = 1)
     @ColumnDefault("'0'")
@@ -67,7 +67,7 @@ public class Recruit extends BaseTimeEntity {
 
     @Column(nullable = false)
     @ColumnDefault("'0'")
-    private Integer childrenCntUsage;
+    private Character childrenCntUsage;
 
     @Column(nullable = false, length = 1)
     @ColumnDefault("'0'")

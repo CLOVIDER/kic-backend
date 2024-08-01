@@ -37,9 +37,4 @@ public class RecruitController {
         return ApiResponse.onSuccess(RecruitResponse.toNowRecruitInfo(recruits, recruitRates));
     }
 
-//    @PostMapping("/create")
-//    public ApiResponse<RecruitCreateResponseDTO> createRecruit(@RequestBody RecruitCreateRequestDTO requestDTO) {
-//        RecruitCreateResponseDTO responseDTO = recruitCommandService.createRecruit(requestDTO);
-//        return ApiResponse.onSuccess(responseDTO);
-//    }
 }

@@ -120,7 +120,7 @@ public class AdminController {
     }
 
 
-    @PostMapping("/create/recruit")
+    @PostMapping("/recruit")
     public ApiResponse<RecruitCreateResponseDTO> createRecruit(@RequestBody RecruitCreateRequestDTO requestDTO) {
         RecruitCreateResponseDTO responseDTO = recruitCommandService.createRecruit(requestDTO);
         return ApiResponse.onSuccess(responseDTO);

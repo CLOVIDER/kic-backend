@@ -40,7 +40,7 @@ public class Lottery extends BaseTimeEntity {
     @Column(nullable = false, length = 1)
     private Character isRegistry;
 
-    public void serIsRegistry(Character isRegistry) {
+    public void setIsRegistry(Character isRegistry) {
         this.isRegistry = isRegistry;
     }
 
@@ -52,7 +52,5 @@ public class Lottery extends BaseTimeEntity {
         this.rankNo = i;
     }
 
-    public void setIsRegistry(char c) {
-        this.isRegistry = c;
-    }
+
 }

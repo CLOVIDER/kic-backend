@@ -94,23 +94,39 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
             List<Map<String, Object>> selectedApplicants = WeightedRandomSelection.weightedRandomSelection(applicants, recruitCnt);
             log.info("Selected applicants: {}", selectedApplicants);
 
-            for (Map<String, Object> applicant : applicants) {
-                Long applicantId = (Long) applicant.get("id");
-                boolean isSelected = selectedApplicants.stream()
-                        .anyMatch(selectedApplicant -> selectedApplicant.get("id").equals(applicantId));
+        // 순서대로 업데이트
+        int rank = 1;
+        Map<Long, Integer> applicantRankMap = new HashMap<>();
 
-                Result result = isSelected ? Result.WIN : Result.LOSE;
+        // 당첨된 신청서에 대한 순번 부여
+        for (Map<String, Object> applicant : selectedApplicants) {
+            Long applicantId = (Long) applicant.get("id");
+            applicantRankMap.put(applicantId, rank++);
+        }
 
+        // 전체 신청서에 대한 순번 부여
+        for (Map<String, Object> applicant : applicants) {
+            Long applicantId = (Long) applicant.get("id");
+            boolean isSelected = selectedApplicants.stream()
+                    .anyMatch(selectedApplicant -> selectedApplicant.get("id").equals(applicantId));
 
-                Lottery lottery = lotteryRepository.findLotteryByApplicationId(applicantId);
+            Result result = isSelected ? Result.WIN : Result.LOSE;
 
+            Lottery lottery = lotteryRepository.findLotteryByApplicationId(applicantId);
 
-                lottery.setResult(result);
-                lottery.setRankNo(1); // 순번
-                lottery.setIsRegistry('0');
-
-                lotteryRepository.save(lottery);
+            if (isSelected) {
+                lottery.setRankNo(applicantRankMap.get(applicantId));
+            } else {
+                // 대기 순번 설정 (당첨된 신청서가 처리된 이후의 순서)
+                int waitingRank = rank++;
+                lottery.setRankNo(waitingRank);
             }
+
+            lottery.setResult(result);
+            lottery.setIsRegistry('0');
+
+            lotteryRepository.save(lottery);
+        }
 
             return new LotteryResponseDTO(
                     true,
@@ -118,7 +134,7 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
                     "추첨이 생성 및 저장되었습니다.",
                     new LotteryResponseDTO.Result(recruit.getId(), recruit.getCreatedAt())
             );
-        
+
 
     }
 
@@ -137,7 +153,7 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
 
         //등록
         if(registryStatus == '0') {
-            lottery.serIsRegistry('1');
+            lottery.setIsRegistry('1');
             return new LotteryResisterResponseDTO(
                     "등록되었습니다.",
                     new LotteryResisterResponseDTO.Result(updatedLottery.getId(), updatedLottery.getIsRegistry() == '1')
@@ -147,7 +163,7 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
         //등록취소
         else {
 
-            lottery.serIsRegistry('0');
+            lottery.setIsRegistry('0');
             return new LotteryResisterResponseDTO(
                     "등록이 취소되었습니다.",
                     new LotteryResisterResponseDTO.Result(updatedLottery.getId(), updatedLottery.getIsRegistry() == '1')
