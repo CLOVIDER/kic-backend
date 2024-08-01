@@ -26,7 +26,8 @@ public class LotteryController {
     }
 
     @Operation(summary = "추첨 생성 및 진행", description = "관리자가 추첨을 생성함과 동시에 실행한다. 모집의 가중치 사용여부에 따라서 진행된다.")
-    @PostMapping("/admin/lotteries/create/{recruitId}")
+    @Parameter(name = "recruitId", description = "모집ID")
+    @PostMapping("/admin/lotteries/{recruitId}")
     public ApiResponse<LotteryResponseDTO> createLottery(
             @PathVariable Long recruitId) {
         return ApiResponse.onSuccess(lotteryService.createLottery(recruitId));
