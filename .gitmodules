@@ -1,0 +1,3 @@
+[submodule "application-config"]
+	path = application-config
+	url = https://github.com/CLOVIDER/application-config.git
