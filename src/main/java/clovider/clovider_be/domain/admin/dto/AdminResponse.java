@@ -112,6 +112,7 @@ public class AdminResponse {
 
     @Builder
     @AllArgsConstructor
+    @Getter
     @NoArgsConstructor
     public static class ApplicationManagement{
         private EmployeeInfo employeeInfo;

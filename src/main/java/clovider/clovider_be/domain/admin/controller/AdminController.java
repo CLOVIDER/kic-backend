@@ -171,18 +171,4 @@ public class AdminController {
         return ApiResponse.onSuccess(responseDTO);
     }
 
-//    @GetMapping("/recruits/applications/{applicationId}")
-//    public ApiResponse<ApplicationManagement> getApplicationManagement(
-//            @PathVariable("applicationId") Long applicationId) {
-//
-//        EmployeeInfo employeeInfo = employeeQueryService.getEmployeeInfo(applicationId);
-//
-//        List<ChildInfo> childInfoList = lotteryQueryService.getChildInfos(applicationId);
-//
-//        List<DocumentInfo> documentInfoList = documentQueryService.getDocumentInfos(applicationId);
-//
-//        return ApiResponse.onSuccess(
-//                toApplicationManagement(employeeInfo,childInfoList,documentInfoList));
-//    }
-
 }

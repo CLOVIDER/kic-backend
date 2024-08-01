@@ -3,7 +3,9 @@ package clovider.clovider_be.domain.lottery.service;
 import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.AcceptResult;
+import clovider.clovider_be.domain.lottery.dto.LotteryResponse.ChildInfo;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
+import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitInfo;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitResult;
 import clovider.clovider_be.domain.lottery.dto.LotteryResultResponseDTO;
 import clovider.clovider_be.domain.lottery.repository.LotteryRepository;
@@ -11,6 +13,8 @@ import clovider.clovider_be.domain.recruit.Recruit;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,32 +72,32 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
         return lotteryRepository.findApplicationsAllByRecruits(recruits);
     }
 
-//    @Override
-//    public List<ChildInfo> getChildInfos(Long applicationId) {
-//        List<Lottery> lotteries = lotteryRepository.findByApplicationId(applicationId);
-//
-//        Map<String, List<RecruitInfo>> childInfoMap = lotteries.stream()
-//                .collect(Collectors.groupingBy(
-//                        lottery -> lottery.getChildNm(),
-//                        Collectors.mapping(
-//                                lottery -> {
-//                                    Recruit recruit = lottery.getRecruit();
-//                                    return RecruitInfo.builder()
-//                                            .kindergartenNm(recruit.getKindergarten().getKindergartenNm())
-//                                            .ageClass(recruit.getAgeClass().getDescription())
-//                                            .build();
-//                                },
-//                                Collectors.toList()
-//                        )
-//                ));
-//
-//        return childInfoMap.entrySet().stream()
-//                .map(entry -> ChildInfo.builder()
-//                        .childName(entry.getKey())
-//                        .recruitInfos(entry.getValue())
-//                        .build()
-//                )
-//                .collect(Collectors.toList());
-//
-//    }
+    @Override
+    public List<ChildInfo> getChildInfos(Long applicationId) {
+        List<Lottery> lotteries = lotteryRepository.findByApplicationId(applicationId);
+
+        Map<String, List<RecruitInfo>> childInfoMap = lotteries.stream()
+                .collect(Collectors.groupingBy(
+                        Lottery::getChildNm,
+                        Collectors.mapping(
+                                lottery -> {
+                                    Recruit recruit = lottery.getRecruit();
+                                    return RecruitInfo.builder()
+                                            .kindergartenNm(recruit.getKindergarten().getKindergartenNm())
+                                            .ageClass(recruit.getAgeClass().getDescription())
+                                            .build();
+                                },
+                                Collectors.toList()
+                        )
+                ));
+
+        return childInfoMap.entrySet().stream()
+                .map(entry -> ChildInfo.builder()
+                        .childName(entry.getKey())
+                        .recruitInfos(entry.getValue())
+                        .build()
+                )
+                .collect(Collectors.toList());
+
+    }
 }
