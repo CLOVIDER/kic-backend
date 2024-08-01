@@ -13,7 +13,16 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-        
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
       - name: 카카오 컨테이너 레지스트리에 로그인중...
         run: |
           docker login kids-in-company.kr-central-2.kcr.dev --username ${{ secrets.KAKAO_ACCESS_ID }} --password ${{ secrets.KAKAO_ACCESS_SECRET }}
@@ -33,4 +42,3 @@ jobs:
       - name: 카카오 컨테이너 레지스트리에 푸시중..
         run: |
           docker push kids-in-company.kr-central-2.kcr.dev/clovider-registry/clovider-be-app:latest
-
