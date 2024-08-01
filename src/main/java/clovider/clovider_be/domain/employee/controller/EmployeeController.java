@@ -53,6 +53,4 @@ public class EmployeeController {
         return ApiResponse.onSuccess(employeeQueryService.getEmployeeInfoByApplicationId(applicationId));
     }
 
-
-
 }

@@ -15,7 +15,7 @@ public class DocumentQueryServiceImpl implements DocumentQueryService{
     private final ApplicationDocumentRepository applicationDocumentRepository;
 
     @Override
-    public List<DocumentInfo> getDocumentInfos(Long applicationId) {
+    public List<DocumentInfo> getDocumentInfoByApplicationId(Long applicationId) {
         List<Document> documents = applicationDocumentRepository.findByApplicationId(
                 applicationId);
 

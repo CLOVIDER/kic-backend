@@ -47,7 +47,7 @@ public class EmployeeQueryServiceImpl implements EmployeeQueryService {
 
     @Override
     public EmployeeInfo getEmployeeInfoByApplicationId(Long applicationId) {
-        Application application = applicationQueryService.getApplication(applicationId);
+        Application application = applicationQueryService.getApplicationWithEmployee(applicationId);
         return EmployeeResponse.toEmployeeInfo(application.getEmployee());
     }
 

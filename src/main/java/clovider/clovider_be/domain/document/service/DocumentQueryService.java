@@ -4,5 +4,5 @@ import clovider.clovider_be.domain.document.dto.DocumentResponse.DocumentInfo;
 import java.util.List;
 
 public interface DocumentQueryService {
-    List<DocumentInfo> getDocumentInfos(Long applicationId);
+    List<DocumentInfo> getDocumentInfoByApplicationId(Long applicationId);
 }

@@ -12,10 +12,12 @@ import clovider.clovider_be.domain.lottery.repository.LotteryRepository;
 import clovider.clovider_be.domain.recruit.Recruit;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class LotteryQueryServiceImpl implements LotteryQueryService {
 
     private final LotteryRepository lotteryRepository;
@@ -76,28 +79,24 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
     public List<ChildInfo> getChildInfos(Long applicationId) {
         List<Lottery> lotteries = lotteryRepository.findByApplicationId(applicationId);
 
-        Map<String, List<RecruitInfo>> childInfoMap = lotteries.stream()
-                .collect(Collectors.groupingBy(
-                        Lottery::getChildNm,
-                        Collectors.mapping(
-                                lottery -> {
-                                    Recruit recruit = lottery.getRecruit();
-                                    return RecruitInfo.builder()
-                                            .kindergartenNm(recruit.getKindergarten().getKindergartenNm())
-                                            .ageClass(recruit.getAgeClass().getDescription())
-                                            .build();
-                                },
-                                Collectors.toList()
-                        )
-                ));
+        Map<String, List<RecruitInfo>> childInfoMap = new HashMap<>();
+        for (Lottery lottery : lotteries) {
+            String childName = lottery.getChildNm();
+            Recruit recruit = lottery.getRecruit();
+            RecruitInfo recruitInfo = LotteryResponse.toRecruitInfo(recruit);
 
-        return childInfoMap.entrySet().stream()
-                .map(entry -> ChildInfo.builder()
-                        .childName(entry.getKey())
-                        .recruitInfos(entry.getValue())
-                        .build()
-                )
-                .collect(Collectors.toList());
+            childInfoMap.computeIfAbsent(childName, k -> new ArrayList<>()).add(recruitInfo);
+        }
 
+        List<ChildInfo> childInfos = new ArrayList<>();
+        for (Map.Entry<String, List<RecruitInfo>> entry : childInfoMap.entrySet()) {
+            ChildInfo childInfo = ChildInfo.builder()
+                    .childName(entry.getKey())
+                    .recruitInfos(entry.getValue())
+                    .build();
+            childInfos.add(childInfo);
+        }
+
+        return childInfos;
     }
 }
