@@ -63,7 +63,6 @@ public class LotteryResponse {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class RecruitInfo {
-
         private String kindergartenNm;
         private String ageClass;
     }
@@ -74,6 +73,15 @@ public class LotteryResponse {
                 .kindergartenNm(recruit.getKindergarten().getKindergartenNm())
                 .ageClass(recruit.getAgeClass().getDescription())
                 .build();
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ChildInfo {
+        private String childName;
+        private List<RecruitInfo> recruitInfos;
     }
 
 }

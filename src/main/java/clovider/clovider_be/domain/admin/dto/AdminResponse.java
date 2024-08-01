@@ -1,7 +1,10 @@
 package clovider.clovider_be.domain.admin.dto;
 
 import clovider.clovider_be.domain.application.Application;
+import clovider.clovider_be.domain.document.dto.DocumentResponse.DocumentInfo;
+import clovider.clovider_be.domain.employee.dto.EmployeeResponse.EmployeeInfo;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.AcceptResult;
+import clovider.clovider_be.domain.lottery.dto.LotteryResponse.ChildInfo;
 import clovider.clovider_be.domain.notice.dto.NoticeTop3;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruitInfo;
 import clovider.clovider_be.global.util.TimeUtil;
@@ -107,4 +110,24 @@ public class AdminResponse {
                 .build();
     }
 
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ApplicationManagement{
+        private EmployeeInfo employeeInfo;
+        private List<ChildInfo> childInfoList;
+        private List<DocumentInfo> documentInfoList;
+    }
+
+    public static ApplicationManagement toApplicationManagement(
+            EmployeeInfo employeeInfo,
+            List<ChildInfo> childInfoList,
+            List<DocumentInfo> documentInfoList) {
+
+        return ApplicationManagement.builder()
+                .employeeInfo(employeeInfo)
+                .childInfoList(childInfoList)
+                .documentInfoList(documentInfoList)
+                .build();
+    }
 }

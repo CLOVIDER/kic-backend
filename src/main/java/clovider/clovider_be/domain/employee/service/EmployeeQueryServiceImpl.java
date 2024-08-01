@@ -1,6 +1,10 @@
 package clovider.clovider_be.domain.employee.service;
 
+import clovider.clovider_be.domain.application.Application;
+import clovider.clovider_be.domain.application.service.ApplicationQueryService;
 import clovider.clovider_be.domain.employee.Employee;
+import clovider.clovider_be.domain.employee.dto.EmployeeResponse;
+import clovider.clovider_be.domain.employee.dto.EmployeeResponse.EmployeeInfo;
 import clovider.clovider_be.domain.employee.repository.EmployeeRepository;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.domain.auth.dto.AuthRequest.LoginRequest;
@@ -16,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class EmployeeQueryServiceImpl implements EmployeeQueryService {
 
     private final EmployeeRepository employeeRepository;
+    private final ApplicationQueryService applicationQueryService;
     private final BCryptPasswordEncoder bCryptEncoder;
 
     @Override
@@ -39,4 +44,12 @@ public class EmployeeQueryServiceImpl implements EmployeeQueryService {
 
         return employee;
     }
+
+    @Override
+    public EmployeeInfo getEmployeeInfo(Long applicationId) {
+        Application application = applicationQueryService.getApplication(applicationId);
+        Employee employee = application.getEmployee();
+        return EmployeeResponse.toEmployeeInfo(employee);
+    }
+
 }

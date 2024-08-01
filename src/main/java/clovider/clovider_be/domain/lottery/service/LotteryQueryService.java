@@ -23,4 +23,6 @@ public interface LotteryQueryService {
 
     List<Long> getApplicationsByLotteries(List<Recruit> recruits);
 
+//    List<ChildInfo> getChildInfos(Long applicationId);
+
 }

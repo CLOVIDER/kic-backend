@@ -67,4 +67,33 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
 
         return lotteryRepository.findApplicationsAllByRecruits(recruits);
     }
+
+//    @Override
+//    public List<ChildInfo> getChildInfos(Long applicationId) {
+//        List<Lottery> lotteries = lotteryRepository.findByApplicationId(applicationId);
+//
+//        Map<String, List<RecruitInfo>> childInfoMap = lotteries.stream()
+//                .collect(Collectors.groupingBy(
+//                        lottery -> lottery.getChildNm(),
+//                        Collectors.mapping(
+//                                lottery -> {
+//                                    Recruit recruit = lottery.getRecruit();
+//                                    return RecruitInfo.builder()
+//                                            .kindergartenNm(recruit.getKindergarten().getKindergartenNm())
+//                                            .ageClass(recruit.getAgeClass().getDescription())
+//                                            .build();
+//                                },
+//                                Collectors.toList()
+//                        )
+//                ));
+//
+//        return childInfoMap.entrySet().stream()
+//                .map(entry -> ChildInfo.builder()
+//                        .childName(entry.getKey())
+//                        .recruitInfos(entry.getValue())
+//                        .build()
+//                )
+//                .collect(Collectors.toList());
+//
+//    }
 }

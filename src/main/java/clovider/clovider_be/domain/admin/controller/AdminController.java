@@ -8,6 +8,8 @@ import clovider.clovider_be.domain.admin.dto.AdminResponse.DashBoard;
 import clovider.clovider_be.domain.admin.dto.SearchVO;
 import clovider.clovider_be.domain.application.service.ApplicationQueryService;
 import clovider.clovider_be.domain.common.CustomPage;
+import clovider.clovider_be.domain.document.service.DocumentQueryService;
+import clovider.clovider_be.domain.employee.service.EmployeeQueryService;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.AcceptResult;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitInfo;
@@ -56,6 +58,8 @@ public class AdminController {
     private final NoticeQueryService noticeQueryService;
     private final RecruitQueryService recruitQueryService;
     private final LotteryQueryService lotteryQueryService;
+    private final EmployeeQueryService employeeQueryService;
+    private final DocumentQueryService documentQueryService;
     private final MailService mailService;
     private final ApplicationQueryService applicationQueryService;
     private final PdfUtil pdfUtil;
@@ -166,4 +170,19 @@ public class AdminController {
         RecruitCreateResponseDTO responseDTO = recruitCommandService.createRecruit(requestDTO);
         return ApiResponse.onSuccess(responseDTO);
     }
+
+//    @GetMapping("/recruits/applications/{applicationId}")
+//    public ApiResponse<ApplicationManagement> getApplicationManagement(
+//            @PathVariable("applicationId") Long applicationId) {
+//
+//        EmployeeInfo employeeInfo = employeeQueryService.getEmployeeInfo(applicationId);
+//
+//        List<ChildInfo> childInfoList = lotteryQueryService.getChildInfos(applicationId);
+//
+//        List<DocumentInfo> documentInfoList = documentQueryService.getDocumentInfos(applicationId);
+//
+//        return ApiResponse.onSuccess(
+//                toApplicationManagement(employeeInfo,childInfoList,documentInfoList));
+//    }
+
 }
