@@ -10,6 +10,6 @@ public interface EmployeeQueryService {
 
     Employee checkAccountIdAndPwd(LoginRequest loginRequest);
 
-    EmployeeInfo getEmployeeInfo(Long applicationId);
+    EmployeeInfo getEmployeeInfoByApplicationId(Long applicationId);
 
 }
