@@ -24,15 +24,19 @@ public class RecruitResponse {
         @Schema(description = "모집 시작 기간", example = "2024-06-25T19:03:40")
         private String recruitStartDt;
 
-        @Schema(description = "모집 마감 시간", example = "2024-07-25T19:03:40")
+        @Schema(description = "모집 마감 기간", example = "2024-07-25T19:03:40")
         private String recruitEndDt;
 
+        @Schema(description = "1차 등록 기간", example = "2024-07-26T19:03:40")
         private String firstStartDt;
 
+        @Schema(description = "1차 등록 마감 기간", example = "2024-07-31T19:03:40")
         private String firstEndDt;
 
+        @Schema(description = "2차 등록 기간", example = "2024-08-01T19:03:40")
         private String secondStartDt;
 
+        @Schema(description = "2차 등록 마감 기간", example = "2024-08-05T19:03:40")
         private String secondEndDt;
 
         @Schema(description = "모집 남은 기간", example = "7")
@@ -44,6 +48,7 @@ public class RecruitResponse {
         @Schema(description = "각 사내 어린이집 경쟁률", example = "0.8")
         private List<Double> rateList;
 
+        @Schema(description = "모집 상태", example = "모집중")
         private String recruitStatus;
     }
 
