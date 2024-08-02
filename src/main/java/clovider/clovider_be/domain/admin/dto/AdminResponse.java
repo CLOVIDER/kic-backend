@@ -1,6 +1,7 @@
 package clovider.clovider_be.domain.admin.dto;
 
 import clovider.clovider_be.domain.application.Application;
+import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.notice.dto.NoticeTop3;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruitInfo;
 import clovider.clovider_be.global.util.TimeUtil;
@@ -135,6 +136,36 @@ public class AdminResponse {
                 .employeeNo(application.getEmployee().getEmployeeNo())
                 .applicationId(application.getId())
                 .isAccept(application.getIsAccept().getDescription())
+                .build();
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class LotteryResult {
+        private String employeeNo;
+        private String nameKo;
+        private String childNm;
+        private String lotteryResult;
+    }
+
+    public static LotteryResult toLotteryResult(Lottery lottery) {
+        String description = lottery.getResult().getDescription();
+        String lotteryResult;
+
+        // 'description'이 "대기"일 경우 'lottery.rankNo'로 치환
+        if ("대기".equals(description)) {
+            lotteryResult = lottery.getRankNo().toString();
+        } else {
+            lotteryResult = description;
+        }
+
+        return LotteryResult.builder()
+                .employeeNo(lottery.getApplication().getEmployee().getEmployeeNo())
+                .nameKo(lottery.getApplication().getEmployee().getNameKo())
+                .childNm(lottery.getChildNm())
+                .lotteryResult(lotteryResult)
                 .build();
     }
 
