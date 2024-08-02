@@ -10,7 +10,7 @@ import clovider.clovider_be.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -21,16 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class LotteryController {
 
     private final LotteryCommandService lotteryService;
     private final LotteryQueryService lotteryQueryService;
-    @Autowired
-    public LotteryController(LotteryCommandService lotteryService, LotteryQueryService lotteryQueryService) {
-
-        this.lotteryService = lotteryService;
-        this.lotteryQueryService = lotteryQueryService;
-    }
 
     @PostMapping("/admin/lotteries/create/{recruitId}/{applicationId}")
     public ApiResponse<LotteryResponseDTO> createLottery(
