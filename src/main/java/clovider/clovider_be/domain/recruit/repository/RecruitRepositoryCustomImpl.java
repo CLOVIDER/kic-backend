@@ -32,6 +32,15 @@ public class RecruitRepositoryCustomImpl implements RecruitRepositoryCustom {
                 .fetch();
     }
 
+    @Override
+    public List<Recruit> findRecruitIngAndScheduled(LocalDateTime now) {
+
+        return jpaQueryFactory
+                .selectFrom(recruit)
+                .where(recruiting(now).or(scheduledRecruit(now)))
+                .fetch();
+    }
+
     private BooleanExpression recruiting(LocalDateTime now) {
 
         return recruit.recruitStartDt.loe(now).and(recruit.secondEndDt.goe(now));

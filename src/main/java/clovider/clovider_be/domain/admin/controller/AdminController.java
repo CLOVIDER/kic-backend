@@ -83,17 +83,17 @@ public class AdminController {
                     AdminResponse.toNotDashBoard(nowRecruitInfo, noticeTop3, waitQna));
         }
 
-        List<CompetitionRate> recruitRates = lotteryQueryService.getRecruitRates(recruits);
-        nowRecruitInfo = RecruitResponse.toNowRecruitInfo(recruits, recruitRates);
-        // 총 신청자 수
-        Long totalApplication = lotteryQueryService.getTotalApplication(recruits);
+    @Operation(summary = "[컴포넌트] 관리자 대시보드 모집 신청 현황 조회 API", description = "총 신청자 수, 승인 대기 수 조회")
+    @GetMapping("/recruits/applications/status")
+    public ApiResponse<ApplicationStatus> getApplicationsStatus() {
 
-        // 승인 대기 수
-        Long unAcceptApplication = lotteryQueryService.getUnAcceptApplication(
+        List<Recruit> recruits = recruitQueryService.getRecruitIngAndScheduled();
+        Long totalCnt = lotteryQueryService.getTotalApplication(recruits);
+        Long unAcceptCnt = lotteryQueryService.getUnAcceptApplication(
                 recruits);
 
-        // 신청 현황
-        List<AcceptResult> acceptStatus = lotteryQueryService.getAcceptStatus(recruits);
+        return ApiResponse.onSuccess(new ApplicationStatus(totalCnt, unAcceptCnt));
+    }
 
         return ApiResponse.onSuccess(
                 toDashBoard(nowRecruitInfo, totalApplication, unAcceptApplication, acceptStatus,
