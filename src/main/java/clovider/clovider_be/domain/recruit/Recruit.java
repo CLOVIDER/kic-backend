@@ -59,7 +59,7 @@ public class Recruit extends BaseTimeEntity {
 
     @Column(nullable = false)
     @ColumnDefault("'0'")
-    private Integer workYearsUsage;
+    private Character workYearsUsage;
 
     @Column(nullable = false, length = 1)
     @ColumnDefault("'0'")
@@ -88,7 +88,6 @@ public class Recruit extends BaseTimeEntity {
     public void changeKindergarten(Kindergarten kindergarten){
         this.kindergarten = kindergarten;
     }
-
 
 
     // 정적 팩토리 메서드 추가
