@@ -1,5 +1,6 @@
 package clovider.clovider_be.domain.application.dto;
 
+import clovider.clovider_be.domain.enums.DocumentType;
 import clovider.clovider_be.domain.recruit.Recruit;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -38,5 +39,5 @@ public class ApplicationRequest {
     private List<Map<String, Object>> childrenRecruitList;
 
     @Schema(description = "증빙 서류 URL 리스트", example = "['s3-1', 's3-2']")
-    private List<String> imageUrls;
+    private Map<DocumentType, String> imageUrls;
 }
