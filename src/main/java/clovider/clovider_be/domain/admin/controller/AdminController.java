@@ -1,14 +1,15 @@
 package clovider.clovider_be.domain.admin.controller;
 
+import static clovider.clovider_be.domain.admin.dto.AdminResponse.ApplicationStatus;
 import static clovider.clovider_be.domain.admin.dto.AdminResponse.toDashBoard;
+import static clovider.clovider_be.domain.admin.dto.AdminResponse.toNotDashBoard;
 
-import clovider.clovider_be.domain.admin.dto.AdminResponse;
+import clovider.clovider_be.domain.admin.dto.AdminResponse.AcceptResult;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.ApplicationList;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.DashBoard;
 import clovider.clovider_be.domain.admin.dto.SearchVO;
 import clovider.clovider_be.domain.application.service.ApplicationQueryService;
 import clovider.clovider_be.domain.common.CustomPage;
-import clovider.clovider_be.domain.lottery.dto.LotteryResponse.AcceptResult;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitInfo;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitResult;
@@ -56,13 +57,12 @@ public class AdminController {
     private final NoticeQueryService noticeQueryService;
     private final RecruitQueryService recruitQueryService;
     private final LotteryQueryService lotteryQueryService;
-    private final MailService mailService;
     private final ApplicationQueryService applicationQueryService;
-    private final PdfUtil pdfUtil;
     private final RecruitCommandService recruitCommandService;
+    private final PdfUtil pdfUtil;
+    private final MailService mailService;
 
-
-    @Operation(summary = "관리자 대시보드 조회", description = "어린이집 모집 통계 정보를 조회합니다.")
+    @Operation(summary = "[전체] 관리자 대시보드 조회", description = "어린이집 모집 통계 정보를 조회합니다.")
     @GetMapping("/dashboards")
     public ApiResponse<DashBoard> getDashboard() {
 
@@ -80,8 +80,39 @@ public class AdminController {
         if (recruits.isEmpty()) {
             nowRecruitInfo = RecruitResponse.toNotRecruitInfo();
             return ApiResponse.onSuccess(
-                    AdminResponse.toNotDashBoard(nowRecruitInfo, noticeTop3, waitQna));
+                    toNotDashBoard(nowRecruitInfo, noticeTop3, waitQna));
         }
+        List<CompetitionRate> recruitRates = lotteryQueryService.getRecruitRates(recruits);
+        nowRecruitInfo = RecruitResponse.toNowRecruitInfo(recruits, recruitRates);
+
+        // 총 신청자 수
+        Long totalApplication = lotteryQueryService.getTotalApplication(recruits);
+
+        // 승인 대기 수
+        Long unAcceptApplication = lotteryQueryService.getUnAcceptApplication(
+                recruits);
+
+        // 신청 현황
+        List<AcceptResult> acceptStatus = lotteryQueryService.getAcceptResult(recruits);
+
+        return ApiResponse.onSuccess(
+                toDashBoard(nowRecruitInfo, totalApplication, unAcceptApplication, acceptStatus,
+                        noticeTop3, waitQna));
+    }
+
+    @Operation(summary = "[컴포넌트] 관리자 대시보드 최신글 3개 조회 API", description = "최신 글 3개 조회")
+    @GetMapping("/notices/top3")
+    public ApiResponse<List<NoticeTop3>> getNoticeTop3() {
+
+        return ApiResponse.onSuccess(noticeQueryService.getTop3Notices());
+    }
+
+    @Operation(summary = "[컴포넌트] 관리자 대시보드 답변 대기 개수 조회 API", description = "QNA 답변 대기 수 조회")
+    @GetMapping("/qnas/waiting")
+    public ApiResponse<Integer> getWaitQna() {
+
+        return ApiResponse.onSuccess(qnaQueryService.getWaitQna());
+    }
 
     @Operation(summary = "[컴포넌트] 관리자 대시보드 모집 신청 현황 조회 API", description = "총 신청자 수, 승인 대기 수 조회")
     @GetMapping("/recruits/applications/status")
@@ -95,10 +126,13 @@ public class AdminController {
         return ApiResponse.onSuccess(new ApplicationStatus(totalCnt, unAcceptCnt));
     }
 
-        return ApiResponse.onSuccess(
-                toDashBoard(nowRecruitInfo, totalApplication, unAcceptApplication, acceptStatus,
-                        noticeTop3, waitQna));
+    @Operation(summary = "[컴포넌트] 관리자 대시보드 어린이집별 신청 현황 조회 API", description = "어린이집별 승인, 승인대기, 미승인 현황 조회")
+    @GetMapping("/recruits/kindergartens/status")
+    public ApiResponse<List<AcceptResult>> getAcceptStatus() {
 
+        List<Recruit> recruits = recruitQueryService.getRecruitIngAndScheduled();
+
+        return ApiResponse.onSuccess(lotteryQueryService.getAcceptResult(recruits));
     }
 
     @Operation(summary = "어린이집 모집 결과 이메일 전송 API", description = "해당 모집의 추첨결과를 이메일로 전송합니다.")
@@ -111,7 +145,6 @@ public class AdminController {
 
         return ApiResponse.onSuccess("성공적으로 추첨결과가 전송되었습니다.");
     }
-
 
     @Operation(summary = "진행중인 모집의 신청 현황 조회", description = "진행 중인 모집의 모든 신청 내역을 조회합니다.")
     @Parameters({
