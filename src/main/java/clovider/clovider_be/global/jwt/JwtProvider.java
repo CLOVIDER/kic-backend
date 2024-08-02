@@ -64,11 +64,12 @@ public class JwtProvider {
                 .compact();
     }
 
-    public String generateRefreshToken(Long employeeId) {
+    public String generateRefreshToken(Long employeeId, Role role) {
 
         Date expiredAt = new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRE_TIME);
         return Jwts.builder()
                 .claim(EMPLOYEE_ID_KEY, employeeId)
+                .claim(ROLE, role)
                 .setIssuedAt(Date.from(ZonedDateTime.now().toInstant()))
                 .setExpiration(expiredAt)
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -138,4 +139,8 @@ public class JwtProvider {
         return redisUtil.hasKeyBlackList(accessToken);
     }
 
+    public Role getRoleByToken(String token) {
+        return parseClaims(token)
+                .get(ROLE, Role.class);
+    }
 }
