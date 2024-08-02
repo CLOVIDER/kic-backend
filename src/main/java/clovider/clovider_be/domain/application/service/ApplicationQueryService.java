@@ -1,8 +1,8 @@
 package clovider.clovider_be.domain.application.service;
 
-import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.ApplicationList;
 import clovider.clovider_be.domain.admin.dto.SearchVO;
+import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.application.dto.ApplicationResponse;
 import clovider.clovider_be.domain.common.CustomPage;
 import clovider.clovider_be.domain.employee.Employee;
@@ -20,4 +20,6 @@ public interface ApplicationQueryService {
     CustomPage<ApplicationResponse> applicationListRead(int page, int size);
 
     Application getApplication(Long Id);
+
+    Application getApplicationWithEmployee(Long applicationId);
 }

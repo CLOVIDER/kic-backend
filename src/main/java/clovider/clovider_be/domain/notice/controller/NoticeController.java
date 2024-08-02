@@ -39,7 +39,7 @@ public class NoticeController {
     private final NoticeCommandService noticeCommandService;
     private final NoticeQueryService noticeQueryService;
 
-    @Operation(summary = "공지사항 조회", description = "특정 공지사항의 정보를 조회합니다.")
+    @Operation(summary = "공지사항 조회 - 공지사항 세부 페이지", description = "특정 공지사항의 정보를 조회합니다.")
     @Parameter(name = "noticeId", description = "공지사항 ID", required = true, example = "1")
     @GetMapping("/notices/{noticeId}")
     public ApiResponse<NoticeResponse> getNotice(@PathVariable Long noticeId, HttpServletRequest request, HttpServletResponse response) {
@@ -47,21 +47,21 @@ public class NoticeController {
     }
 
     @GetMapping("/notices")
-    @Operation(summary = "전체 공지사항 목록 조회", description = "페이지네이션을 적용하여 전체 공지사항 목록을 조회합니다.")
+    @Operation(summary = "전체 공지사항 목록 조회 - 공지사항 리스트 페이지", description = "페이지네이션을 적용하여 전체 공지사항 목록을 조회합니다.")
     public ApiResponse<CustomPage<NoticeResponse>> getAllNotices(
             @RequestParam(defaultValue = "0") @Parameter(description = "페이지 번호") int page,
             @RequestParam(defaultValue = "10") @Parameter(description = "페이지 크기") int size) {
         return ApiResponse.onSuccess(noticeQueryService.getAllNotices(page, size));
     }
 
-    @Operation(summary = "공지사항 생성", description = "새로운 공지사항을 생성합니다.")
+    @Operation(summary = "공지사항 생성 - 공지사항 작성 페이지", description = "새로운 공지사항을 생성합니다.")
     @PostMapping("/admin/notices")
     public ApiResponse<CustomResult> createNotice(@AuthEmployee Employee employee,
             @Valid @RequestBody NoticeRequest noticeRequest) {
         return ApiResponse.onSuccess(noticeCommandService.createNotice(employee, noticeRequest));
     }
 
-    @Operation(summary = "공지사항 수정", description = "특정 공지사항을 수정합니다.")
+    @Operation(summary = "공지사항 수정 - 공지사항 수정 페이지", description = "특정 공지사항을 수정합니다.")
     @Parameter(name = "noticeId", description = "수정할 공지사항 ID", required = true, example = "1")
     @PatchMapping("/admin/notices/{noticeId}")
     public ApiResponse<NoticeUpdateResponse> updateNotice(@PathVariable Long noticeId,
@@ -69,7 +69,7 @@ public class NoticeController {
         return ApiResponse.onSuccess(noticeCommandService.updateNotice(noticeId, noticeRequest));
     }
 
-    @Operation(summary = "공지사항 삭제",
+    @Operation(summary = "공지사항 삭제 - 공지사항 수정 페이지",
             description = "특정 공지사항을 삭제합니다.")
     @Parameter(name = "noticeId", description = "삭제할 공지사항 ID", required = true, example = "1")
     @DeleteMapping("/admin/notices/{noticeId}")
@@ -77,7 +77,7 @@ public class NoticeController {
         return ApiResponse.onSuccess(noticeCommandService.deleteNotice(noticeId));
     }
 
-    @Operation(summary = "공지사항 검색",
+    @Operation(summary = "공지사항 검색 - 공지사항 리스트 페이지",
             description = "검색 타입과 키워드를 기반으로 공지사항을 검색합니다.",
             parameters = {
             @Parameter(name = "type", description = "검색 타입을 나타내는 Enum 값", example = "TITLE", required = true, in = ParameterIn.QUERY),
