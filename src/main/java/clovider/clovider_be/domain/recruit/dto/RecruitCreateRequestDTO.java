@@ -19,7 +19,7 @@ public class RecruitCreateRequestDTO {
     private Long kindergartenId;
     private Integer workYearsUsage;
     private Character isSingleParentUsage;
-    private Integer childrenCntUsage;
+    private Character childrenCntUsage;
     private Character isDisabilityUsage;
     private Character isDualIncomeUsage;
     private Character isEmployeeCoupleUsage;

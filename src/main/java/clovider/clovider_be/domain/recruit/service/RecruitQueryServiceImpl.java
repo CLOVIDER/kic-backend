@@ -51,4 +51,9 @@ public class RecruitQueryServiceImpl implements RecruitQueryService {
                 () -> new ApiException(ErrorStatus._RECRUIT_NOT_FOUND)
         );
     }
+
+    @Override
+    public List<Recruit> getRecruitAndKindergarten() {
+        return recruitRepository.findRecruitKdg(LocalDateTime.now());
+    }
 }

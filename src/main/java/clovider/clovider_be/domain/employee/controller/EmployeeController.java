@@ -36,6 +36,7 @@ public class EmployeeController {
 
     }
 
+    @Operation(summary = "사내 직원 정보 조회", description = "신청 폼 사내직원 정보 조회")
     @GetMapping("/employees")
     public ApiResponse<EmployeeInfo> getEmployeeInfo(@AuthEmployee Employee employee) {
 
