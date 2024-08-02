@@ -1,7 +1,6 @@
 package clovider.clovider_be.domain.admin.dto;
 
 import clovider.clovider_be.domain.application.Application;
-import clovider.clovider_be.domain.lottery.dto.LotteryResponse.AcceptResult;
 import clovider.clovider_be.domain.notice.dto.NoticeTop3;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruitInfo;
 import clovider.clovider_be.global.util.TimeUtil;
@@ -59,6 +58,38 @@ public class AdminResponse {
                 .waitQnaCnt(waitQnaCnt)
                 .build();
     }
+
+    @Schema(description = "[관리자 대시보드] 총 신청자 수, 승인 대기 응답 DTO")
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ApplicationStatus {
+
+        @Schema(description = "총 신청자 수")
+        private Long totalApplications;
+        @Schema(description = "승인 대기 수")
+        private Long unAcceptApplications;
+    }
+
+    @Schema(description = "어린이집별 신청현황 DTO")
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class AcceptResult {
+
+        @Schema(description = "어린이집 이름")
+        private String kindergartenNm;
+        @Schema(description = "승인 수")
+        private Integer acceptCnt;
+        @Schema(description = "미승인 수")
+        private Integer unAcceptCnt;
+        @Schema(description = "승인 대기 수")
+        private Integer waitCnt;
+    }
+
+    //** ===================================================================================== **//
 
     @Schema(description = "신청내역 페이징 DTO")
     @Builder

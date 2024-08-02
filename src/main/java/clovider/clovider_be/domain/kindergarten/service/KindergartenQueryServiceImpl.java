@@ -2,11 +2,8 @@ package clovider.clovider_be.domain.kindergarten.service;
 
 
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
-import clovider.clovider_be.domain.kindergarten.dto.KindergartenResponse;
 import clovider.clovider_be.domain.kindergarten.dto.KindergartenResponse.KindergartenGetResponse;
 import clovider.clovider_be.domain.kindergarten.repository.KindergartenRepository;
-import clovider.clovider_be.domain.kindergartenImage.KindergartenImage;
-import clovider.clovider_be.domain.kindergartenImage.repository.KindergartenImageRepository;
 import clovider.clovider_be.domain.kindergartenImage.service.KindergartenImageQueryService;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
@@ -21,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class KindergartenQueryServiceImpl implements KindergartenQueryService {
+
     private final KindergartenRepository kindergartenRepository;
     private final KindergartenImageQueryService kindergartenImageQuery;
 
@@ -40,15 +38,18 @@ public class KindergartenQueryServiceImpl implements KindergartenQueryService {
         List<KindergartenGetResponse> responses = new ArrayList<>();
 
         List<String> imageUrlsList = kindergartens.stream()
-                .map(kindergarten -> kindergartenImageQuery.getKindergartenImageUrls(kindergarten.getId()))
+                .map(kindergarten -> kindergartenImageQuery.getKindergartenImageUrls(
+                        kindergarten.getId()))
                 .collect(Collectors.toList());
 
         for (int i = 0; i < kindergartens.size(); i++) {
             Kindergarten kindergarten = kindergartens.get(i);
             String imageUrls = imageUrlsList.get(i);
-            responses.add(KindergartenGetResponse.toKindergartenGetResponse(kindergarten, imageUrls));
+            responses.add(
+                    KindergartenGetResponse.toKindergartenGetResponse(kindergarten, imageUrls));
         }
 
         return responses;
     }
+
 }
