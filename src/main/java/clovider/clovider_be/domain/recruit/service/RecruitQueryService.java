@@ -16,4 +16,5 @@ public interface RecruitQueryService {
 
     Recruit getRecruit(Long id);
 
+    List<Recruit> getRecruitAndKindergarten();
 }

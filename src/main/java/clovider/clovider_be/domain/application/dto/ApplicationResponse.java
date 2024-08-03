@@ -42,7 +42,6 @@ public class ApplicationResponse {
     private Character isDualIncome;
     private Character isEmployeeCouple;
     private Character isSibling;
-    private String childNm;
     private Accept isAccept;
 
     private List<Document> documents;
@@ -59,7 +58,6 @@ public class ApplicationResponse {
                 .isDualIncome(application.getIsDualIncome())
                 .isEmployeeCouple(application.getIsEmployeeCouple())
                 .isSibling(application.getIsSibling())
-                .childNm(application.getChildNm())
                 .isAccept(application.getIsAccept())
                 .documents(application.getDocuments())
                 .build();

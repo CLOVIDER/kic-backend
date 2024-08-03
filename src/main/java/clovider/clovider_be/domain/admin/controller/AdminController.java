@@ -166,4 +166,5 @@ public class AdminController {
         RecruitCreateResponseDTO responseDTO = recruitCommandService.createRecruit(requestDTO);
         return ApiResponse.onSuccess(responseDTO);
     }
+
 }

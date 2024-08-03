@@ -68,5 +68,9 @@ public class ApplicationQueryServiceImpl implements ApplicationQueryService {
         );
     }
 
-    //
+    @Override
+    public Application getApplicationWithEmployee(Long applicationId) {
+        return applicationRepository.findApplicationWithEmployee(applicationId);
+    }
+
 }
