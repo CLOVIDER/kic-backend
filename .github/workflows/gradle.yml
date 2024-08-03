@@ -21,7 +21,7 @@ jobs:
           distribution: 'temurin'
           
       - name: Set environment yml file
-        run: echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.yml
+        run: echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application-dev.yml
         shell: bash
   
       - name: Build with Gradle
