@@ -38,7 +38,7 @@ public class QnaController {
     private final QnaQueryService qnaQueryService;
     private final QnaCommandService qnaCommandService;
 
-    @Operation(summary = "Q&A 생성", description = "새로운 Q&A를 생성합니다.")
+    @Operation(summary = "Q&A 생성 - Q&A 작성 페이지", description = "새로운 Q&A를 생성합니다.")
     @PostMapping("/qnas")
     public ApiResponse<CustomResult> createQna(
             @AuthEmployee Employee employee,
@@ -46,7 +46,7 @@ public class QnaController {
         return ApiResponse.onSuccess(qnaCommandService.createQna(employee, qna));
     }
 
-    @Operation(summary = "Q&A 수정", description = "기존 Q&A를 수정합니다.")
+    @Operation(summary = "Q&A 수정 - Q&A 수정 페이지", description = "기존 Q&A를 수정합니다.")
     @Parameter(name = "qnaId", description = "qna ID", required = true, example = "1")
     @PatchMapping("/qnas/{qnaId}")
     public ApiResponse<QnaUpdateResponse> updateQna(
@@ -55,7 +55,7 @@ public class QnaController {
         return ApiResponse.onSuccess(qnaCommandService.updateQna(qnaId, qnaRequest));
     }
 
-    @Operation(summary = "Q&A 삭제", description = "Q&A를 삭제합니다.")
+    @Operation(summary = "Q&A 삭제 - Q&A 수정 페이지", description = "Q&A를 삭제합니다.")
     @Parameter(name = "qnaId", description = "qna ID", required = true, example = "1")
     @DeleteMapping("/qnas/{qnaId}")
     public ApiResponse<String> deleteQna(
@@ -63,7 +63,7 @@ public class QnaController {
         return ApiResponse.onSuccess(qnaCommandService.deleteQna(qnaId));
     }
 
-    @Operation(summary = "Q&A 조회", description = "특정 Q&A의 세부정보를 조회합니다.")
+    @Operation(summary = "Q&A 조회 - Q&A 상세 페이지", description = "특정 Q&A의 세부정보를 조회합니다.")
     @Parameter(name = "qnaId", description = "qna ID", required = true, example = "1")
     @GetMapping("/qnas/{qnaId}")
     public ApiResponse<QnaResponse> getQna(
@@ -71,7 +71,7 @@ public class QnaController {
         return ApiResponse.onSuccess(qnaQueryService.getQna(qnaId));
     }
 
-    @Operation(summary = "전체 Q&A 목록 조회", description = "페이지네이션을 적용하여 전체 Q&A 목록을 조회합니다.")
+    @Operation(summary = "전체 Q&A 목록 조회 - Q&A 리스트 페이지", description = "페이지네이션을 적용하여 전체 Q&A 목록을 조회합니다.")
     @GetMapping("/qnas")
     public ApiResponse<CustomPage<QnaResponse>> getAllQnas(
             @RequestParam(defaultValue = "0") @Parameter(description = "페이지 번호") int page,
@@ -79,7 +79,7 @@ public class QnaController {
         return ApiResponse.onSuccess(qnaQueryService.getAllQnas(page, size));
     }
 
-    @Operation(summary = "Q&A 답변 수정", description = "관리자가 Q&A에 답변을 수정합니다.")
+    @Operation(summary = "Q&A 답변 수정 - Q&A 답변 작성 페이지", description = "관리자가 Q&A에 답변을 수정합니다.")
     @Parameter(name = "qnaId", description = "qna ID", required = true, example = "1")
     @PatchMapping("/qnas/admin/{qnaId}")
     public ApiResponse<QnaUpdateResponse> updateQnaAnswer(
@@ -89,7 +89,7 @@ public class QnaController {
         return ApiResponse.onSuccess(qnaCommandService.updateAnswer(admin, qnaId, qnaAnswerRequest));
     }
 
-    @Operation(summary = "QNA 검색",
+    @Operation(summary = "QNA 검색 - Q&A 리스트 페이지",
             description = "검색 타입과 키워드를 기반으로 QNA를 검색합니다.",
             parameters = {
                     @Parameter(name = "type", description = "검색 타입을 나타내는 Enum 값", example = "TITLE", required = true, in = ParameterIn.QUERY),

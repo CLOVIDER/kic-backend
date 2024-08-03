@@ -2,13 +2,13 @@ package clovider.clovider_be.domain.employee.dto;
 
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.global.util.TimeUtil;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 public class EmployeeResponse {
-
     @Getter
     @Builder
     @AllArgsConstructor
@@ -31,6 +31,6 @@ public class EmployeeResponse {
                 .isCouple(employee.getCoupleNo() == null)
                 .workedAt(TimeUtil.formattedDate(employee.getCreatedAt()))
                 .build();
-    }
 
+    }
 }

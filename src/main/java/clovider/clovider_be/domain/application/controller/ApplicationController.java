@@ -1,7 +1,7 @@
 package clovider.clovider_be.domain.application.controller;
 
-import clovider.clovider_be.domain.application.dto.ApplicationResponse;
 import clovider.clovider_be.domain.application.dto.ApplicationRequest;
+import clovider.clovider_be.domain.application.dto.ApplicationResponse;
 import clovider.clovider_be.domain.application.service.ApplicationCommandService;
 import clovider.clovider_be.domain.application.service.ApplicationQueryService;
 import clovider.clovider_be.domain.common.CustomPage;
@@ -13,10 +13,8 @@ import clovider.clovider_be.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -33,11 +31,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ApplicationController {
 
-    @Autowired
-    private ApplicationCommandService applicationCommandService;
-
-    @Autowired
-    private ApplicationQueryService applicationQueryService;
+    private final ApplicationCommandService applicationCommandService;
+    private final ApplicationQueryService applicationQueryService;
 
     @Operation(summary = "신청서 작성 API", description = "지원한 모집 ID 리스트에 대해서도 입력받습니다.")
     @PostMapping("/applications")
