@@ -21,7 +21,7 @@ jobs:
         run: |
           mkdir -p src/main/resources
           cp application-config/application.yml src/main/resources/application.yml
-          cp application-config/submodule/application-dev.yml src/main/resources/application-dev.yml
+          cp application-config/application-dev.yml src/main/resources/application-dev.yml
           cp application-config/application-prod.yml src/main/resources/application-prod.yml
 
       - name: Set up JDK 17
