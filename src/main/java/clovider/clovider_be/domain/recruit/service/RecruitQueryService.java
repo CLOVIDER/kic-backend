@@ -10,6 +10,8 @@ public interface RecruitQueryService {
 
     List<Recruit> getNowRecruitOrderByClass();
 
+    List<Recruit> getRecruitIngAndScheduled();
+
     List<Recruit> getNowRecruit();
 
     RecruitInfo getRecruitInfo(Long recruitId);

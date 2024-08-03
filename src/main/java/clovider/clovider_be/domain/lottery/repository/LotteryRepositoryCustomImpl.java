@@ -4,8 +4,8 @@ import static clovider.clovider_be.domain.application.QApplication.application;
 import static clovider.clovider_be.domain.lottery.QLottery.lottery;
 import static clovider.clovider_be.domain.recruit.QRecruit.recruit;
 
+import clovider.clovider_be.domain.admin.dto.AdminResponse.AcceptResult;
 import clovider.clovider_be.domain.enums.Accept;
-import clovider.clovider_be.domain.lottery.dto.LotteryResponse.AcceptResult;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
 import clovider.clovider_be.domain.recruit.Recruit;
 import com.querydsl.core.Tuple;
@@ -47,7 +47,6 @@ public class LotteryRepositoryCustomImpl implements LotteryRepositoryCustom {
         return jpaQueryFactory
                 .select(lottery.count().as("cnt"))
                 .from(lottery)
-                .join(lottery.recruit, recruit)
                 .where(lottery.recruit.in(recruits))
                 .fetchFirst();
     }
@@ -58,7 +57,6 @@ public class LotteryRepositoryCustomImpl implements LotteryRepositoryCustom {
         return jpaQueryFactory
                 .select(lottery.count().as("cnt"))
                 .from(lottery)
-                .join(lottery.recruit, recruit)
                 .join(lottery.application, application)
                 .where(lottery.recruit.in(recruits).and(application.isAccept.eq(Accept.WAIT)))
                 .fetchFirst();
