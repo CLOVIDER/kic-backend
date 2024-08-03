@@ -5,6 +5,7 @@ import clovider.clovider_be.domain.document.Document;
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.enums.Accept;
 import clovider.clovider_be.domain.lottery.Lottery;
+import clovider.clovider_be.domain.lottery.dto.LotteryResponse.ChildInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
