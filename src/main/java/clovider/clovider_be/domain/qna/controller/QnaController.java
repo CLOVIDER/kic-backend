@@ -14,11 +14,11 @@ import clovider.clovider_be.global.annotation.AuthEmployee;
 import clovider.clovider_be.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -71,12 +71,15 @@ public class QnaController {
         return ApiResponse.onSuccess(qnaQueryService.getQna(qnaId));
     }
 
-    @Operation(summary = "전체 Q&A 목록 조회 - Q&A 리스트 페이지", description = "페이지네이션을 적용하여 전체 Q&A 목록을 조회합니다.")
+    @Operation(summary = "전체 Q&A 목록 조회 - Q&A 리스트 페이지", description = "페이지네이션과 타입별 키워드 검색을 적용하여 전체 Q&A 목록을 조회합니다.")
     @GetMapping("/qnas")
     public ApiResponse<CustomPage<QnaResponse>> getAllQnas(
             @RequestParam(defaultValue = "0") @Parameter(description = "페이지 번호") int page,
-            @RequestParam(defaultValue = "10") @Parameter(description = "페이지 크기") int size) {
-        return ApiResponse.onSuccess(qnaQueryService.getAllQnas(page, size));
+            @RequestParam(defaultValue = "10") @Parameter(description = "페이지 크기") int size,
+            @RequestParam SearchType type, @RequestParam(required = false) String keyword) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<QnaResponse> allQnas = qnaQueryService.getAllQnas(pageRequest, type, keyword);
+        return ApiResponse.onSuccess(new CustomPage<> (allQnas));
     }
 
     @Operation(summary = "Q&A 답변 수정 - Q&A 답변 작성 페이지", description = "관리자가 Q&A에 답변을 수정합니다.")
@@ -87,18 +90,6 @@ public class QnaController {
             @PathVariable Long qnaId,
             @Valid @RequestBody QnaAnswerRequest qnaAnswerRequest) {
         return ApiResponse.onSuccess(qnaCommandService.updateAnswer(admin, qnaId, qnaAnswerRequest));
-    }
-
-    @Operation(summary = "QNA 검색 - Q&A 리스트 페이지",
-            description = "검색 타입과 키워드를 기반으로 QNA를 검색합니다.",
-            parameters = {
-                    @Parameter(name = "type", description = "검색 타입을 나타내는 Enum 값", example = "TITLE", required = true, in = ParameterIn.QUERY),
-                    @Parameter(name = "keyword", description = "검색할 키워드", example = "공지", required = false, in = ParameterIn.QUERY)
-            })
-    @GetMapping("/qnas/search")
-    public ApiResponse<List<QnaResponse>> searchQnas(
-            @RequestParam SearchType type, @RequestParam(required = false) String keyword) {
-        return ApiResponse.onSuccess(qnaQueryService.searchQnas(type, keyword));
     }
     
 }

@@ -1,6 +1,5 @@
 package clovider.clovider_be.domain.notice.service;
 
-import clovider.clovider_be.domain.common.CustomPage;
 import clovider.clovider_be.domain.enums.SearchType;
 import clovider.clovider_be.domain.notice.Notice;
 import clovider.clovider_be.domain.notice.dto.NoticeResponse;
@@ -15,7 +14,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,22 +42,13 @@ public class NoticeQueryServiceImpl implements NoticeQueryService {
     }
 
     @Override
-    public CustomPage<NoticeResponse> getAllNotices(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Page<Notice> noticePage = noticeRepository.findAll(pageRequest);
-
-        Page<NoticeResponse> noticeResponsePage = noticePage.map(NoticeResponse::toNoticeResponse);
-        return new CustomPage<>(noticeResponsePage);
+    public Page<NoticeResponse> getAllNotices(Pageable pageable, SearchType type, String keyword) {
+        return noticeRepository.searchNotices(pageable,type,keyword);
     }
 
     @Override
     public List<NoticeTop3> getTop3Notices() {
         return NoticeTop3.from(noticeRepository.findTop3ByOrderByIdDesc());
-    }
-
-    @Override
-    public List<NoticeResponse> searchNotices(SearchType type, String keyword) {
-        return noticeRepository.searchNotices(type, keyword);
     }
 
     private void handleViewCookie(Notice foundNotice, Long noticeId, HttpServletRequest request, HttpServletResponse response) {
