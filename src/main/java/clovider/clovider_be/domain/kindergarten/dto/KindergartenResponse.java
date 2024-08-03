@@ -30,7 +30,8 @@ public class KindergartenResponse {
 
         private LocalDateTime createdAt;
 
-        public static KindergartenRegisterResponse toKindergartenRegisterResponse(Kindergarten kindergarten,
+        public static KindergartenRegisterResponse toKindergartenRegisterResponse(
+                Kindergarten kindergarten,
                 Long kindergartenImageId) {
             return KindergartenRegisterResponse.builder()
                     .kindergartenId(kindergarten.getId())
@@ -56,7 +57,8 @@ public class KindergartenResponse {
         private Long kindergartenId;
         private List<Long> relatedRecruit;
 
-        public static KindergartenDeleteResponse toKindergartenDeleteResponse(Long kindergartenId, List<Long> relatedRecruit) {
+        public static KindergartenDeleteResponse toKindergartenDeleteResponse(Long kindergartenId,
+                List<Long> relatedRecruit) {
             return KindergartenDeleteResponse.builder()
                     .kindergartenId(kindergartenId)
                     .relatedRecruit(relatedRecruit)
@@ -83,7 +85,8 @@ public class KindergartenResponse {
 
         private LocalDateTime updatedAt;
 
-        public static KindergartenUpdateResponse toKindergartenUpdateResponse(Kindergarten kindergarten,
+        public static KindergartenUpdateResponse toKindergartenUpdateResponse(
+                Kindergarten kindergarten,
                 Long kindergartenImageId) {
             return KindergartenUpdateResponse.builder()
                     .kindergartenId(kindergarten.getId())
@@ -117,7 +120,8 @@ public class KindergartenResponse {
 
         private String kindergartenImageUrl;
 
-        public static KindergartenGetResponse toKindergartenGetResponse(Kindergarten kindergarten, String kindergartenImageUrl) {
+        public static KindergartenGetResponse toKindergartenGetResponse(Kindergarten kindergarten,
+                String kindergartenImageUrl) {
             return KindergartenGetResponse.builder()
                     .kindergartenId(kindergarten.getId())
                     .kindergartenNm(kindergarten.getKindergartenNm())

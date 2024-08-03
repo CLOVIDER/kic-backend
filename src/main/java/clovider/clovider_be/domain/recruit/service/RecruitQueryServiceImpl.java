@@ -31,6 +31,11 @@ public class RecruitQueryServiceImpl implements RecruitQueryService {
     }
 
     @Override
+    public List<Recruit> getRecruitIngAndScheduled() {
+        return recruitRepository.findRecruitIngAndScheduled(LocalDateTime.now());
+    }
+
+    @Override
     public List<Recruit> getNowRecruit() {
         return recruitRepository.findNowRecruit(LocalDateTime.now());
     }
