@@ -55,14 +55,20 @@ public class ApplicationController {
         return ApiResponse.onSuccess(applicationCommandService.applicationDelete(applicationId));
     }
 
-    @Operation(summary = "신청서 조회 API", description = "")
+    @Operation(summary = "신청서 ID 기반 신청서 조회 API", description = "")
     @GetMapping("/applications/{applicationId}")
-    public ApiResponse<ApplicationResponse> getApplication(@PathVariable Long applicationId) {
+    public ApiResponse<ApplicationResponse> getApplicationUsingID(@PathVariable Long applicationId) {
         return ApiResponse.onSuccess(applicationQueryService.applicationIdRead(applicationId));
     }
 
-    @Operation(summary = "신청서 리스트 조회 API", description = "")
+    @Operation(summary = "최근 신청서 조회 API", description = "")
     @GetMapping("/applications")
+    public ApiResponse<ApplicationResponse> getApplication(@AuthEmployee Employee employee) {
+        return ApiResponse.onSuccess(applicationQueryService.applicationRead(employee));
+    }
+
+    @Operation(summary = "신청서 리스트 조회 API", description = "")
+    @GetMapping("/applications/list")
     public ApiResponse<CustomPage<ApplicationResponse>> getApplicationList(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
