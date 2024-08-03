@@ -14,13 +14,13 @@ public class DocumentResponse {
     @NoArgsConstructor
     public static class DocumentInfo {
         private String type;
-        private Long documentId;
+        private String documentUrl;
     }
 
     public static DocumentInfo toDocumentInfo (Document document){
         return DocumentInfo.builder()
                 .type(document.getDocumentType().getDescription())
-                .documentId(document.getId())
+                .documentUrl(document.getImage())
                 .build();
     }
 }
