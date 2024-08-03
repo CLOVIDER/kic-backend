@@ -15,7 +15,14 @@ jobs:
         uses: actions/checkout@v3
         with:
           submodules: true
-          token: ${{ secrets.ACTIONS_TOKEN }} 
+          token: ${{ secrets.ACTIONS_TOKEN }}
+
+      - name: Copy application.yml from submodule
+        run: |
+          mkdir -p src/main/resources
+          cp path/to/submodule/application.yml src/main/resources/application.yml
+          cp path/to/submodule/application-dev.yml src/main/resources/application-dev.yml
+          cp path/to/submodule/application-prod.yml src/main/resources/application-prod.yml
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -24,14 +31,14 @@ jobs:
           distribution: 'temurin'
 
       - name: Build with Gradle
-        uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+        uses: gradle/gradle-build-action@v67421db6bd0bf253fb4bd25b31ebb98943c375e1
         with:
           arguments: clean bootJar
 
       - name: 카카오 컨테이너 레지스트리에 로그인중...
         run: |
           docker login kids-in-company.kr-central-2.kcr.dev --username ${{ secrets.KAKAO_ACCESS_ID }} --password ${{ secrets.KAKAO_ACCESS_SECRET }}
-
+          
       - name: Docker 이미지 빌드중..
         uses: docker/build-push-action@v4
         with:
