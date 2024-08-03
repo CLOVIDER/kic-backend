@@ -102,6 +102,7 @@ public class LotteryRepositoryCustomImpl implements LotteryRepositoryCustom {
     @Override
     public Page<LotteryResult> getLotteryResults(Long kindergartenId, Pageable pageable,
             String value) {
+
         List<LotteryResult> content = jpaQueryFactory
                 .select(lottery)
                 .from(lottery)
@@ -128,7 +129,9 @@ public class LotteryRepositoryCustomImpl implements LotteryRepositoryCustom {
                 .join(application.employee, employee)
                 .join(lottery.recruit, recruit)
                 .join(recruit.kindergarten, kindergarten)
-                .where(lottery.recruit.kindergarten.id.eq(kindergartenId), searchEmployee(value));
+                .where(lottery.recruit.kindergarten.id.eq(kindergartenId),
+                        searchEmployee(value),
+                        lottery.recruit.recruitEndDt.lt(LocalDateTime.now()));
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
