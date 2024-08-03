@@ -2,7 +2,6 @@ package clovider.clovider_be.domain.lottery.repository;
 
 import static clovider.clovider_be.domain.application.QApplication.application;
 import static clovider.clovider_be.domain.employee.QEmployee.employee;
-import static clovider.clovider_be.domain.kindergarten.QKindergarten.kindergarten;
 import static clovider.clovider_be.domain.lottery.QLottery.lottery;
 import static clovider.clovider_be.domain.recruit.QRecruit.recruit;
 
@@ -108,8 +107,8 @@ public class LotteryRepositoryCustomImpl implements LotteryRepositoryCustom {
                 .from(lottery)
                 .join(lottery.application, application).fetchJoin()
                 .join(application.employee, employee).fetchJoin()
-                .join(lottery.recruit, recruit).fetchJoin()
-                .join(recruit.kindergarten, kindergarten).fetchJoin()
+                // 조건절에서는 바로 필터링을 걸어서 굳이 엔티티 fetch join이 필요하지 않음
+                // 만약 결과에 recruit와 kindergarten의 정보가 필요하고 이 정보를 바탕으로 데이터 조작을 해야 한다면 필요
                 .where(lottery.recruit.kindergarten.id.in(kindergartenId),
                         searchEmployee(value),
                         lottery.recruit.recruitEndDt.lt(LocalDateTime.now()))
@@ -127,8 +126,6 @@ public class LotteryRepositoryCustomImpl implements LotteryRepositoryCustom {
                 .from(lottery)
                 .join(lottery.application, application)
                 .join(application.employee, employee)
-                .join(lottery.recruit, recruit)
-                .join(recruit.kindergarten, kindergarten)
                 .where(lottery.recruit.kindergarten.id.eq(kindergartenId),
                         searchEmployee(value),
                         lottery.recruit.recruitEndDt.lt(LocalDateTime.now()));
