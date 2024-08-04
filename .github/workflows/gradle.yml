@@ -37,18 +37,12 @@ jobs:
 
       - name: Login to Kakao Container Registry
         run: |
-          docker login kids-in-company.kr-central-2.kcr.dev --username ${{ secrets.KAKAO_ACCESS_ID }} --password ${{ secrets.KAKAO_ACCESS_SECRET }}
+          echo ${{ secrets.KAKAO_ACCESS_SECRET }} | docker login kids-in-company.kr-central-2.kcr.dev --username ${{ secrets.KAKAO_ACCESS_ID }} --password-stdin
           
-      - name: Generate Tag and Build Docker Image
-        id: build_image
+      - name: Build and Push Docker Image
         run: |
-          TAG=$(date +'%Y%m%d%H%M%S')
-          docker build -t kids-in-company.kr-central-2.kcr.dev/clovider-registry/clovider-be-app:${TAG} .
-          echo "TAG=${TAG}" >> $GITHUB_ENV
-
-      - name: Push Docker Image to Registry
-        run: |
-          docker push kids-in-company.kr-central-2.kcr.dev/clovider-registry/clovider-be-app:${{ env.TAG }}
+          docker build -t kids-in-company.kr-central-2.kcr.dev/clovider-registry/clovider-be-app:${{ github.sha }} .
+          docker push kids-in-company.kr-central-2.kcr.dev/clovider-registry/clovider-be-app:${{ github.sha }}
 
   update-manifest-state:
     runs-on: ubuntu-latest
@@ -66,13 +60,12 @@ jobs:
 
       - name: Update image tag in deployment file
         run: |
-          yq e ".spec.template.spec.containers[0].image = \"kids-in-company.kr-central-2.kcr.dev/clovider-registry/clovider-be-app:${{ env.TAG }}\"" -i clovider-app/be-deployment.yaml
+          yq e ".spec.template.spec.containers[0].image = \"kids-in-company.kr-central-2.kcr.dev/clovider-registry/clovider-be-app:${{ github.sha }}\"" -i clovider-app/be-deployment.yaml
 
       - name: Commit and Push changes
         run: |
           git config --global user.email "${{ secrets.EMAIL }}"
           git config --global user.name "${{ secrets.USERNAME }}"
           git add clovider-app/be-deployment.yaml
-          git commit -m "[skip ci] Update image tag to ${{ env.TAG }}"
-          git remote set-url origin https://${{ secrets.ACTIONS_TOKEN }}@github.com/${{ secrets.GIT_PROJECT }}/kic-k8s
-          git push --set-upstream origin main
+          git commit -m "[skip ci] Update image tag to ${{ github.sha }}"
+          git push
