@@ -13,8 +13,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Builder
 @Schema(description = "신청서 요청 DTO")
 public class ApplicationRequest {
 
