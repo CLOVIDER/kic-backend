@@ -1,8 +1,8 @@
 package clovider.clovider_be.domain.lottery.service;
 
+import clovider.clovider_be.domain.admin.dto.AdminResponse.AcceptResult;
 import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse;
-import clovider.clovider_be.domain.lottery.dto.LotteryResponse.AcceptResult;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.ChildInfo;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitInfo;
@@ -59,7 +59,7 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
     }
 
     @Override
-    public List<AcceptResult> getAcceptStatus(List<Recruit> recruits) {
+    public List<AcceptResult> getAcceptResult(List<Recruit> recruits) {
         return lotteryRepository.findAcceptStatus(recruits);
     }
 

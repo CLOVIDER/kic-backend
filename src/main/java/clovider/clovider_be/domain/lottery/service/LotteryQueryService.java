@@ -1,6 +1,7 @@
 package clovider.clovider_be.domain.lottery.service;
 
-import clovider.clovider_be.domain.lottery.dto.LotteryResponse.AcceptResult;
+
+import clovider.clovider_be.domain.admin.dto.AdminResponse.AcceptResult;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.ChildInfo;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitResult;
@@ -18,7 +19,7 @@ public interface LotteryQueryService {
 
     Long getUnAcceptApplication(List<Recruit> recruits);
 
-    List<AcceptResult> getAcceptStatus(List<Recruit> recruits);
+    List<AcceptResult> getAcceptResult(List<Recruit> recruits);
 
     List<RecruitResult> getRecruitResult(Long recruitId);
 
