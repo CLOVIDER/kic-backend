@@ -23,8 +23,6 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
     private final ApplicationDocumentCommandService applicationDocumentCommandService;
     private final LotteryCommandService lotteryCommandService;
 
-
-
     @Override
     public CustomResult applicationCreate(ApplicationRequest applicationRequest, Employee employee) {
 
@@ -39,14 +37,13 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
                 .isDualIncome(applicationRequest.getIsDualIncome())
                 .isEmployeeCouple(applicationRequest.getIsEmployeeCouple())
                 .isSibling(applicationRequest.getIsSibling())
-                .childNm(applicationRequest.getChildNm())
                 .isTemp('0')
                 .build()
         );
 
         applicationDocumentCommandService.createApplicationDocuments(applicationRequest.getDocuments(), savedApplication);
 
-        lotteryCommandService.insertLottery(applicationRequest.getRecruitIdList(), savedApplication.getId());
+        lotteryCommandService.insertLottery(applicationRequest.getChildrenRecruitList(), savedApplication.getId());
 
         return CustomResult.toCustomResult(savedApplication.getId());
     }
@@ -83,7 +80,6 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
                 .isDualIncome(applicationRequest.getIsDualIncome())
                 .isEmployeeCouple(applicationRequest.getIsEmployeeCouple())
                 .isSibling(applicationRequest.getIsSibling())
-                .childNm(applicationRequest.getChildNm())
                 .isTemp('1')
                 .build()
         );

@@ -17,9 +17,9 @@ public class RecruitCreateRequestDTO {
     private LocalDateTime secondStartDt;
     private LocalDateTime secondEndDt;
     private Long kindergartenId;
-    private Integer workYearsUsage;
+    private Character workYearsUsage;
     private Character isSingleParentUsage;
-    private Integer childrenCntUsage;
+    private Character childrenCntUsage;
     private Character isDisabilityUsage;
     private Character isDualIncomeUsage;
     private Character isEmployeeCoupleUsage;

@@ -1,7 +1,7 @@
 package clovider.clovider_be.domain.lottery.dto;
 
 import clovider.clovider_be.domain.lottery.Lottery;
-import io.swagger.v3.oas.annotations.media.Schema;
+import clovider.clovider_be.domain.recruit.Recruit;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,23 +18,6 @@ public class LotteryResponse {
         private Long recruitId;
         private Double competitionRate;
 
-    }
-
-    @Schema(description = "어린이집별 신청현황 DTO")
-    @Builder
-    @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class AcceptResult {
-
-        @Schema(description = "어린이집 이름")
-        private String kindergartenNm;
-        @Schema(description = "승인 수")
-        private Integer acceptCnt;
-        @Schema(description = "미승인 수")
-        private Integer unAcceptCnt;
-        @Schema(description = "승인 대기 수")
-        private Integer waitCnt;
     }
 
     @Builder
@@ -56,4 +39,31 @@ public class LotteryResponse {
                         .build())
                 .toList();
     }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class RecruitInfo {
+        private String kindergartenNm;
+        private String ageClass;
+    }
+
+    public static RecruitInfo toRecruitInfo(Recruit recruit) {
+
+        return RecruitInfo.builder()
+                .kindergartenNm(recruit.getKindergarten().getKindergartenNm())
+                .ageClass(recruit.getAgeClass().getDescription())
+                .build();
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ChildInfo {
+        private String childName;
+        private List<RecruitInfo> recruitInfos;
+    }
+
 }

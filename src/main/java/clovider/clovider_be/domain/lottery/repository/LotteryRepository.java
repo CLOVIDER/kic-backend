@@ -3,10 +3,9 @@ package clovider.clovider_be.domain.lottery.repository;
 import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.lottery.Lottery;
 import java.util.List;
-
-import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface LotteryRepository extends JpaRepository<Lottery, Long>, LotteryRepositoryCustom {
 
@@ -23,5 +22,11 @@ public interface LotteryRepository extends JpaRepository<Lottery, Long>, Lottery
 
     @Query("select l.id from Lottery l where l.application.id = :applicationId")
     Long findLotteryIdByApplication(@Param("applicationId") Long applicationId);
+
+    @Query("select l from Lottery l " +
+            "join fetch l.recruit r " +
+            "join fetch r.kindergarten k " +
+            "where l.application.id = :applicationId")
+    List<Lottery> findByApplicationId(Long applicationId);
 
 }

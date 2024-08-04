@@ -10,4 +10,6 @@ public interface RecruitRepositoryCustom {
 
     List<Recruit> findNowRecruitOrderByClass(LocalDateTime now);
 
+    List<Recruit> findRecruitIngAndScheduled(LocalDateTime now);
+
 }

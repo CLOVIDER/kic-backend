@@ -1,9 +1,12 @@
 package clovider.clovider_be.domain.document;
 
 import clovider.clovider_be.domain.application.Application;
+import clovider.clovider_be.domain.enums.DocumentType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -32,6 +35,10 @@ public class Document {
 
     @Column(nullable = false)
     private String image;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private DocumentType documentType;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
