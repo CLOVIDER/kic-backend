@@ -13,6 +13,7 @@ import clovider.clovider_be.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.Enumerated;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -64,6 +65,8 @@ public class ApplicationController {
     @Operation(summary = "최근 신청서 조회 API", description = "")
     @GetMapping("/applications")
     public ApiResponse<ApplicationResponse> getApplication(@AuthEmployee Employee employee) {
+
+
         return ApiResponse.onSuccess(applicationQueryService.applicationRead(employee));
     }
 
@@ -83,18 +86,9 @@ public class ApplicationController {
     }
 
     @Operation(summary = "관리자 신청서 승인 API", description = "acceptRequest 값을 body로 '0' 또는 '1로' 입력받습니다. 0 이면 미승인 처리, 1 이면 승인 처리로 수정됩니다.")
-    @PatchMapping("/admin/applications/{applicationId}")
-    public ApiResponse<CustomResult> acceptApplication(@PathVariable Long applicationId, @RequestBody
-    @Schema(description = "신청서 승인 여부", example = "{'accessRequest' : '0'}") Map<String, String> acceptRequest) {
-
-        String acceptStatus = acceptRequest.get("acceptRequest");
-        Accept accept = Accept.WAIT;
-
-        if ("1".equals(acceptStatus)) {
-            accept = Accept.ACCEPT;
-        } else if ("0".equals(acceptStatus)) {
-            accept = Accept.UNACCEPT;
-        }
+    @PatchMapping("/admin/applications/{applicationId}/{accept}")
+    public ApiResponse<CustomResult> acceptApplication(@PathVariable Long applicationId, @PathVariable Accept accept
+    ) {
 
         return ApiResponse.onSuccess(applicationCommandService.applicationAccept(applicationId, accept));
     }
