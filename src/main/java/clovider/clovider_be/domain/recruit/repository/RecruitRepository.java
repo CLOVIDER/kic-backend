@@ -15,6 +15,9 @@ public interface RecruitRepository extends JpaRepository<Recruit, Long>, Recruit
     @Query("select r from Recruit r where r.recruitStartDt <= :now and r.recruitEndDt >= :now")
     List<Recruit> findNowRecruit(@Param("now") LocalDateTime now);
 
+    @Query("select r from Recruit r join fetch r.kindergarten where r.recruitStartDt <= :now and r.recruitEndDt >= :now")
+    List<Recruit> findRecruitKdg(LocalDateTime now);
+
     @Query("select r from Recruit r join fetch r.kindergarten k where r.id = :recruitId")
     Optional<Recruit> findRecruitInfoById(@Param("recruitId") Long recruitId);
 

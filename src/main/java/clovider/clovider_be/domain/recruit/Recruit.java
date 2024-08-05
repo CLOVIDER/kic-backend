@@ -90,7 +90,6 @@ public class Recruit extends BaseTimeEntity {
     }
 
 
-
     // 정적 팩토리 메서드 추가
     public static Recruit createRecruit(RecruitCreateRequestDTO requestDTO, Kindergarten kindergarten) {
         Recruit recruit = new Recruit();

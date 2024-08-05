@@ -7,6 +7,7 @@ import clovider.clovider_be.domain.application.dto.ApplicationResponse;
 import clovider.clovider_be.domain.application.repository.ApplicationRepository;
 import clovider.clovider_be.domain.common.CustomPage;
 import clovider.clovider_be.domain.employee.Employee;
+import clovider.clovider_be.domain.lottery.service.LotteryQueryService;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import java.util.List;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ApplicationQueryServiceImpl implements ApplicationQueryService {
 
     private final ApplicationRepository applicationRepository;
+    private final LotteryQueryService lotteryQueryService;
 
     @Override
     public ApplicationResponse applicationRead(Employee employee) {
@@ -30,6 +32,7 @@ public class ApplicationQueryServiceImpl implements ApplicationQueryService {
                 employee).orElseThrow(
                 () -> new ApiException(ErrorStatus._APPLICATION_NOT_FOUND)
         );
+
 
         return ApplicationResponse.toEntity(savedApplication);
     }
@@ -68,5 +71,9 @@ public class ApplicationQueryServiceImpl implements ApplicationQueryService {
         );
     }
 
-    //
+    @Override
+    public Application getApplicationWithEmployee(Long applicationId) {
+        return applicationRepository.findApplicationWithEmployee(applicationId);
+    }
+
 }
