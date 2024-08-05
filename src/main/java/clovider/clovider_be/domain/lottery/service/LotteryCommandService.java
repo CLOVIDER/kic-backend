@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface LotteryCommandService {
-    LotteryResponseDTO createLottery(Long recruitId, Long applicationId);
+    LotteryResponseDTO createLottery(Long recruitId);
     LotteryResisterResponseDTO updateRegistry(Long lotteryId);
 
     void insertLottery(List<Map<String, Object>> childrenRecruitList, Long applicationId);
