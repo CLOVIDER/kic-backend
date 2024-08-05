@@ -17,6 +17,7 @@ import clovider.clovider_be.domain.employee.repository.EmployeeRepository;
 import clovider.clovider_be.domain.enums.Accept;
 import clovider.clovider_be.domain.enums.DocumentType;
 import clovider.clovider_be.domain.enums.Role;
+import clovider.clovider_be.domain.enums.Save;
 import clovider.clovider_be.domain.lottery.repository.LotteryRepository;
 import clovider.clovider_be.global.config.QuerydslConfig;
 import java.time.LocalDate;
@@ -85,6 +86,7 @@ class ApplicationRepositoryTest {
         employeeRepository.save(employee);
     }
 
+
     public Application createApplication(ApplicationRequest applicationRequest)
     {
         Application savedApplication =
@@ -97,7 +99,7 @@ class ApplicationRepositoryTest {
                         .isDualIncome(applicationRequest.getIsDualIncome())
                         .isEmployeeCouple(applicationRequest.getIsEmployeeCouple())
                         .isSibling(applicationRequest.getIsSibling())
-                        .isTemp('0')
+                        .isTemp(Save.APPLIED)
                         .build();
 
         applicationRepository.save(savedApplication);

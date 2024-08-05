@@ -7,6 +7,8 @@ import static clovider.clovider_be.domain.enums.DocumentType.MULTI_CHILDREN;
 import static clovider.clovider_be.domain.enums.DocumentType.RESIDENT_REGISTER;
 import static clovider.clovider_be.domain.enums.DocumentType.SIBLING;
 import static clovider.clovider_be.domain.enums.DocumentType.SINGLE_PARENT;
+import static clovider.clovider_be.domain.enums.Save.APPLIED;
+import static clovider.clovider_be.domain.enums.Save.TEMP;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -25,7 +27,9 @@ import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.enums.Accept;
 import clovider.clovider_be.domain.enums.DocumentType;
 import clovider.clovider_be.domain.enums.Role;
+import clovider.clovider_be.domain.enums.Save;
 import clovider.clovider_be.domain.lottery.service.LotteryCommandService;
+import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -39,25 +43,32 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @ExtendWith(MockitoExtension.class)
+@Service
+@Transactional
 class ApplicationCommandServiceImplTest {
 
     @Mock
+    @Autowired
     private ApplicationRepository applicationRepository;
 
-
-
     @Mock
+    @Autowired
     private ApplicationDocumentCommandService applicationDocumentCommandService;
 
     @Mock
+    @Autowired
     private LotteryCommandService lotteryCommandService;
 
     @InjectMocks
+    @Autowired
     private ApplicationCommandServiceImpl applicationCommandService;
 
     private Employee employee;
+
 
     List<Map<String, Object>> childrenRecruitList = List.of(
             Map.of(
@@ -107,7 +118,7 @@ class ApplicationCommandServiceImplTest {
                         .isDualIncome(applicationRequest.getIsDualIncome())
                         .isEmployeeCouple(applicationRequest.getIsEmployeeCouple())
                         .isSibling(applicationRequest.getIsSibling())
-                        .isTemp('0')
+                        .isTemp(APPLIED)
                         .build();
 
     }
@@ -142,14 +153,14 @@ class ApplicationCommandServiceImplTest {
                 .imageUrls(imageUrls)
                 .build();
 
-        Application application = createApplication(applicationRequest);
+        Application savedApplication = createApplication(applicationRequest);
 
-        createApplicationDocuments(applicationRequest.getImageUrls(), application);
-
-        //WHEN
-        when(applicationRepository.save(any(Application.class))).thenReturn(application);
+        createApplicationDocuments(applicationRequest.getImageUrls(), savedApplication);
 
         CustomResult result = applicationCommandService.applicationCreate(applicationRequest, employee);
+
+        //WHEN
+        when(applicationRepository.save(any(Application.class))).thenReturn(savedApplication);
 
         //THEN
         assertNotNull(result);
@@ -245,7 +256,7 @@ class ApplicationCommandServiceImplTest {
                 .isDualIncome(applicationRequest.getIsDualIncome())
                 .isEmployeeCouple(applicationRequest.getIsEmployeeCouple())
                 .isSibling(applicationRequest.getIsSibling())
-                .isTemp('1')
+                .isTemp(TEMP)
                 .build();
 
         when(applicationRepository.save(any(Application.class))).thenReturn(tempApplication);
@@ -268,7 +279,7 @@ class ApplicationCommandServiceImplTest {
                 .isDualIncome('0')
                 .isEmployeeCouple('0')
                 .isSibling('0')
-                .isTemp('0')
+                .isTemp(APPLIED)
                 .build();
 
         when(applicationRepository.findById(anyLong())).thenReturn(Optional.of(application));
