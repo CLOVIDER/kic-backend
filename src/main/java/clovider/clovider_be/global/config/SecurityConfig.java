@@ -84,7 +84,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://210.109.55.28:3000", "http://210.109.52.95/", "http://kidsincompany.shop"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000","http://210.109.52.95/",
+            "http://kidsincompany.shop", "http://api.kidsincompany.shop"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
