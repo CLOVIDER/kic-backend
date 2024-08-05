@@ -41,15 +41,14 @@ public class SecurityConfig {
     private static final String[] WHITE_LIST_URL = {
         //application
         "/api",
-        "/api:8080/**",
         "/api/login",
         "/api/signup",
         "/api/emails/**",
 
         // swagger
-        "/v3/api-docs/**",
+        "/api/v3/api-docs/**",
         "/swagger-resources/**",
-        "/swagger-ui/**",
+        "/api/swagger-ui/**",
         "/favicon.ico"
     };
 
@@ -85,7 +84,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://210.109.55.28:3000", "http://210.109.52.95/fe"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://210.109.55.28:3000", "http://210.109.52.95/"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
