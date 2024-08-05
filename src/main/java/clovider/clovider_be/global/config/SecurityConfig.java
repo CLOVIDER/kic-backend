@@ -46,9 +46,9 @@ public class SecurityConfig {
         "/api/emails/**",
 
         // swagger
-        "/api/v3/api-docs/**",
+        "/v3/api-docs/**",
         "/swagger-resources/**",
-        "/api/swagger-ui/**",
+        "/swagger-ui/**",
         "/favicon.ico"
     };
 
