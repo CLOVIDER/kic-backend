@@ -22,7 +22,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
-// @ExtendWith(MockitoExtension.class)
 @DataJpaTest
 @Import(QuerydslConfig.class)
 @ActiveProfiles("test")
@@ -34,7 +33,7 @@ class RecruitQueryServiceImplTest {
     private RecruitRepository recruitRepository;
 
     @Autowired
-    KindergartenRepository kindergartenRepository;
+    private KindergartenRepository kindergartenRepository;
 
     @Test
     @DisplayName("현재 진행 중인 모집 - 클래스반별 정렬")
