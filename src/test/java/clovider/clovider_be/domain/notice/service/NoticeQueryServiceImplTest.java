@@ -1,5 +1,6 @@
 package clovider.clovider_be.domain.notice.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -9,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.enums.Role;
+import clovider.clovider_be.domain.enums.SearchType;
 import clovider.clovider_be.domain.notice.Notice;
 import clovider.clovider_be.domain.notice.dto.NoticeResponse;
 import clovider.clovider_be.domain.notice.dto.NoticeTop3;
@@ -28,6 +30,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 @ExtendWith(MockitoExtension.class)
 class NoticeQueryServiceImplTest {
@@ -112,23 +117,32 @@ class NoticeQueryServiceImplTest {
         verify(noticeRepository).findById(1L);
     }
 
-//    @Test
-//    @DisplayName("모든 공지사항 조회 테스트")
-//    void getAllNotices() {
-//
-//        // given
-//        PageRequest pageRequest = PageRequest.of(0, 10);
-//        Page<Notice> noticePage = new PageImpl<>(List.of(notice, notice), pageRequest, 1);
-//        when(noticeRepository.findAll(pageRequest)).thenReturn(noticePage);
-//
-//        // when
-//        CustomPage<NoticeResponse> result = noticeQueryService.getAllNotices(0, 10);
-//
-//        // then
-//        assertNotNull(result);
-//        assertEquals(2, result.getTotalElements());
-//        verify(noticeRepository).findAll(pageRequest);
-//    }
+    @Test
+    @DisplayName("모든 공지사항 조회 테스트")
+    void getAllNotices() {
+        // given
+        PageRequest pageRequest = PageRequest.of(0, 2);
+        List<NoticeResponse> noticeResponses = List.of(
+                NoticeResponse.toNoticeResponse(notice),
+                NoticeResponse.toNoticeResponse(notice),
+                NoticeResponse.toNoticeResponse(notice));
+
+        Page<NoticeResponse> noticePage = new PageImpl<>(noticeResponses, pageRequest, noticeResponses.size());
+
+        when(noticeRepository.searchNotices(pageRequest,SearchType.TITLE, "공지사항")).thenReturn(noticePage);
+
+        // when
+        Page<NoticeResponse> result = noticeQueryService.getAllNotices(pageRequest,
+                SearchType.TITLE, "공지사항");
+
+        // then
+        assertThat(result).isNotNull();
+        assertThat(result.getTotalElements()).isEqualTo(3);
+        assertThat(result.getContent()).containsExactlyElementsOf(noticeResponses);
+        assertThat(result.getTotalPages()).isEqualTo(2);
+        assertThat(result.getSize()).isEqualTo(2);
+        assertThat(result.getNumber()).isEqualTo(0);
+    }
 
     @Test
     @DisplayName("최신 3개 공지사항 조회 테스트")
@@ -145,21 +159,5 @@ class NoticeQueryServiceImplTest {
         assertEquals(3, result.size());
         verify(noticeRepository).findTop3ByOrderByIdDesc();
     }
-
-//    @Test
-//    @DisplayName("공지사항 검색 테스트")
-//    void searchNotices() {
-//        // given
-//        List<NoticeResponse> searchResults = List.of(NoticeResponse.toNoticeResponse(notice));
-//        when(noticeRepository.searchNotices(SearchType.TITLE, "공지사항 제목")).thenReturn(searchResults);
-//
-//        // when
-//        List<NoticeResponse> result = noticeQueryService.searchNotices(SearchType.TITLE, "공지사항 제목");
-//
-//        // then
-//        assertNotNull(result);
-//        assertEquals(1, result.size());
-//        verify(noticeRepository).searchNotices(SearchType.TITLE, "공지사항 제목");
-//    }
 
 }

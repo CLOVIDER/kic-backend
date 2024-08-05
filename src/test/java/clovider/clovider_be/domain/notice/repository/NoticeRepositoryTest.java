@@ -7,8 +7,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.employee.repository.EmployeeRepository;
 import clovider.clovider_be.domain.enums.Role;
+import clovider.clovider_be.domain.enums.SearchType;
 import clovider.clovider_be.domain.notice.Notice;
 import clovider.clovider_be.domain.notice.dto.NoticeRequest;
+import clovider.clovider_be.domain.notice.dto.NoticeResponse;
 import clovider.clovider_be.domain.noticeImage.NoticeImage;
 import clovider.clovider_be.global.config.QuerydslConfig;
 import java.lang.reflect.Field;
@@ -21,6 +23,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 @DataJpaTest
 @Import(QuerydslConfig.class)
@@ -174,4 +178,35 @@ class NoticeRepositoryTest {
                 .collect(Collectors.toList()))
                 .containsExactly("http://example.com/image3.jpg", "http://example.com/image4.jpg");
     }
+
+    @Test
+    @DisplayName("공지사항 검색 테스트")
+    public void searchNoticeTest(){
+        // given
+        Notice notice1 = createAndSaveNotice("Notice 1", "Content 1");
+        addImagesToNotice(notice1, List.of("http://example.com/image1.jpg", "http://example.com/image2.jpg"));
+
+        Notice notice2 = createAndSaveNotice("Notice 2", "Content 2");
+        addImagesToNotice(notice2, List.of("http://example.com/image3.jpg", "http://example.com/image4.jpg"));
+
+        Notice notice3 = createAndSaveNotice("Notice 3", "Content 3");
+        addImagesToNotice(notice3, List.of("http://example.com/image5.jpg", "http://example.com/image6.jpg"));
+
+        Notice notice4 = createAndSaveNotice("Notice 4", "Content 4");
+        addImagesToNotice(notice4, List.of("http://example.com/image7.jpg", "http://example.com/image8.jpg"));
+
+        PageRequest pageRequest = PageRequest.of(0, 3);
+
+        // when
+        Page<NoticeResponse> noticeList = noticeRepository.searchNotices(pageRequest, SearchType.TITLE,
+                "Notice");
+
+        // then
+        assertThat(noticeList).isNotNull();
+        assertThat(noticeList.getTotalElements()).isEqualTo(4);
+        assertThat(noticeList.getTotalPages()).isEqualTo(2);
+        assertThat(noticeList.getNumberOfElements()).isEqualTo(3);
+        assertThat(noticeList.getNumber()).isEqualTo(0);
+    }
+
 }
