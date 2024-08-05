@@ -85,11 +85,11 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://210.109.55.28:3000", "http://210.109.52.95/fe")); // 허용할 출처
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 허용할 HTTP 메서드
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type")); // 허용할 헤더
-        configuration.setAllowCredentials(true); // 인증 정보 허용
-        configuration.setMaxAge(3600L); // Preflight 요청 캐싱 시간 (1시간)
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://210.109.55.28:3000", "http://210.109.52.95/fe"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
