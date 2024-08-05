@@ -54,9 +54,9 @@ public class LotteryController {
         return ApiResponse.onSuccess("추첨이 삭제되었습니다.");
     }
 
-    @Operation(summary = "아이 리스트 정보 조회 - 관리자 신청 승인 페이지", description = "특정 신청서에 제출된 아이 리스트 정보를 조회합니다.")
+    @Operation(summary = "아이 리스트 정보 조회 - 신청서 조회 페이지, 관리자 신청 승인 페이지", description = "특정 신청서에 제출된 아이 리스트 정보를 조회합니다.")
     @Parameter(name = "applicationId", description = "신청서 ID", required = true, example = "1")
-    @GetMapping("/admin/lotteries/children/{applicationId}")
+    @GetMapping("/lotteries/children/{applicationId}")
     public ApiResponse<List<ChildInfo>> getChildrenInfos(@PathVariable Long applicationId) {
         return ApiResponse.onSuccess(lotteryQueryService.getChildInfos(applicationId));
     }
