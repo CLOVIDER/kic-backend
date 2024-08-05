@@ -148,14 +148,15 @@ public class AdminResponse {
         private String nameKo;
         private String childNm;
         private String lotteryResult;
+        private Long applicationId;
     }
 
     public static LotteryResult toLotteryResult(Lottery lottery) {
         String description = lottery.getResult().getDescription();
         String lotteryResult;
 
-        // 'description'이 "대기"일 경우 'lottery.rankNo'로 치환
-        if ("대기".equals(description)) {
+        // 'description'이 "낙첨"일 경우 'lottery.rankNo'로 치환
+        if ("낙첨".equals(description)) {
             lotteryResult = lottery.getRankNo().toString();
         } else {
             lotteryResult = description;
@@ -166,6 +167,7 @@ public class AdminResponse {
                 .nameKo(lottery.getApplication().getEmployee().getNameKo())
                 .childNm(lottery.getChildNm())
                 .lotteryResult(lotteryResult)
+                .applicationId(lottery.getApplication().getId())
                 .build();
     }
 
