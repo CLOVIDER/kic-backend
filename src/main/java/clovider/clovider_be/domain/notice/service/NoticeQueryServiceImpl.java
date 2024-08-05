@@ -25,6 +25,7 @@ public class NoticeQueryServiceImpl implements NoticeQueryService {
 
     private final NoticeRepository noticeRepository;
 
+    @Override
     public Notice findById(Long id) {
         return noticeRepository.findById(id)
                 .orElseThrow(() -> new ApiException(ErrorStatus._NOTICE_NOT_FOUND));
@@ -32,6 +33,7 @@ public class NoticeQueryServiceImpl implements NoticeQueryService {
 
     @Cacheable(value = "notices", key = "#noticeId")
     @Transactional
+    @Override
     public NoticeResponse getNotice(Long noticeId, HttpServletRequest request, HttpServletResponse response) {
         Notice foundNotice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new ApiException(ErrorStatus._NOTICE_NOT_FOUND));
