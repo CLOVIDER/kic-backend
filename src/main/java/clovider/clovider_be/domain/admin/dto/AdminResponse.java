@@ -157,7 +157,7 @@ public class AdminResponse {
 
         // 'description'이 "낙첨"일 경우 'lottery.rankNo'로 치환
         if ("낙첨".equals(description)) {
-            lotteryResult = lottery.getRankNo().toString();
+            lotteryResult = "대기 " + lottery.getRankNo().toString();
         } else {
             lotteryResult = description;
         }
