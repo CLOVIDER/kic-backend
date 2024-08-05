@@ -41,6 +41,7 @@ public class SecurityConfig {
     private static final String[] WHITE_LIST_URL = {
         //application
         "/api",
+        "/api:8080/**",
         "/api/login",
         "/api/signup",
         "/api/emails/**",
