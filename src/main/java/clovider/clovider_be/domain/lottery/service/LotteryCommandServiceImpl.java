@@ -31,7 +31,6 @@ import java.util.*;
 import org.springframework.web.client.RestTemplate;
 
 
-import static clovider.clovider_be.domain.enums.Accept.UNACCEPT;
 import static clovider.clovider_be.domain.enums.Result.*;
 import static clovider.clovider_be.domain.enums.Result.WAIT;
 
@@ -53,74 +52,88 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
     private final RecruitQueryService recruitQueryService;
 
     @Override
-    public LotteryResponseDTO createLottery(Long recruitId, Long applicationId) {
-        log.info("Creating lottery");
-        log.info("Attempting to find Recruit with ID: {}", recruitId);
+    public LotteryResponseDTO createLottery(Long recruitId) {
 
-        Recruit recruit = recruitRepository.findById(recruitId)
-                .orElseThrow(() -> new ApiException(ErrorStatus._RECRUIT_NOT_FOUND));
-        log.info("Recruit: {}", recruit);
 
-        Application application = applicationRepository.findById(applicationId)
-                .orElseThrow(() -> new ApiException(ErrorStatus._APPLICATION_NOT_FOUND));
-        log.info("Application: {}", application);
 
-        List<Application> applications = lotteryRepository.findApplicationByRecruitId(recruit.getId());
-        log.info("Recruit: {} applications: {}", recruitId, applications);
+            Recruit recruit = recruitRepository.findById(recruitId)
+                    .orElseThrow(() -> new ApiException(ErrorStatus._RECRUIT_NOT_FOUND));
 
-        List<Map<String, Object>> applicants = new ArrayList<>();
+            List<Application> applications = lotteryRepository.findAllApplicationByRecruitId(recruit.getId());
 
-        for (Application app : applications) {
-            Map<String, Object> applicantData = new HashMap<>();
-            applicantData.put("id", app.getId());
+            List<Map<String, Object>> applicants = new ArrayList<>();
 
-            WeightCalculationDTO weightDTO = new WeightCalculationDTO(
-                    app.getWorkYears(),
-                    app.getIsSingleParent(),
-                    app.getChildrenCnt(),
-                    app.getIsDisability(),
-                    app.getIsEmployeeCouple(),
-                    app.getIsSibling(),
-                    app.getIsDualIncome()
-            );
+            for (Application app : applications) {
+                Map<String, Object> applicantData = new HashMap<>();
+                applicantData.put("id", app.getId());
 
-            double weight =  weightDTO.calculateWeight();
-            applicantData.put("weight", weight);
-            applicants.add(applicantData);
-            log.info("Applicant data: {}", applicantData);
+                WeightCalculationDTO weightDTO = new WeightCalculationDTO(
+                        app.getWorkYears(),
+                        app.getIsSingleParent(),
+                        app.getChildrenCnt(),
+                        app.getIsDisability(),
+                        app.getIsEmployeeCouple(),
+                        app.getIsSibling(),
+                        app.getIsDualIncome(),
+                        recruit
+                );
+
+                double weight = weightDTO.calculateWeight();
+                applicantData.put("weight", weight);
+                applicants.add(applicantData);
+            }
+
+            int recruitCnt = recruit.getRecruitCnt();
+
+            List<Map<String, Object>> selectedApplicants = WeightedRandomSelection.weightedRandomSelection(applicants, recruitCnt);
+
+        // 순서대로 업데이트
+        int rank = 1;
+        Map<Long, Integer> applicantRankMap = new HashMap<>();
+
+        // 당첨된 신청서에 대한 순번 부여
+        for (Map<String, Object> applicant : selectedApplicants) {
+            Long applicantId = (Long) applicant.get("id");
+            applicantRankMap.put(applicantId, rank++);
         }
 
-        int recruitCnt = recruit.getRecruitCnt();
-        log.info("RecruitCnt: {}", recruitCnt);
+        // 전체 신청서에 대한 순번 부여
+        for (Map<String, Object> applicant : applicants) {
+            Long applicantId = (Long) applicant.get("id");
+            boolean isSelected = selectedApplicants.stream()
+                    .anyMatch(selectedApplicant -> selectedApplicant.get("id").equals(applicantId));
 
-        List<Integer> selectedApplicants = WeightedRandomSelection.weightedRandomSelection(applicants, recruitCnt);
-        log.info("Selected applicants: {}", selectedApplicants);
+            Result result = isSelected ? Result.WIN : Result.LOSE;
 
-        boolean isSelected = selectedApplicants.contains(applicationId.intValue());
+            Lottery lottery = lotteryRepository.findLotteryByApplicationId(applicantId);
 
-        String result = isSelected ? "당첨" : "낙첨";
+            if (isSelected) {
+                lottery.setRankNo(applicantRankMap.get(applicantId));
+            } else {
+                // 대기 순번 설정 (당첨된 신청서가 처리된 이후의 순서)
+                int waitingRank = rank++;
+                lottery.setRankNo(waitingRank);
+            }
 
-        Lottery lottery = Lottery.builder()
-                .recruit(recruit)
-                .application(application)
-                .rankNo(1)
-                .result(Result.valueOf(result))
-                .isRegistry('1')
-                .build();
+            lottery.setResult(result);
+            lottery.setIsRegistry('0');
 
-        Lottery savedLottery = lotteryRepository.save(lottery);
+            lotteryRepository.save(lottery);
+        }
 
-        return new LotteryResponseDTO(
-                true,
-                "COMMON200",
-                "추첨이 생성 및 저장되었습니다.",
-                new LotteryResponseDTO.Result(savedLottery.getId(), savedLottery.getCreatedAt())
-        );
+            return new LotteryResponseDTO(
+                    true,
+                    "COMMON200",
+                    "추첨이 생성 및 저장되었습니다.",
+                    new LotteryResponseDTO.Result(recruit.getId(), recruit.getCreatedAt())
+            );
+
+
     }
+
 
     @Override
     public LotteryResisterResponseDTO updateRegistry(Long lotteryId) {
-        log.info("Updating registry for Lottery with ID: {}", lotteryId);
 
         Lottery lottery = lotteryRepository.findById(lotteryId)
                 .orElseThrow(() -> new ApiException(ErrorStatus._LOTTERY_NOT_FOUND));
@@ -132,7 +145,7 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
 
         //등록
         if(registryStatus == '0') {
-            lottery.serIsRegistry('1');
+            lottery.setIsRegistry('1');
             return new LotteryResisterResponseDTO(
                     "등록되었습니다.",
                     new LotteryResisterResponseDTO.Result(updatedLottery.getId(), updatedLottery.getIsRegistry() == '1')
@@ -142,7 +155,7 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
         //등록취소
         else {
 
-            lottery.serIsRegistry('0');
+            lottery.setIsRegistry('0');
             return new LotteryResisterResponseDTO(
                     "등록이 취소되었습니다.",
                     new LotteryResisterResponseDTO.Result(updatedLottery.getId(), updatedLottery.getIsRegistry() == '1')
@@ -201,44 +214,7 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
     }
 
 
-    // 추첨 진행
-    public static class WeightedRandomSelection {
 
-        public static List<Integer> weightedRandomSelection(List<Map<String, Object>> applicants, int numSelected) {
-            double totalWeight = applicants.stream()
-                    .mapToDouble(applicant -> (double) applicant.get("weight"))
-                    .sum();
-            log.info("Total weight: {}", totalWeight);
-
-            List<Double> cumulativeWeights = new ArrayList<>();
-
-            double cumulativeSum = 0;
-            for (Map<String, Object> applicant : applicants) {
-                cumulativeSum += (double) applicant.get("weight");
-                cumulativeWeights.add(cumulativeSum);
-            }
-            log.info("Cumulative weights: {}", cumulativeWeights);
-
-            Set<Integer> selectedApplicantsSet = new HashSet<>();
-            log.info("Selected applicants: {}", selectedApplicantsSet);
-            Random random = new Random();
-
-            while (selectedApplicantsSet.size() < numSelected) {
-                double value = random.nextDouble() * totalWeight;
-                log.info("Selected applicant: {}", value);
-                for (int i = 0; i < cumulativeWeights.size(); i++) {
-                    if (value <= cumulativeWeights.get(i)) {
-                        selectedApplicantsSet.add((int) applicants.get(i).get("id"));
-                        log.info("Applicant selected: {}", applicants.get(i).get("id"));
-                        break;
-                    }
-                }
-            }
-            log.info("Selected applicants: {}", selectedApplicantsSet);
-
-            return new ArrayList<>(selectedApplicantsSet);
-        }
-    }
 
     // 추첨 확률 받기
     public Double getPercent(Long lotteryId) {
@@ -272,7 +248,6 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
                 throw new ApiException(ErrorStatus._EXTERNAL_API_ERROR);
             }
         } catch (Exception e) {
-            log.error("Error occurred while getting percentage: ", e);
             throw new ApiException(ErrorStatus._EXTERNAL_API_ERROR);
         }
     }
@@ -296,7 +271,8 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
                 app.getIsDisability(),
                 app.getIsEmployeeCouple(),
                 app.getIsSibling(),
-                app.getIsDualIncome()
+                app.getIsDualIncome(),
+                recruit
             );
 
             double weight = weightDTO.calculateWeight();

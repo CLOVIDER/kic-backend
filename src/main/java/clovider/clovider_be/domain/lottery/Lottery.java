@@ -31,6 +31,7 @@ public class Lottery extends BaseTimeEntity {
     private Application application;
 
     @Column(nullable = false)
+    @ColumnDefault("0")
     private Integer rankNo;
 
     @Enumerated(EnumType.STRING)
@@ -38,13 +39,24 @@ public class Lottery extends BaseTimeEntity {
     private Result result;
 
     @Column(nullable = false, length = 1)
+    @ColumnDefault("'0'")
     private Character isRegistry;
 
     @Column(nullable = false)
+    @ColumnDefault("'0'")
     private String childNm;
 
-    public void serIsRegistry(Character isRegistry) {
+
+    public void setIsRegistry(Character isRegistry) {
         this.isRegistry = isRegistry;
+}
+    public void setResult(Result result) {
+        this.result = result;
     }
-    
+
+    public void setRankNo(int i) {
+        this.rankNo = i;
+    }
+
+
 }

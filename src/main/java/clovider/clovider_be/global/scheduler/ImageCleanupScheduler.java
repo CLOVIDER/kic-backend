@@ -1,6 +1,5 @@
 package clovider.clovider_be.global.scheduler;
 
-import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import clovider.clovider_be.domain.kindergartenImage.KindergartenImage;
 import clovider.clovider_be.domain.kindergartenImage.repository.KindergartenImageRepository;
 import clovider.clovider_be.domain.noticeImage.NoticeImage;

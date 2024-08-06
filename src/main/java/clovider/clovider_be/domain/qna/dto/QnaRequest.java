@@ -4,6 +4,7 @@ import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.qna.Qna;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
@@ -21,7 +22,7 @@ public class QnaRequest {
     private String question;
 
     @Schema(description = "공지사항의 공개 여부", example = "1", allowableValues = {"0", "1"})
-    @NotEmpty(message = "공개여부는 필수입니다.")
+    @NotNull(message = "공개여부는 필수입니다.")
     private Character isVisibility;
 
     public static Qna toQna(QnaRequest qnaRequest, Employee employee) {
