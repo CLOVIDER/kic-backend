@@ -45,7 +45,7 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
         );
     }
 
-
+    @Override
     public List<CompetitionRate> getRecruitRates(List<Recruit> recruits) {
 
         return lotteryRepository.findCompetitionRates(recruits);
