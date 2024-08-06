@@ -1,17 +1,22 @@
 package clovider.clovider_be.domain.application.dto;
 
 import clovider.clovider_be.domain.enums.DocumentType;
+import clovider.clovider_be.domain.document.Document;
 import clovider.clovider_be.domain.recruit.Recruit;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import java.util.Map;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Builder
 @Schema(description = "신청서 요청 DTO")
 public class ApplicationRequest {
 

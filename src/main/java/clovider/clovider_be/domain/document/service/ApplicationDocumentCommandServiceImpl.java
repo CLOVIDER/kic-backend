@@ -21,19 +21,15 @@ public class ApplicationDocumentCommandServiceImpl implements ApplicationDocumen
     @Override
     public void createApplicationDocuments(Map<DocumentType, String> imageUrls, Application application) {
 
-
-
         if (imageUrls == null) {
             imageUrls = new HashMap<>();
         }
 
-// Map<DocumentType, String> imageUrls를 순회
         imageUrls.forEach((documentType, imageUrl) -> {
-            // documentType은 DocumentType 열거형의 값
             Document document = Document.builder()
-                    .image(imageUrl)  // 이미지 URL 설정
-                    .application(application)  // 관련된 신청 정보 설정
-                    .documentType(documentType)  // 문서 유형 설정
+                    .image(imageUrl)
+                    .application(application)
+                    .documentType(documentType)
                     .build();
             applicationDocumentRepository.save(document);
         });

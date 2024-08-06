@@ -28,6 +28,7 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 신청서 관련
     _APPLICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "APPLICATION001", "해당 신청서를 찾을 수 없습니다."),
+    _APPLICATION_NOT_CREATED(HttpStatus.NOT_FOUND, "APPLICATION002", "작성된 신청서가 없습니다."),
 
     // 공사사항 관련
     _NOTICE_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "NOTICE400", "공지사항을 찾을 수 없습니다."),
