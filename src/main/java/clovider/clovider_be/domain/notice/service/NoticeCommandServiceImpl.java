@@ -22,6 +22,7 @@ public class NoticeCommandServiceImpl implements NoticeCommandService {
     private final NoticeQueryService noticeQueryService;
     private final EmployeeQueryService employeeQueryService;
 
+    @Override
     public CustomResult createNotice(Employee employee, NoticeRequest request) {
 
         Notice savedNotice = noticeRepository.save(
@@ -39,6 +40,7 @@ public class NoticeCommandServiceImpl implements NoticeCommandService {
     }
 
     @CacheEvict(value = "notices", key = "#noticeId")
+    @Override
     public NoticeUpdateResponse updateNotice(Long noticeId, NoticeRequest request) {
 
         Notice foundNotice = noticeQueryService.findById(noticeId);
@@ -49,6 +51,7 @@ public class NoticeCommandServiceImpl implements NoticeCommandService {
     }
 
     @CacheEvict(value = "notices", key = "#noticeId")
+    @Override
     public String deleteNotice(Long noticeId) {
         noticeRepository.deleteById(noticeId);
         return "공지사항 삭제에 성공했습니다.";

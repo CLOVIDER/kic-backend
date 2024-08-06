@@ -13,13 +13,13 @@ import clovider.clovider_be.global.annotation.AuthEmployee;
 import clovider.clovider_be.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -46,14 +46,6 @@ public class NoticeController {
         return ApiResponse.onSuccess(noticeQueryService.getNotice(noticeId, request, response));
     }
 
-    @GetMapping("/notices")
-    @Operation(summary = "전체 공지사항 목록 조회 - 공지사항 리스트 페이지", description = "페이지네이션을 적용하여 전체 공지사항 목록을 조회합니다.")
-    public ApiResponse<CustomPage<NoticeResponse>> getAllNotices(
-            @RequestParam(defaultValue = "0") @Parameter(description = "페이지 번호") int page,
-            @RequestParam(defaultValue = "10") @Parameter(description = "페이지 크기") int size) {
-        return ApiResponse.onSuccess(noticeQueryService.getAllNotices(page, size));
-    }
-
     @Operation(summary = "공지사항 생성 - 공지사항 작성 페이지", description = "새로운 공지사항을 생성합니다.")
     @PostMapping("/admin/notices")
     public ApiResponse<CustomResult> createNotice(@AuthEmployee Employee employee,
@@ -77,16 +69,17 @@ public class NoticeController {
         return ApiResponse.onSuccess(noticeCommandService.deleteNotice(noticeId));
     }
 
-    @Operation(summary = "공지사항 검색 - 공지사항 리스트 페이지",
-            description = "검색 타입과 키워드를 기반으로 공지사항을 검색합니다.",
-            parameters = {
-            @Parameter(name = "type", description = "검색 타입을 나타내는 Enum 값", example = "TITLE", required = true, in = ParameterIn.QUERY),
-            @Parameter(name = "keyword", description = "검색할 키워드", example = "공지", required = false, in = ParameterIn.QUERY)
-    })
-    @GetMapping("/notices/search")
-    public ApiResponse<List<NoticeResponse>> searchNotices(
+    @GetMapping("/notices")
+    @Operation(summary = "전체 공지사항 목록 조회 - 공지사항 리스트 페이지", description = "페이지네이션과 타입별 키워드 검색을 적용하여 전체 공지사항 목록을 조회합니다.")
+    public ApiResponse<CustomPage<NoticeResponse>> getAllNotices(
+            @RequestParam(defaultValue = "0") @Parameter(description = "페이지 번호") int page,
+            @RequestParam(defaultValue = "10") @Parameter(description = "페이지 크기") int size,
             @RequestParam SearchType type, @RequestParam(required = false) String keyword) {
-        return ApiResponse.onSuccess(noticeQueryService.searchNotices(type, keyword));
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<NoticeResponse> allNotices = noticeQueryService.getAllNotices(pageRequest, type,
+                keyword);
+        return ApiResponse.onSuccess(new CustomPage<> (allNotices));
     }
+
 
 }

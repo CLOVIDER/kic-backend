@@ -1,7 +1,8 @@
 package clovider.clovider_be.domain.notice.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.employee.repository.EmployeeRepository;
@@ -11,12 +12,9 @@ import clovider.clovider_be.domain.notice.Notice;
 import clovider.clovider_be.domain.notice.dto.NoticeRequest;
 import clovider.clovider_be.domain.notice.dto.NoticeResponse;
 import clovider.clovider_be.domain.noticeImage.NoticeImage;
-import clovider.clovider_be.domain.noticeImage.repository.NoticeImageRepository;
 import clovider.clovider_be.global.config.QuerydslConfig;
 import java.lang.reflect.Field;
-import java.security.PublicKey;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +23,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 @DataJpaTest
 @Import(QuerydslConfig.class)
@@ -136,84 +136,6 @@ class NoticeRepositoryTest {
     }
 
     @Test
-    @DisplayName("공지사항 검색 테스트 - TITLE")
-    public void searchNoticeByTitleTest() {
-        // given
-        Notice savedNotice1 = createAndSaveNotice("공지사항 제목", "공지사항 내용");
-        addImagesToNotice(savedNotice1, List.of("http://example.com/image1.jpg", "http://example.com/image2.jpg"));
-
-        Notice savedNotice2 = createAndSaveNotice("공지사항 제목2", "공지사항 내용2");
-        addImagesToNotice(savedNotice2, List.of("http://example.com/image3.jpg", "http://example.com/image4.jpg"));
-
-        // when
-        List<NoticeResponse> searchedNotices = noticeRepository.searchNotices(SearchType.TITLE, "공지사항");
-
-        // then
-        assertThat(searchedNotices).isNotEmpty();
-        assertThat(searchedNotices).hasSize(2);
-
-        List<String> titles = searchedNotices.stream()
-                .map(NoticeResponse::getTitle)
-                .toList();
-
-        assertThat(titles).contains("공지사항 제목", "공지사항 제목2");
-
-        assertThat(searchedNotices.stream().anyMatch(n -> n.getNoticeImageList().size() == 2)).isTrue();
-    }
-
-    @Test
-    @DisplayName("공지사항 검색 테스트 - CONTENT")
-    public void searchNoticeByContentTest() {
-        // given
-        Notice savedNotice1 = createAndSaveNotice("공지사항 제목", "공지사항 내용");
-        addImagesToNotice(savedNotice1, List.of("http://example.com/image1.jpg", "http://example.com/image2.jpg"));
-
-        Notice savedNotice2 = createAndSaveNotice("공지사항 제목2", "공지사항 내용2");
-        addImagesToNotice(savedNotice2, List.of("http://example.com/image3.jpg", "http://example.com/image4.jpg"));
-
-        // when
-        List<NoticeResponse> searchedNotices = noticeRepository.searchNotices(SearchType.CONTENT, "공지사항");
-
-        // then
-        assertThat(searchedNotices).isNotEmpty();
-        assertThat(searchedNotices).hasSize(2);
-
-        List<String> contents = searchedNotices.stream()
-                .map(NoticeResponse::getContent)
-                .toList();
-
-        assertThat(contents).contains("공지사항 내용", "공지사항 내용2");
-
-        assertThat(searchedNotices.stream().anyMatch(n -> n.getNoticeImageList().size() == 2)).isTrue();
-    }
-
-    @Test
-    @DisplayName("공지사항 검색 테스트 - BOTH")
-    public void searchNoticeByBothTest() {
-        // given
-        Notice savedNotice1 = createAndSaveNotice("공지사항 제목 - keyword", "공지사항 내용");
-        addImagesToNotice(savedNotice1, List.of("http://example.com/image1.jpg", "http://example.com/image2.jpg"));
-
-        Notice savedNotice2 = createAndSaveNotice("공지사항 제목2", "공지사항 내용2 - keyword");
-        addImagesToNotice(savedNotice2, List.of("http://example.com/image3.jpg", "http://example.com/image4.jpg"));
-
-        // when
-        List<NoticeResponse> searchedNotices = noticeRepository.searchNotices(SearchType.BOTH, "keyword");
-
-        // then
-        assertThat(searchedNotices).isNotEmpty();
-        assertThat(searchedNotices).hasSize(2);
-
-        List<String> contents = searchedNotices.stream()
-                .map(NoticeResponse::getContent)
-                .toList();
-
-        assertThat(contents).contains("공지사항 내용", "공지사항 내용2 - keyword");
-
-        assertThat(searchedNotices.stream().anyMatch(n -> n.getNoticeImageList().size() == 2)).isTrue();
-    }
-
-    @Test
     @DisplayName("최신 3개 공지사항 조회 테스트")
     public void findTop3ByOrderByIdDescTest() {
         // given
@@ -256,4 +178,35 @@ class NoticeRepositoryTest {
                 .collect(Collectors.toList()))
                 .containsExactly("http://example.com/image3.jpg", "http://example.com/image4.jpg");
     }
+
+    @Test
+    @DisplayName("공지사항 검색 테스트")
+    public void searchNoticeTest(){
+        // given
+        Notice notice1 = createAndSaveNotice("Notice 1", "Content 1");
+        addImagesToNotice(notice1, List.of("http://example.com/image1.jpg", "http://example.com/image2.jpg"));
+
+        Notice notice2 = createAndSaveNotice("Notice 2", "Content 2");
+        addImagesToNotice(notice2, List.of("http://example.com/image3.jpg", "http://example.com/image4.jpg"));
+
+        Notice notice3 = createAndSaveNotice("Notice 3", "Content 3");
+        addImagesToNotice(notice3, List.of("http://example.com/image5.jpg", "http://example.com/image6.jpg"));
+
+        Notice notice4 = createAndSaveNotice("Notice 4", "Content 4");
+        addImagesToNotice(notice4, List.of("http://example.com/image7.jpg", "http://example.com/image8.jpg"));
+
+        PageRequest pageRequest = PageRequest.of(0, 3);
+
+        // when
+        Page<NoticeResponse> noticeList = noticeRepository.searchNotices(pageRequest, SearchType.TITLE,
+                "Notice");
+
+        // then
+        assertThat(noticeList).isNotNull();
+        assertThat(noticeList.getTotalElements()).isEqualTo(4);
+        assertThat(noticeList.getTotalPages()).isEqualTo(2);
+        assertThat(noticeList.getNumberOfElements()).isEqualTo(3);
+        assertThat(noticeList.getNumber()).isEqualTo(0);
+    }
+
 }

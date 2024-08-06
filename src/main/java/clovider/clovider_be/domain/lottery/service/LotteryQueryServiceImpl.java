@@ -1,6 +1,7 @@
 package clovider.clovider_be.domain.lottery.service;
 
 import clovider.clovider_be.domain.admin.dto.AdminResponse.AcceptResult;
+import clovider.clovider_be.domain.admin.dto.AdminResponse.LotteryResult;
 import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.ChildInfo;
@@ -18,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -98,5 +101,10 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
         }
 
         return childInfos;
+    }
+
+    @Override
+    public Page<LotteryResult> getLotteryResult(Long kindergartenId, Pageable pageable, String value) {
+        return lotteryRepository.getLotteryResults(kindergartenId,pageable,value);
     }
 }
