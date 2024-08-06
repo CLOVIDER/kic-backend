@@ -44,6 +44,8 @@ public class KindergartenController {
     public ApiResponse<KindergartenRegisterResponse> registerKindergarten(
             @Valid @RequestBody KindergartenRequest.KindergartenRegisterRequest request) {
 
+        log.info("응답은 받음");
+
         KindergartenRegisterResponse result = kindergartenCommandService.registerKindergarten(request);
 
         return ApiResponse.onSuccess(result);
