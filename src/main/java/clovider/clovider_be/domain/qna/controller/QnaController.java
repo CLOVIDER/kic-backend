@@ -66,8 +66,7 @@ public class QnaController {
     @Operation(summary = "Q&A 조회 - Q&A 상세 페이지", description = "특정 Q&A의 세부정보를 조회합니다.")
     @Parameter(name = "qnaId", description = "qna ID", required = true, example = "1")
     @GetMapping("/qnas/{qnaId}")
-    public ApiResponse<QnaResponse> getQna(
-            @PathVariable Long qnaId) {
+    public ApiResponse<QnaResponse> getQna(@PathVariable Long qnaId) {
         return ApiResponse.onSuccess(qnaQueryService.getQna(qnaId));
     }
 
