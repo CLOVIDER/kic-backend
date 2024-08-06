@@ -8,9 +8,11 @@ import clovider.clovider_be.domain.admin.dto.AdminResponse.AcceptResult;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.ApplicationList;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.DashBoard;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.LotteryResult;
+import clovider.clovider_be.domain.admin.dto.AdminResponse.RecruitCreationInfo;
 import clovider.clovider_be.domain.admin.dto.SearchVO;
 import clovider.clovider_be.domain.application.service.ApplicationQueryService;
 import clovider.clovider_be.domain.common.CustomPage;
+import clovider.clovider_be.domain.kindergarten.service.KindergartenQueryService;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitInfo;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitResult;
@@ -61,6 +63,7 @@ public class AdminController {
     private final LotteryQueryService lotteryQueryService;
     private final ApplicationQueryService applicationQueryService;
     private final RecruitCommandService recruitCommandService;
+    private final KindergartenQueryService kindergartenQueryService;
     private final PdfUtil pdfUtil;
     private final MailService mailService;
 
@@ -224,5 +227,12 @@ public class AdminController {
 
         return ApiResponse.onSuccess(new CustomPage<>(lotteryResultPage));
     }
+
+    @Operation(summary = "생성한 모집 정보 조회 - 관리자 모집 조회 페이지", description = "생성한 모집을 어린이집, 분반 정보를 포함하여 조회합니다.")
+    @GetMapping("/recruits")
+    public ApiResponse<RecruitCreationInfo> getRecruitCreationInfo() {
+        return ApiResponse.onSuccess(recruitQueryService.getRecruitCreationInfo());
+    }
+
 
 }

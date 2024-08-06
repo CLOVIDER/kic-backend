@@ -236,6 +236,7 @@ public class RecruitResponse {
         private Character isDualIncomeUsage;
         @Schema(description = "형제/자매 가중치 설정 여부 (0 미설정/ 1 설정)", example = "1")
         private Character isSiblingUsage;
+
     }
 
     public static RecruitWeight toRecruitWeight(Recruit recruit) {
@@ -248,6 +249,8 @@ public class RecruitResponse {
                 .isSiblingUsage(recruit.getIsSiblingUsage())
                 .build();
     }
+
+
 
     @Schema(description = "모집 기간 상세 정보 DTO")
     @Builder
@@ -287,6 +290,48 @@ public class RecruitResponse {
                 .build();
     }
 
+    @Schema(description = "진행 중인 모집의 가중치 설정 상태 전체 DTO")
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class RecruitWeightInfo {
+
+        @Schema(description = "경력 연수 가중치 설정 여부 (0 미설정/ 1 설정)", example = "1")
+        private Character workYearsUsage;
+
+        @Schema(description = "한부모 가정 가중치 설정 여부 (0 미설정/ 1 설정)", example = "1")
+        private Character isSingleParentUsage;
+
+        @Schema(description = "다자녀 가정 가중치 설정 여부 (0 미설정/ 1 설정)", example = "1")
+        private Character childrenCntUsage;
+
+        @Schema(description = "장애 가중치 설정 여부 (0 미설정/ 1 설정)", example = "1")
+        private Character isDisabilityUsage;
+
+        @Schema(description = "맞벌이 가정 설정 여부 (0 미설정/ 1 설정)", example = "1")
+        private Character isDualIncomeUsage;
+
+        @Schema(description = "맞벌이 부부 가중치 설정 여부 (0 미설정/ 1 설정)", example = "1")
+        private Character isEmployeeCoupleUsage;
+
+        @Schema(description = "형제/자매 가중치 설정 여부 (0 미설정/ 1 설정)", example = "1")
+        private Character isSiblingUsage;
+    }
+
+    public static RecruitWeightInfo toRecruitWeightInfo(Recruit recruit) {
+        return RecruitWeightInfo.builder()
+                .workYearsUsage(recruit.getWorkYearsUsage())
+                .isSingleParentUsage(recruit.getIsSingleParentUsage())
+                .childrenCntUsage(recruit.getChildrenCntUsage())
+                .isDisabilityUsage(recruit.getIsDisabilityUsage())
+                .isDualIncomeUsage(recruit.getIsDualIncomeUsage())
+                .isEmployeeCoupleUsage(recruit.getIsEmployeeCoupleUsage())
+                .isSiblingUsage(recruit.getIsSiblingUsage())
+                .build();
+    }
+
+
 
     @Schema(description = "모집 기간 및 가중치 관리 DTO")
     @Builder
@@ -294,21 +339,20 @@ public class RecruitResponse {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class RecruitDateAndWeightInfo {
-
         @Schema(description = "모집의 기간 정보")
         private RecruitDateInfo recruitDateInfo;
 
         @Schema(description = "가중치 설정 상태")
-        private RecruitWeight recruitWeight;
+        private RecruitWeightInfo recruitWeightInfo;
     }
 
-    public static RecruitDateAndWeightInfo toRecruitDetails(Recruit recruit) {
+    public static RecruitDateAndWeightInfo toRecruitDateAndWeightInfo(Recruit recruit) {
         RecruitDateInfo recruitDateInfo = toRecruitDateInfo(recruit);
-        RecruitWeight recruitWeight = toRecruitWeight(recruit);
+        RecruitWeightInfo recruitWeightInfo = toRecruitWeightInfo(recruit);
 
         return RecruitDateAndWeightInfo.builder()
                 .recruitDateInfo(recruitDateInfo)
-                .recruitWeight(recruitWeight)
+                .recruitWeightInfo(recruitWeightInfo)
                 .build();
     }
 

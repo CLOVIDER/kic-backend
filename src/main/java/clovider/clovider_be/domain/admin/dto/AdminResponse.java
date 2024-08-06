@@ -3,6 +3,7 @@ package clovider.clovider_be.domain.admin.dto;
 import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.notice.dto.NoticeTop3;
+import clovider.clovider_be.domain.recruit.Recruit;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruitInfo;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.RecruitDateAndWeightInfo;
 import clovider.clovider_be.global.util.TimeUtil;
@@ -185,6 +186,14 @@ public class AdminResponse {
         private Integer recruitCnt;
     }
 
+    public static RecruitClassInfo toRecruitClassInfo(Recruit recruit) {
+        return RecruitClassInfo.builder()
+                .ageClass(recruit.getAgeClass().getDescription())
+                .recruitCnt(recruit.getRecruitCnt())
+                .build();
+    }
+
+
     @Schema(description = "어린이집의 클래스(분반) 정보 DTO")
     @Builder
     @Getter
@@ -196,7 +205,7 @@ public class AdminResponse {
         private String kindergartenName;
 
         @Schema(description = "어린이집의 분반 리스트")
-        private List<RecruitClassInfo> classInfos;
+        private List<RecruitClassInfo> classInfoList;
     }
 
     @Schema(description = "모집 생성 정보 DTO")
@@ -207,12 +216,19 @@ public class AdminResponse {
     public static class RecruitCreationInfo {
 
         @Schema(description = "어린이집 및 분반 정보 리스트")
-        private List<KindergartenClassInfo> kindergartenClassInfos;
+        private List<KindergartenClassInfo> kindergartenClassInfoList;
 
         @Schema(description = "모집 기간 상세 및 가중치 설정 정보")
-        private RecruitDateAndWeightInfo recruitDetails;
+        private RecruitDateAndWeightInfo recruitDateAndWeightInfo;
     }
 
+    public static RecruitCreationInfo toRecruitCreationInfo(List<KindergartenClassInfo> kindergartenClassInfos,
+            RecruitDateAndWeightInfo recruitDetails) {
+        return RecruitCreationInfo.builder()
+                .kindergartenClassInfoList(kindergartenClassInfos)  // 어린이집 및 분반 정보 리스트
+                .recruitDateAndWeightInfo(recruitDetails)  // 모집 기간 상세 및 가중치 설정 정보
+                .build();
+    }
 
 
 }

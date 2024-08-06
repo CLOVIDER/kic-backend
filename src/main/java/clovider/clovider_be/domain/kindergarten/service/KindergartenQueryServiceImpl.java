@@ -5,6 +5,7 @@ import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import clovider.clovider_be.domain.kindergarten.dto.KindergartenResponse.KindergartenGetResponse;
 import clovider.clovider_be.domain.kindergarten.repository.KindergartenRepository;
 import clovider.clovider_be.domain.kindergartenImage.service.KindergartenImageQueryService;
+import clovider.clovider_be.domain.recruit.service.RecruitQueryService;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public class KindergartenQueryServiceImpl implements KindergartenQueryService {
 
     private final KindergartenRepository kindergartenRepository;
     private final KindergartenImageQueryService kindergartenImageQuery;
+    private final RecruitQueryService recruitQueryService;
 
     @Override
     public KindergartenGetResponse getKindergarten(Long kindergartenId) {
