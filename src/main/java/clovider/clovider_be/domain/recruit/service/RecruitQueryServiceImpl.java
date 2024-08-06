@@ -83,6 +83,7 @@ public class RecruitQueryServiceImpl implements RecruitQueryService {
     public RecruitCreationInfo getRecruitCreationInfo() {
         List<Recruit> nowRecruit = getRecruitAndKindergarten();
 
+        // 어린이집 이름으로 그룹핑 - 어린이집 별 모집 리스트 조회
         Map<String, List<Recruit>> groupByKindergarten = nowRecruit.stream()
                 .collect(Collectors.groupingBy(recruit -> recruit.getKindergarten().getKindergartenNm()));
 
@@ -103,6 +104,7 @@ public class RecruitQueryServiceImpl implements RecruitQueryService {
     }
 
     private KindergartenClassInfo createKindergartenClassInfo(String kindergartenName, List<Recruit> recruits) {
+        // 모집 별 분반 정보 변환
         List<RecruitClassInfo> classInfos = recruits.stream()
                 .map(AdminResponse::toRecruitClassInfo)
                 .collect(Collectors.toList());
