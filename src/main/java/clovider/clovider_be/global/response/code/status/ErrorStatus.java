@@ -59,7 +59,7 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // qna 관련
     _QNA_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "QNA400", "qna를 찾을 수 없습니다."),
-
+    _QNA_NO_READ_PERMISSION(HttpStatus.FORBIDDEN, "QNA403", "읽기 권한이 없는 QNA입니다."),
 
     //추첨 관련
     _LOTTERY_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "LOTTERY400", "lottery를 찾을 수 없습니다."),
