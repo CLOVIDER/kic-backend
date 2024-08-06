@@ -229,5 +229,6 @@ gradle-app.setting
 .vscode/
 
 src/main/resources/*.yml
+src/test/resources/*.yml
 
 /src/main/generated/**
