@@ -6,6 +6,8 @@ import clovider.clovider_be.domain.admin.dto.AdminResponse.AcceptResult;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
 import clovider.clovider_be.domain.lottery.repository.LotteryRepository;
 import clovider.clovider_be.domain.recruit.Recruit;
+import clovider.clovider_be.domain.recruit.repository.RecruitRepository;
+import clovider.clovider_be.domain.recruit.service.RecruitQueryService;
 import clovider.clovider_be.domain.recruit.service.RecruitQueryServiceImpl;
 import clovider.clovider_be.global.config.QuerydslConfig;
 import java.util.List;
@@ -14,23 +16,34 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
-@SpringBootTest
+@DataJpaTest
 @Import(QuerydslConfig.class)
 @ActiveProfiles("test")
-@TestPropertySource(locations = "classpath:application-test.yaml")
+@TestPropertySource(locations = "classpath:application-test.yml")
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 class LotteryQueryServiceImplTest {
 
     @Autowired
-    private RecruitQueryServiceImpl recruitQueryService;
+    private RecruitQueryService recruitQueryService;
 
     @Autowired
     private LotteryRepository lotteryRepository;
+
+    @TestConfiguration
+    static class TestConfig {
+
+        @Bean
+        public RecruitQueryService recruitQueryService(RecruitRepository recruitRepository) {
+            return new RecruitQueryServiceImpl(recruitRepository);
+        }
+    }
 
     @Test
     @DisplayName("진행 중인 모집의 경쟁률 조회")
@@ -80,7 +93,7 @@ class LotteryQueryServiceImplTest {
 
         // when
         Long unAcceptApplication = lotteryRepository.findUnAcceptApplication(recruits);
-        
+
         // then
         assertThat(unAcceptApplication).isEqualTo(0);
     }
@@ -88,10 +101,10 @@ class LotteryQueryServiceImplTest {
     @Test
     @DisplayName("어린이집별 신청현황")
     void getAcceptResult() {
-        
+
         // given
         List<Recruit> recruits = recruitQueryService.getRecruitIngAndScheduled();
-        
+
         // when
         List<AcceptResult> acceptStatus = lotteryRepository.findAcceptStatus(recruits);
         String kindergartenNm1 = acceptStatus.get(0).getKindergartenNm();

@@ -25,7 +25,7 @@ import org.springframework.test.context.TestPropertySource;
 @DataJpaTest
 @Import(QuerydslConfig.class)
 @ActiveProfiles("test")
-@TestPropertySource(locations = "classpath:application-test.yaml")
+@TestPropertySource(locations = "classpath:application-test.yml")
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 class RecruitQueryServiceImplTest {
 
