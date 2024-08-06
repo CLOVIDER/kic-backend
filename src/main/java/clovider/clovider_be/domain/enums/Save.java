@@ -6,5 +6,5 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Save {
-    APPLIED, TEMP, NOT_APPLIED
+    APPLIED, TEMP
 }

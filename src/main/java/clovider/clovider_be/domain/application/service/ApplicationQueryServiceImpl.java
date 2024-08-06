@@ -7,11 +7,14 @@ import clovider.clovider_be.domain.application.dto.ApplicationResponse;
 import clovider.clovider_be.domain.application.repository.ApplicationRepository;
 import clovider.clovider_be.domain.common.CustomPage;
 import clovider.clovider_be.domain.employee.Employee;
+import clovider.clovider_be.domain.enums.Save;
 import clovider.clovider_be.domain.lottery.service.LotteryQueryService;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,9 +33,8 @@ public class ApplicationQueryServiceImpl implements ApplicationQueryService {
     public ApplicationResponse applicationRead(Employee employee) {
         Application savedApplication = applicationRepository.findFirstByEmployeeOrderByCreatedAtDesc(
                 employee).orElseThrow(
-                () -> new ApiException(ErrorStatus._APPLICATION_NOT_FOUND)
+                () -> new ApiException(ErrorStatus._APPLICATION_NOT_CREATED)
         );
-
 
         return ApplicationResponse.toEntity(savedApplication);
     }

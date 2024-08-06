@@ -5,6 +5,7 @@ import clovider.clovider_be.domain.common.BaseTimeEntity;
 import clovider.clovider_be.domain.document.Document;
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.enums.Accept;
+import clovider.clovider_be.domain.enums.Save;
 import clovider.clovider_be.domain.lottery.Lottery;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
@@ -32,7 +33,7 @@ import org.hibernate.annotations.DynamicInsert;
 
 @Entity
 @Getter
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
@@ -73,9 +74,10 @@ public class Application extends BaseTimeEntity {
     @ColumnDefault("'0'")
     private Character isSibling;
 
-    @Column(length = 1)
-    @ColumnDefault("'0'")
-    private Character isTemp; //default : 임시저장이 아닌 일반 저장 상태
+    @Column
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("'APPLIED'")
+    private Save isTemp; //default : 임시저장이 아닌 일반 저장 상태
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 15)
@@ -91,7 +93,7 @@ public class Application extends BaseTimeEntity {
     private List<Lottery> lotteries;
 
     @OneToMany(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Document> documents = new ArrayList<>();
+    private List<Document> documents;
 
     public void update(ApplicationRequest applicationRequest) {
         this.isSingleParent = applicationRequest.getIsSingleParent();
@@ -100,7 +102,7 @@ public class Application extends BaseTimeEntity {
         this.isDualIncome = applicationRequest.getIsDualIncome();
         this.isEmployeeCouple = applicationRequest.getIsEmployeeCouple();
         this.isSibling = applicationRequest.getIsSibling();
-        this.isTemp = 0;
+        this.isTemp = Save.APPLIED;
     }
 
     public void isAccept(Accept accept) {

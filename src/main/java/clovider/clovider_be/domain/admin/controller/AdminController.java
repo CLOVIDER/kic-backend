@@ -8,9 +8,11 @@ import clovider.clovider_be.domain.admin.dto.AdminResponse.AcceptResult;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.ApplicationList;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.DashBoard;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.LotteryResult;
+import clovider.clovider_be.domain.admin.dto.AdminResponse.RecruitCreationInfo;
 import clovider.clovider_be.domain.admin.dto.SearchVO;
 import clovider.clovider_be.domain.application.service.ApplicationQueryService;
 import clovider.clovider_be.domain.common.CustomPage;
+import clovider.clovider_be.domain.kindergarten.service.KindergartenQueryService;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitInfo;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitResult;
@@ -23,6 +25,7 @@ import clovider.clovider_be.domain.recruit.Recruit;
 import clovider.clovider_be.domain.recruit.dto.RecruitCreateRequestDTO;
 import clovider.clovider_be.domain.recruit.dto.RecruitCreateResponseDTO;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse;
+import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruit;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruitInfo;
 import clovider.clovider_be.domain.recruit.service.RecruitCommandService;
 import clovider.clovider_be.domain.recruit.service.RecruitQueryService;
@@ -60,6 +63,7 @@ public class AdminController {
     private final LotteryQueryService lotteryQueryService;
     private final ApplicationQueryService applicationQueryService;
     private final RecruitCommandService recruitCommandService;
+    private final KindergartenQueryService kindergartenQueryService;
     private final PdfUtil pdfUtil;
     private final MailService mailService;
 
@@ -68,7 +72,8 @@ public class AdminController {
     public ApiResponse<DashBoard> getDashboard() {
 
         // 진행 중인 모집 정보, 기간, 경쟁률
-        List<Recruit> recruits = recruitQueryService.getNowRecruitOrderByClass();
+        List<NowRecruit> recruits = recruitQueryService.getNowRecruitOrderByClass()
+                .getNowRecruits();
 
         // Top3 공지글
         List<NoticeTop3> noticeTop3 = noticeQueryService.getTop3Notices();
@@ -86,15 +91,17 @@ public class AdminController {
         List<CompetitionRate> recruitRates = lotteryQueryService.getRecruitRates(recruits);
         nowRecruitInfo = RecruitResponse.toNowRecruitInfo(recruits, recruitRates);
 
+        List<Long> recruitIds = recruits.stream().map(NowRecruit::getId).toList();
+
         // 총 신청자 수
-        Long totalApplication = lotteryQueryService.getTotalApplication(recruits);
+        Long totalApplication = lotteryQueryService.getTotalApplication(recruitIds);
 
         // 승인 대기 수
         Long unAcceptApplication = lotteryQueryService.getUnAcceptApplication(
-                recruits);
+                recruitIds);
 
         // 신청 현황
-        List<AcceptResult> acceptStatus = lotteryQueryService.getAcceptResult(recruits);
+        List<AcceptResult> acceptStatus = lotteryQueryService.getAcceptResult(recruitIds);
 
         return ApiResponse.onSuccess(
                 toDashBoard(nowRecruitInfo, totalApplication, unAcceptApplication, acceptStatus,
@@ -119,10 +126,10 @@ public class AdminController {
     @GetMapping("/recruits/applications/status")
     public ApiResponse<ApplicationStatus> getApplicationsStatus() {
 
-        List<Recruit> recruits = recruitQueryService.getRecruitIngAndScheduled();
-        Long totalCnt = lotteryQueryService.getTotalApplication(recruits);
+        List<Long> recruitIds = recruitQueryService.getRecruitIngAndScheduled();
+        Long totalCnt = lotteryQueryService.getTotalApplication(recruitIds);
         Long unAcceptCnt = lotteryQueryService.getUnAcceptApplication(
-                recruits);
+                recruitIds);
 
         return ApiResponse.onSuccess(new ApplicationStatus(totalCnt, unAcceptCnt));
     }
@@ -131,9 +138,9 @@ public class AdminController {
     @GetMapping("/recruits/kindergartens/status")
     public ApiResponse<List<AcceptResult>> getAcceptStatus() {
 
-        List<Recruit> recruits = recruitQueryService.getRecruitIngAndScheduled();
+        List<Long> recruitIds = recruitQueryService.getRecruitIngAndScheduled();
 
-        return ApiResponse.onSuccess(lotteryQueryService.getAcceptResult(recruits));
+        return ApiResponse.onSuccess(lotteryQueryService.getAcceptResult(recruitIds));
     }
 
     @Operation(summary = "어린이집 모집 결과 이메일 전송 API", description = "해당 모집의 추첨결과를 이메일로 전송합니다.")
@@ -194,9 +201,10 @@ public class AdminController {
         return new ResponseEntity<>(resource, headers, HttpStatus.OK);
     }
 
-    @Operation(summary = "모집 생성" ,description = "관리자가 모집을 생성합니다.")
+    @Operation(summary = "모집 생성", description = "관리자가 모집을 생성합니다.")
     @PostMapping("/recruit")
-    public ApiResponse<RecruitCreateResponseDTO> createRecruit(@RequestBody RecruitCreateRequestDTO requestDTO) {
+    public ApiResponse<RecruitCreateResponseDTO> createRecruit(
+            @RequestBody RecruitCreateRequestDTO requestDTO) {
         RecruitCreateResponseDTO responseDTO = recruitCommandService.createRecruit(requestDTO);
         return ApiResponse.onSuccess(responseDTO);
     }
@@ -214,9 +222,17 @@ public class AdminController {
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
             @RequestParam(name = "accountId", required = false) String value) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Page<LotteryResult> lotteryResultPage = lotteryQueryService.getLotteryResult(kindergartenId,pageRequest,value);
+        Page<LotteryResult> lotteryResultPage = lotteryQueryService.getLotteryResult(kindergartenId,
+                pageRequest, value);
 
         return ApiResponse.onSuccess(new CustomPage<>(lotteryResultPage));
     }
+
+    @Operation(summary = "생성한 모집 정보 조회 - 관리자 모집 조회 페이지", description = "생성한 모집을 어린이집, 분반 정보를 포함하여 조회합니다.")
+    @GetMapping("/recruits")
+    public ApiResponse<RecruitCreationInfo> getRecruitCreationInfo() {
+        return ApiResponse.onSuccess(recruitQueryService.getRecruitCreationInfo());
+    }
+
 
 }

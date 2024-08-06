@@ -35,4 +35,8 @@ public class KindergartenImage extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "kindergarten_id", nullable = false)
     private Kindergarten kindergarten;
+
+    public void updateImage(String newImageUrl) {
+        this.image = newImageUrl;
+    }
 }

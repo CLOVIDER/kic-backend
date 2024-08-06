@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.criteria.CriteriaBuilder.In;
 import java.util.List;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -37,7 +38,10 @@ public class Kindergarten extends BaseTimeEntity {
     private String kindergartenAddr;
 
     @Column(nullable = false)
-    private String kindergartenScale;
+    private Integer kindergartenScale;
+
+    @Column(nullable = false)
+    private Integer kindergartenCapacity;
 
     @Column(nullable = false, length = 50)
     private String kindergartenNo;
@@ -51,11 +55,12 @@ public class Kindergarten extends BaseTimeEntity {
     @OneToMany(mappedBy = "kindergarten", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<KindergartenImage> kindergartenImages;
 
-    public void updateKindergarten(String kindergartenNm, String kindergartenAddr, String kindergartenScale,
-            String kindergartenNo, String kindergartenTime, String kindergartenInfo) {
+    public void updateKindergarten(String kindergartenNm, String kindergartenAddr, Integer kindergartenScale,
+            Integer kindergartenCapacity, String kindergartenNo, String kindergartenTime, String kindergartenInfo) {
         this.kindergartenNm = kindergartenNm;
         this.kindergartenAddr = kindergartenAddr;
         this.kindergartenScale = kindergartenScale;
+        this.kindergartenCapacity = kindergartenCapacity;
         this.kindergartenNo = kindergartenNo;
         this.kindergartenTime = kindergartenTime;
         this.kindergartenInfo = kindergartenInfo;

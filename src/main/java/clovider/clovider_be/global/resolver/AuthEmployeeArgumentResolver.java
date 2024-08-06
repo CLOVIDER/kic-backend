@@ -37,7 +37,6 @@ public class AuthEmployeeArgumentResolver implements HandlerMethodArgumentResolv
         }
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        Long employeeId = Long.parseLong(userDetails.getUsername());
-        return employeeQueryService.getEmployee(employeeId);
+        return userDetails.getEmployee();
     }
 }
