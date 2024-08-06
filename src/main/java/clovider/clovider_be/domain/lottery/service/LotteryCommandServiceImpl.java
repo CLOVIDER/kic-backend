@@ -89,13 +89,13 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
 
         // 순서대로 업데이트
         int rank = 1;
-        Map<Long, Integer> applicantRankMap = new HashMap<>();
+//        Map<Long, Integer> applicantRankMap = new HashMap<>();
 
-        // 당첨된 신청서에 대한 순번 부여
-        for (Map<String, Object> applicant : selectedApplicants) {
-            Long applicantId = (Long) applicant.get("id");
-            applicantRankMap.put(applicantId, rank++);
-        }
+//        // 당첨된 신청서에 대한 순번 부여
+//        for (Map<String, Object> applicant : selectedApplicants) {
+//            Long applicantId = (Long) applicant.get("id");
+//            applicantRankMap.put(applicantId, rank++);
+//        }
 
         // 전체 신청서에 대한 순번 부여
         for (Map<String, Object> applicant : applicants) {
@@ -105,14 +105,13 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
 
             Result result = isSelected ? Result.WIN : Result.LOSE;
 
-            Lottery lottery = lotteryRepository.findLotteryByApplicationId(applicantId);
+            Lottery lottery = lotteryRepository.findLotteryByApplicationIdAndRecruitId(applicantId, recruitId);
 
             if (isSelected) {
-                lottery.setRankNo(applicantRankMap.get(applicantId));
+                lottery.setRankNo(0);  // 당첨자의 대기 순번은 0으로 설정
             } else {
                 // 대기 순번 설정 (당첨된 신청서가 처리된 이후의 순서)
-                int waitingRank = rank++;
-                lottery.setRankNo(waitingRank);
+                lottery.setRankNo(rank++);
             }
 
             lottery.setResult(result);
