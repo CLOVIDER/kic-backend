@@ -2,9 +2,7 @@ package clovider.clovider_be.domain.qna;
 
 import clovider.clovider_be.domain.common.BaseTimeEntity;
 import clovider.clovider_be.domain.employee.Employee;
-import clovider.clovider_be.domain.qna.dto.QnaRequest;
-import clovider.clovider_be.domain.qna.dto.QnaResponse;
-import clovider.clovider_be.domain.qna.dto.QnaUpdateResponse;
+import clovider.clovider_be.domain.qna.dto.QnaRequest.QnaCreateRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -57,10 +55,10 @@ public class Qna extends BaseTimeEntity {
     @JoinColumn(name = "admin_id")
     private Employee admin;
 
-    public void updateQna(QnaRequest qnaRequest) {
-        this.title = qnaRequest.getTitle();
-        this.question = qnaRequest.getQuestion();
-        this.isVisibility = qnaRequest.getIsVisibility();
+    public void updateQna(QnaCreateRequest qnaCreateRequest) {
+        this.title = qnaCreateRequest.getTitle();
+        this.question = qnaCreateRequest.getQuestion();
+        this.isVisibility = qnaCreateRequest.getIsVisibility();
     }
 
     public void updateAnswer(String answer, Employee admin) {

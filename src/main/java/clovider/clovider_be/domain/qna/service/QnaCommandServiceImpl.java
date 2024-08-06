@@ -4,9 +4,9 @@ import clovider.clovider_be.domain.common.CustomResult;
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.employee.service.EmployeeQueryService;
 import clovider.clovider_be.domain.qna.Qna;
-import clovider.clovider_be.domain.qna.dto.QnaAnswerRequest;
-import clovider.clovider_be.domain.qna.dto.QnaRequest;
-import clovider.clovider_be.domain.qna.dto.QnaUpdateResponse;
+import clovider.clovider_be.domain.qna.dto.QnaRequest.QnaAnswerRequest;
+import clovider.clovider_be.domain.qna.dto.QnaRequest.QnaCreateRequest;
+import clovider.clovider_be.domain.qna.dto.QnaResponse.QnaUpdateResponse;
 import clovider.clovider_be.domain.qna.repository.QnaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,19 +22,19 @@ public class QnaCommandServiceImpl implements QnaCommandService {
     private final EmployeeQueryService employeeQueryService;
 
     @Override
-    public CustomResult createQna(Employee employee, QnaRequest qnaRequest) {
+    public CustomResult createQna(Employee employee, QnaCreateRequest qnaCreateRequest) {
 
-        Qna savedQna = qnaRepository.save(QnaRequest
-                .toQna(qnaRequest, employeeQueryService.getEmployee(employee.getId())));
+        Qna savedQna = qnaRepository.save(QnaCreateRequest
+                .toQna(qnaCreateRequest, employeeQueryService.getEmployee(employee.getId())));
 
         return CustomResult.toCustomResult(savedQna.getId());
     }
 
     @Override
-    public QnaUpdateResponse updateQna(Long qnaId, QnaRequest qnaRequest) {
+    public QnaUpdateResponse updateQna(Long qnaId, QnaCreateRequest qnaCreateRequest) {
         Qna foundQna = qnaQueryService.findById(qnaId);
 
-        foundQna.updateQna(qnaRequest);
+        foundQna.updateQna(qnaCreateRequest);
 
         return QnaUpdateResponse.of(qnaId);
     }

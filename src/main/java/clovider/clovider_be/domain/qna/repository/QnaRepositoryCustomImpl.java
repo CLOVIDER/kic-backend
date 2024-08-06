@@ -3,7 +3,7 @@ package clovider.clovider_be.domain.qna.repository;
 import static clovider.clovider_be.domain.qna.QQna.qna;
 
 import clovider.clovider_be.domain.enums.SearchType;
-import clovider.clovider_be.domain.qna.dto.QnaResponse;
+import clovider.clovider_be.domain.qna.dto.QnaResponse.BaseQnaResponse;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -21,16 +21,16 @@ public class QnaRepositoryCustomImpl implements QnaRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<QnaResponse> searchQnas(Pageable pageable, SearchType type, String keyword) {
+    public Page<BaseQnaResponse> searchQnas(Pageable pageable, SearchType type, String keyword) {
 
         // Fetch results with pagination
-        List<QnaResponse> content = queryFactory.selectFrom(qna)
+        List<BaseQnaResponse> content = queryFactory.selectFrom(qna)
                 .where(buildPredicate(type, keyword))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch()
                 .stream()
-                .map(QnaResponse::toQnaResponse)
+                .map(BaseQnaResponse::fromQna)
                 .toList();
 
         // Count total results
