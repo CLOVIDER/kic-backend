@@ -105,7 +105,7 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
 
             Result result = isSelected ? Result.WIN : Result.LOSE;
 
-            Lottery lottery = lotteryRepository.findLotteryByApplicationId(applicantId);
+            Lottery lottery = lotteryRepository.findLotteryByApplicationIdAndRecruitId(applicantId, recruitId);
 
             if (isSelected) {
                 lottery.setRankNo(applicantRankMap.get(applicantId));

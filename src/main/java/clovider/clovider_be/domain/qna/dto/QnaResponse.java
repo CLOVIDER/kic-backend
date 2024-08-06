@@ -15,6 +15,7 @@ public class QnaResponse {
     private Long qnaId;
     private String title;
     private String question;
+    private Boolean isAnswerPresent;
     private String answer;
     private Character isVisibility;
     private String writerName;
@@ -26,6 +27,7 @@ public class QnaResponse {
                 .title(qna.getTitle())
                 .question(qna.getQuestion())
                 .answer(qna.getAnswer())
+                .isAnswerPresent(qna.getAnswer() != null)
                 .isVisibility(qna.getIsVisibility())
                 .writerName(qna.getEmployee().getNameKo())
                 .createdAt(qna.getCreatedAt().toLocalDate())
