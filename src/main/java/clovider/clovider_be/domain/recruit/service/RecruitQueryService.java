@@ -1,5 +1,6 @@
 package clovider.clovider_be.domain.recruit.service;
 
+import clovider.clovider_be.domain.admin.dto.AdminResponse.RecruitCreationInfo;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitInfo;
 import clovider.clovider_be.domain.recruit.Recruit;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruits;
@@ -20,4 +21,6 @@ public interface RecruitQueryService {
     Recruit getRecruit(Long id);
 
     List<Recruit> getRecruitAndKindergarten();
+
+    RecruitCreationInfo getRecruitCreationInfo();
 }
