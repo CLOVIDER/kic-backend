@@ -52,19 +52,15 @@ import org.springframework.stereotype.Service;
 class ApplicationCommandServiceImplTest {
 
     @Mock
-    @Autowired
     private ApplicationRepository applicationRepository;
 
     @Mock
-    @Autowired
     private ApplicationDocumentCommandService applicationDocumentCommandService;
 
     @Mock
-    @Autowired
     private LotteryCommandService lotteryCommandService;
 
     @InjectMocks
-    @Autowired
     private ApplicationCommandServiceImpl applicationCommandService;
 
     private Employee employee;
