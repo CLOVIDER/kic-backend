@@ -7,6 +7,7 @@ import static clovider.clovider_be.domain.admin.dto.AdminResponse.toNotDashBoard
 import clovider.clovider_be.domain.admin.dto.AdminResponse.AcceptResult;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.ApplicationList;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.DashBoard;
+import clovider.clovider_be.domain.admin.dto.AdminResponse.LotteryResult;
 import clovider.clovider_be.domain.admin.dto.SearchVO;
 import clovider.clovider_be.domain.application.service.ApplicationQueryService;
 import clovider.clovider_be.domain.common.CustomPage;
@@ -193,11 +194,29 @@ public class AdminController {
         return new ResponseEntity<>(resource, headers, HttpStatus.OK);
     }
 
-    @PostMapping("/create/recruit")
-    public ApiResponse<RecruitCreateResponseDTO> createRecruit(
-            @RequestBody RecruitCreateRequestDTO requestDTO) {
+    @Operation(summary = "모집 생성" ,description = "관리자가 모집을 생성합니다.")
+    @PostMapping("/recruit")
+    public ApiResponse<RecruitCreateResponseDTO> createRecruit(@RequestBody RecruitCreateRequestDTO requestDTO) {
         RecruitCreateResponseDTO responseDTO = recruitCommandService.createRecruit(requestDTO);
         return ApiResponse.onSuccess(responseDTO);
+    }
+
+    @Operation(summary = "종료된 모집에 대한 추첨 결과 리스트 조회 - 관리자 추첨 결과 탭 ", description = "종료된 모집의 추첨 결과를 리스트 형식으로 조회합니다")
+    @Parameters({
+            @Parameter(name = "page", description = "페이지 번호"),
+            @Parameter(name = "size", description = "페이지 크기"),
+            @Parameter(name = "accountId", description = "신청자 아이디 검색")
+    })
+    @GetMapping("/lotteries/result/{kindergartenId}")
+    public ApiResponse<CustomPage<LotteryResult>> getLotteryResult(
+            @PathVariable(name = "kindergartenId") Long kindergartenId,
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size,
+            @RequestParam(name = "accountId", required = false) String value) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<LotteryResult> lotteryResultPage = lotteryQueryService.getLotteryResult(kindergartenId,pageRequest,value);
+
+        return ApiResponse.onSuccess(new CustomPage<>(lotteryResultPage));
     }
 
 }

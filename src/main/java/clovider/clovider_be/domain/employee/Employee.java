@@ -2,6 +2,10 @@ package clovider.clovider_be.domain.employee;
 
 import clovider.clovider_be.domain.common.BaseTimeEntity;
 import clovider.clovider_be.domain.enums.Role;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -48,6 +52,8 @@ public class Employee extends BaseTimeEntity {
     private String employeeNo;
 
     @Column(nullable = false)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate joinDt;
 
     @Column(nullable = false, length = 20)

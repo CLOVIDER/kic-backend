@@ -2,14 +2,15 @@ package clovider.clovider_be.domain.employee.service;
 
 import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.application.service.ApplicationQueryService;
+import clovider.clovider_be.domain.auth.dto.AuthRequest.LoginRequest;
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.employee.dto.EmployeeResponse;
 import clovider.clovider_be.domain.employee.dto.EmployeeResponse.EmployeeInfo;
 import clovider.clovider_be.domain.employee.repository.EmployeeRepository;
 import clovider.clovider_be.global.exception.ApiException;
-import clovider.clovider_be.domain.auth.dto.AuthRequest.LoginRequest;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,7 @@ public class EmployeeQueryServiceImpl implements EmployeeQueryService {
     private final BCryptPasswordEncoder bCryptEncoder;
 
     @Override
+    @Cacheable(value = "employees", key = "#id")
     public Employee getEmployee(Long id) {
         return employeeRepository.findById(id).orElseThrow(
                 () -> new ApiException(ErrorStatus._EMPLOYEE_NOT_FOUND)

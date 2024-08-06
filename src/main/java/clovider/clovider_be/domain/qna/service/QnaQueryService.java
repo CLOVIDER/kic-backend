@@ -1,10 +1,10 @@
 package clovider.clovider_be.domain.qna.service;
 
-import clovider.clovider_be.domain.common.CustomPage;
 import clovider.clovider_be.domain.enums.SearchType;
 import clovider.clovider_be.domain.qna.Qna;
 import clovider.clovider_be.domain.qna.dto.QnaResponse;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,9 +14,8 @@ public interface QnaQueryService {
 
     QnaResponse getQna(Long qnaId);
 
-    CustomPage<QnaResponse> getAllQnas(int page, int size);
+    Page<QnaResponse> getAllQnas(Pageable pageable, SearchType type, String keyword);
 
     Integer getWaitQna();
 
-    List<QnaResponse> searchQnas(SearchType type, String keyword);
 }

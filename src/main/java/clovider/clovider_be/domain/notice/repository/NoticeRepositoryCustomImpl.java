@@ -1,13 +1,18 @@
 package clovider.clovider_be.domain.notice.repository;
 
+import static clovider.clovider_be.domain.notice.QNotice.notice;
+
 import clovider.clovider_be.domain.enums.SearchType;
-import clovider.clovider_be.domain.notice.Notice;
 import clovider.clovider_be.domain.notice.QNotice;
 import clovider.clovider_be.domain.notice.dto.NoticeResponse;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -17,15 +22,22 @@ public class NoticeRepositoryCustomImpl implements NoticeRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<NoticeResponse> searchNotices(SearchType searchType, String keyword) {
-        QNotice notice = QNotice.notice;
+    public Page<NoticeResponse> searchNotices(Pageable pageable, SearchType type, String keyword) {
 
-        return queryFactory.selectFrom(notice)
-                .where(buildPredicate(searchType, keyword))
+        List<NoticeResponse> content = queryFactory.selectFrom(notice)
+                .where(buildPredicate(type, keyword))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch()
                 .stream()
                 .map(NoticeResponse::toNoticeResponse)
                 .toList();
+
+        JPAQuery<Long> count = queryFactory.select(notice.count())
+                .from(notice)
+                .where(buildPredicate(type, keyword));
+
+        return PageableExecutionUtils.getPage(content, pageable, count::fetchOne);
     }
 
     private BooleanExpression buildPredicate(SearchType searchType, String keyword) {
