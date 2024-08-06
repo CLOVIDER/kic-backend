@@ -248,4 +248,68 @@ public class RecruitResponse {
                 .isSiblingUsage(recruit.getIsSiblingUsage())
                 .build();
     }
+
+    @Schema(description = "모집 기간 상세 정보 DTO")
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class RecruitDateInfo {
+
+        @Schema(description = "모집 시작 기간", example = "2024-06-25T19:03:40")
+        private LocalDateTime recruitStartDt;
+
+        @Schema(description = "모집 마감 기간", example = "2024-07-25T19:03:40")
+        private LocalDateTime recruitEndDt;
+
+        @Schema(description = "1차 등록 기간", example = "2024-07-26T19:03:40")
+        private LocalDateTime firstStartDt;
+
+        @Schema(description = "1차 등록 마감 기간", example = "2024-07-31T19:03:40")
+        private LocalDateTime firstEndDt;
+
+        @Schema(description = "2차 등록 기간", example = "2024-08-01T19:03:40")
+        private LocalDateTime secondStartDt;
+
+        @Schema(description = "2차 등록 마감 기간", example = "2024-08-05T19:03:40")
+        private LocalDateTime secondEndDt;
+    }
+
+
+    public static RecruitDateInfo toRecruitDateInfo(Recruit recruit) {
+        return RecruitDateInfo.builder()
+                .recruitStartDt(recruit.getRecruitStartDt())
+                .recruitEndDt(recruit.getRecruitEndDt())
+                .firstStartDt(recruit.getFirstStartDt())
+                .firstEndDt(recruit.getFirstEndDt())
+                .secondStartDt(recruit.getSecondStartDt())
+                .secondEndDt(recruit.getSecondEndDt())
+                .build();
+    }
+
+
+    @Schema(description = "모집 기간 및 가중치 관리 DTO")
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class RecruitDateAndWeightInfo {
+
+        @Schema(description = "모집의 기간 정보")
+        private RecruitDateInfo recruitDateInfo;
+
+        @Schema(description = "가중치 설정 상태")
+        private RecruitWeight recruitWeight;
+    }
+
+    public static RecruitDateAndWeightInfo toRecruitDetails(Recruit recruit) {
+        RecruitDateInfo recruitDateInfo = toRecruitDateInfo(recruit);
+        RecruitWeight recruitWeight = toRecruitWeight(recruit);
+
+        return RecruitDateAndWeightInfo.builder()
+                .recruitDateInfo(recruitDateInfo)
+                .recruitWeight(recruitWeight)
+                .build();
+    }
+
 }
