@@ -2,12 +2,16 @@ package clovider.clovider_be.domain.lottery.service;
 
 import clovider.clovider_be.domain.admin.dto.AdminResponse.AcceptResult;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.LotteryResult;
+import clovider.clovider_be.domain.application.Application;
+import clovider.clovider_be.domain.application.repository.ApplicationRepository;
+import clovider.clovider_be.domain.enums.Result;
 import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.ChildInfo;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitInfo;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitResult;
+import clovider.clovider_be.domain.lottery.dto.LotteryResultByEmployeeDTO;
 import clovider.clovider_be.domain.lottery.dto.LotteryResultResponseDTO;
 import clovider.clovider_be.domain.lottery.repository.LotteryRepository;
 import clovider.clovider_be.domain.recruit.Recruit;
@@ -17,6 +21,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -32,6 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class LotteryQueryServiceImpl implements LotteryQueryService {
 
     private final LotteryRepository lotteryRepository;
+    private final ApplicationRepository applicationRepository;
 
     @Override
     public LotteryResultResponseDTO getLotteryResult(Long lotteryId) {
@@ -106,5 +113,41 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
     @Override
     public Page<LotteryResult> getLotteryResult(Long kindergartenId, Pageable pageable, String value) {
         return lotteryRepository.getLotteryResults(kindergartenId,pageable,value);
+    }
+
+    @Override
+    public List<LotteryResultByEmployeeDTO> getLotteryResultsByEmployeeId(Long employeeId) {
+        if (employeeId == null) {
+            throw new ApiException(ErrorStatus._EMPLOYEE_NOT_FOUND);
+        }
+
+        List<Application> applications = applicationRepository.findAllByEmployeeId(employeeId);
+
+        if (applications.isEmpty()) {
+            throw new ApiException(ErrorStatus._APPLICATION_NOT_FOUND);
+        }
+
+        return applications.stream()
+                .flatMap(application -> lotteryRepository.findByApplicationId(application.getId()).stream())
+                .map(lottery -> {
+                    LotteryResultByEmployeeDTO dto = new LotteryResultByEmployeeDTO();
+                    dto.setApplicationId(lottery.getApplication().getId());
+                    dto.setRecruitId(lottery.getRecruit().getId());
+                    dto.setChildName(lottery.getChildNm());
+                    dto.setKindergartenNm(lottery.getRecruit().getKindergarten().getKindergartenNm());
+                    dto.setAgeClass(lottery.getRecruit().getAgeClass());
+
+                    if (lottery.getResult() == Result.WIN) {
+                        dto.setResult("WIN");
+                    } else if (lottery.getResult() == Result.LOSE){
+                        dto.setResult("LOSE");
+                        dto.setWaitingNumber(lottery.getRankNo());
+                    }
+                    else {
+                        dto.setResult("WAIT");
+                    }
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
 }

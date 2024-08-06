@@ -2,6 +2,8 @@ package clovider.clovider_be.domain.kindergarten;
 
 import clovider.clovider_be.domain.common.BaseTimeEntity;
 import clovider.clovider_be.domain.kindergartenImage.KindergartenImage;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -49,6 +51,7 @@ public class Kindergarten extends BaseTimeEntity {
     private String kindergartenInfo;
 
     @OneToMany(mappedBy = "kindergarten", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
     private List<KindergartenImage> kindergartenImages;
 
     public void updateKindergarten(String kindergartenNm, String kindergartenAddr, String kindergartenScale,

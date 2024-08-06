@@ -2,6 +2,7 @@ package clovider.clovider_be.domain.kindergartenImage;
 
 import clovider.clovider_be.domain.common.BaseTimeEntity;
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -34,5 +35,6 @@ public class KindergartenImage extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "kindergarten_id", nullable = false)
+    @JsonBackReference
     private Kindergarten kindergarten;
 }
