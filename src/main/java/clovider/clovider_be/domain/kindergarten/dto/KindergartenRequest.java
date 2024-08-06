@@ -15,7 +15,7 @@ public class KindergartenRequest {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @Schema(description = "새로운 어린이집 상세정보를 등록하기 위한 요청 DTO")
+    @Builder
     public static class KindergartenRegisterRequest{
         @Schema(description = "어린이집 이름", example = "샛별 어린이집", required = true)
         @NotNull(message = "어린이집 이름은 필수 항목입니다.")
@@ -48,13 +48,13 @@ public class KindergartenRequest {
 
         @Schema(description = "어린이집 이미지 url", example = "[\"path/file1.png\", \"path/file2.png\"]", required = true)
         @NotNull(message = "어린이집 이미지 url은 필수 항목입니다.")
-        private List<String> kindergartenImage;
+        private List<String> kindergartenImages;
     }
 
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @Schema(description = "새로운 어린이집 상세정보를 등록하기 위한 요청 DTO")
+    @Builder
     public static class KindergartenUpdateRequest{
         @Schema(description = "어린이집 이름", example = "샛별 어린이집", required = true)
         private String kindergartenNm;

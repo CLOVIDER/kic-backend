@@ -47,7 +47,7 @@ public class KindergartenCommandServiceImpl implements KindergartenCommandServic
 
         kindergarten = kindergartenRepository.save(kindergarten);
 
-        List<Long> kindergartenImageIds = kindergartenImageCommandService.saveKindergartenImage(kindergarten, kindergartenRegisterRequest.getKindergartenImage());
+        List<Long> kindergartenImageIds = kindergartenImageCommandService.saveKindergartenImage(kindergarten, kindergartenRegisterRequest.getKindergartenImages());
 
         return toKindergartenRegisterResponse(kindergarten, kindergartenImageIds);
     }
