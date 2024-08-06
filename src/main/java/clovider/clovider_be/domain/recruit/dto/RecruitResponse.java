@@ -4,8 +4,13 @@ import clovider.clovider_be.domain.enums.Period;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
 import clovider.clovider_be.domain.recruit.Recruit;
 import clovider.clovider_be.global.util.TimeUtil;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -53,7 +58,7 @@ public class RecruitResponse {
         private String recruitStatus;
     }
 
-    public static NowRecruitInfo toNowRecruitInfo(List<Recruit> recruits,
+    public static NowRecruitInfo toNowRecruitInfo(List<NowRecruit> recruits,
             List<CompetitionRate> competitionRates) {
 
         String startDt = TimeUtil.formattedDateTime(recruits.get(0).getRecruitStartDt());
@@ -67,8 +72,7 @@ public class RecruitResponse {
         String period = getPeriod(recruits.get(0), LocalDateTime.now());
 
         List<String> kindergartenClasses = recruits.stream()
-                .map(r -> r.getKindergarten().getKindergartenNm() + ":" + r.getAgeClass()
-                        .getDescription())
+                .map(r -> r.getKindergartenNm() + ":" + r.getAgeClass())
                 .toList();
 
         List<Double> rates = competitionRates.stream()
@@ -96,7 +100,7 @@ public class RecruitResponse {
                 .build();
     }
 
-    private static String getPeriod(Recruit recruit, LocalDateTime now) {
+    private static String getPeriod(NowRecruit recruit, LocalDateTime now) {
 
         if (now.isBefore(recruit.getRecruitStartDt())) {
             return Period.SCHEDULED.getDescription();
@@ -114,6 +118,62 @@ public class RecruitResponse {
         } else {
             return Period.NOT_RECRUIT.getDescription();
         }
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class NowRecruit {
+
+        private Long id;
+        @JsonSerialize(using = LocalDateTimeSerializer.class)
+        @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+        private LocalDateTime recruitStartDt;
+        @JsonSerialize(using = LocalDateTimeSerializer.class)
+        @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+        private LocalDateTime recruitEndDt;
+        @JsonSerialize(using = LocalDateTimeSerializer.class)
+        @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+        private LocalDateTime firstStartDt;
+        @JsonSerialize(using = LocalDateTimeSerializer.class)
+        @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+        private LocalDateTime firstEndDt;
+        @JsonSerialize(using = LocalDateTimeSerializer.class)
+        @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+        private LocalDateTime secondStartDt;
+        @JsonSerialize(using = LocalDateTimeSerializer.class)
+        @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+        private LocalDateTime secondEndDt;
+        private String kindergartenNm;
+        private String ageClass;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    public static class NowRecruits {
+
+        private List<NowRecruit> nowRecruits = new ArrayList<>();
+
+        public NowRecruits(List<NowRecruit> recruits) {
+            this.nowRecruits = recruits;
+        }
+
+    }
+
+    public static NowRecruit toNowRecruit(Recruit recruit) {
+
+        return NowRecruit.builder()
+                .id(recruit.getId())
+                .recruitStartDt(recruit.getRecruitStartDt())
+                .recruitEndDt(recruit.getRecruitEndDt())
+                .firstStartDt(recruit.getFirstStartDt())
+                .firstEndDt(recruit.getFirstEndDt())
+                .secondStartDt(recruit.getSecondStartDt())
+                .secondEndDt(recruit.getSecondEndDt())
+                .kindergartenNm(recruit.getKindergarten().getKindergartenNm())
+                .ageClass(recruit.getAgeClass().getDescription())
+                .build();
     }
 
     @Schema(description = "진행 중인 어린이집 정보 DTO")
