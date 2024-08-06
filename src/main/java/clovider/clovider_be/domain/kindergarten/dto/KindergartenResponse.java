@@ -19,26 +19,24 @@ public class KindergartenResponse {
     public static class KindergartenRegisterResponse {
 
         private Long kindergartenId;
-        private Long kindergartenImageId;
-
+        private List<Long> kindergartenImageIds;
         private String kindergartenNm;
         private String kindergartenAddr;
-        private String kindergartenScale;
+        private Integer kindergartenScale;
+        private Integer kindergartenCapacity;
         private String kindergartenNo;
         private String kindergartenTime;
         private String kindergartenInfo;
-
         private LocalDateTime createdAt;
 
-        public static KindergartenRegisterResponse toKindergartenRegisterResponse(
-                Kindergarten kindergarten,
-                Long kindergartenImageId) {
+        public static KindergartenRegisterResponse toKindergartenRegisterResponse(Kindergarten kindergarten, List<Long> kindergartenImageIds) {
             return KindergartenRegisterResponse.builder()
                     .kindergartenId(kindergarten.getId())
-                    .kindergartenImageId(kindergartenImageId)
+                    .kindergartenImageIds(kindergartenImageIds)
                     .kindergartenNm(kindergarten.getKindergartenNm())
                     .kindergartenAddr(kindergarten.getKindergartenAddr())
                     .kindergartenScale(kindergarten.getKindergartenScale())
+                    .kindergartenCapacity(kindergarten.getKindergartenCapacity())
                     .kindergartenNo(kindergarten.getKindergartenNo())
                     .kindergartenTime(kindergarten.getKindergartenTime())
                     .kindergartenInfo(kindergarten.getKindergartenInfo())
@@ -74,29 +72,29 @@ public class KindergartenResponse {
     public static class KindergartenUpdateResponse {
 
         private Long kindergartenId;
-        private Long kindergartenImageId;
-
+        private List<Long> kindergartenImageIds;
         private String kindergartenNm;
         private String kindergartenAddr;
-        private String kindergartenScale;
+        private Integer kindergartenScale;
+        private Integer kindergartenCapacity;
         private String kindergartenNo;
         private String kindergartenTime;
         private String kindergartenInfo;
-
         private LocalDateTime updatedAt;
 
         public static KindergartenUpdateResponse toKindergartenUpdateResponse(
                 Kindergarten kindergarten,
-                Long kindergartenImageId) {
+                List<Long> kindergartenImageIds) {
             return KindergartenUpdateResponse.builder()
                     .kindergartenId(kindergarten.getId())
                     .kindergartenNm(kindergarten.getKindergartenNm())
                     .kindergartenAddr(kindergarten.getKindergartenAddr())
                     .kindergartenScale(kindergarten.getKindergartenScale())
+                    .kindergartenCapacity(kindergarten.getKindergartenCapacity())
                     .kindergartenNo(kindergarten.getKindergartenNo())
                     .kindergartenTime(kindergarten.getKindergartenTime())
                     .kindergartenInfo(kindergarten.getKindergartenInfo())
-                    .kindergartenImageId(kindergartenImageId)
+                    .kindergartenImageIds(kindergartenImageIds)
                     .updatedAt(LocalDateTime.now())
                     .build();
         }
@@ -113,24 +111,26 @@ public class KindergartenResponse {
 
         private String kindergartenNm;
         private String kindergartenAddr;
-        private String kindergartenScale;
+        private Integer kindergartenScale;
+        private Integer kindergartenCapacity;
         private String kindergartenNo;
         private String kindergartenTime;
         private String kindergartenInfo;
 
-        private String kindergartenImageUrl;
+        private List<String> kindergartenImageUrls;
 
         public static KindergartenGetResponse toKindergartenGetResponse(Kindergarten kindergarten,
-                String kindergartenImageUrl) {
+                List<String> kindergartenImageUrls) {
             return KindergartenGetResponse.builder()
                     .kindergartenId(kindergarten.getId())
                     .kindergartenNm(kindergarten.getKindergartenNm())
                     .kindergartenAddr(kindergarten.getKindergartenAddr())
                     .kindergartenScale(kindergarten.getKindergartenScale())
+                    .kindergartenCapacity(kindergarten.getKindergartenCapacity())
                     .kindergartenNo(kindergarten.getKindergartenNo())
                     .kindergartenTime(kindergarten.getKindergartenTime())
                     .kindergartenInfo(kindergarten.getKindergartenInfo())
-                    .kindergartenImageUrl(kindergartenImageUrl)
+                    .kindergartenImageUrls(kindergartenImageUrls)
                     .build();
         }
     }

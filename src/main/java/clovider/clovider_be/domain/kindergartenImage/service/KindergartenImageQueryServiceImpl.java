@@ -1,8 +1,13 @@
 package clovider.clovider_be.domain.kindergartenImage.service;
 
+import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import clovider.clovider_be.domain.kindergartenImage.KindergartenImage;
 import clovider.clovider_be.domain.kindergartenImage.repository.KindergartenImageRepository;
+import clovider.clovider_be.global.exception.ApiException;
+import clovider.clovider_be.global.response.code.status.ErrorStatus;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,29 +19,40 @@ public class KindergartenImageQueryServiceImpl implements KindergartenImageQuery
     private final KindergartenImageRepository kindergartenImageRepository;
 
     @Override
-    public String getKindergartenImageUrls(Long kindergartenId) {
-        Optional<KindergartenImage> kindergartenImage = kindergartenImageRepository.findByKindergartenId(kindergartenId);
+    public List<String> getKindergartenImageUrls(Long kindergartenId) {
+        List<KindergartenImage> kindergartenImages = kindergartenImageRepository.findByKindergartenId(kindergartenId);
 
-        if (kindergartenImage.isEmpty()) {
-            return "default/image.png";
+        if (kindergartenImages.isEmpty()) {
+            throw new ApiException(ErrorStatus._KDG_IMAGE_NOT_FOUND);
         }
 
-        return kindergartenImage.get().getImage();
+        return kindergartenImages.stream()
+                .map(KindergartenImage::getImage)
+                .collect(Collectors.toList());
     }
 
 
     @Override
-    public Optional<KindergartenImage> getKindergartenImage(Long kindergartenId) {
-        return kindergartenImageRepository.findByKindergartenId(kindergartenId);
-    }
-
-    @Override
-    public Long getKindergartenImageId(Long kindergartenId) {
-        Optional<KindergartenImage> kindergartenImage = kindergartenImageRepository.findByKindergartenId(kindergartenId);
+    public List<KindergartenImage> getKindergartenImage(Long kindergartenId) {
+        List<KindergartenImage> kindergartenImage = kindergartenImageRepository.findByKindergartenId(kindergartenId);
 
         if(kindergartenImage.isEmpty()){
-            return 0L; // TODO: 디폴트 이미지 DB에 저장해두고, 해당 id값으로 바꾸기
+            throw new ApiException(ErrorStatus._KDG_IMAGE_NOT_FOUND);
         }
-        return kindergartenImage.get().getId();
+
+        return kindergartenImage;
+    }
+
+    @Override
+    public List<Long> getKindergartenImageId(Long kindergartenId) {
+        List<KindergartenImage> kindergartenImages = kindergartenImageRepository.findByKindergartenId(kindergartenId);
+
+        if(kindergartenImages.isEmpty()){
+            throw new ApiException(ErrorStatus._KDG_IMAGE_NOT_FOUND);
+        }
+
+        return kindergartenImages.stream()
+                .map(KindergartenImage::getId)
+                .collect(Collectors.toList());
     }
 }
