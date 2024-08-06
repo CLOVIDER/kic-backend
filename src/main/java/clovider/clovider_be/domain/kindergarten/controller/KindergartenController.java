@@ -36,36 +36,17 @@ public class KindergartenController {
     private final KindergartenCommandService kindergartenCommandService;
     private final KindergartenQueryService kindergartenQueryService;
 
-    @Operation(summary = "어린이집 정보 등록", description = "새로운 어린이집 상세정보를 등록하는 API입니다. \n 관리자용 API입니다.")
+    @Operation(summary = "어린이집 정보 등록", description = "새로운 어린이집 상세정보를 등록하는 API입니다. \n 관리자용 API입니다."
+            + "\n kindergartenNm: 어린이집 이름 // "
+            + "\n kindergartenAddr: 어린이집 주소 // "
+            + "\n kindergartenScale: 어린이집 평수(integer) // "
+            + "\n kindergartenNo: 어린이집 전화번호 // "
+            + "\n kindergartenTime: 어린이집 영업시간 // "
+            + "\n kindergartenInfo: 어린이집 정보 // "
+            + "\n kindergartenImages: 어린이집 이미지(List<String(url)>)")
     @PostMapping("/admin/kindergartens")
     public ApiResponse<KindergartenRegisterResponse> registerKindergarten(
-            @Parameter(description = "어린이집 이름", required = true, example = "샛별 어린이집")
-            @RequestParam String kindergartenNm,
-            @Parameter(description = "어린이집 주소", required = true, example = "경기도 성남시")
-            @RequestParam String kindergartenAddr,
-            @Parameter(description = "어린이집 규모(평수)", required = true, example = "500")
-            @RequestParam Integer kindergartenScale,
-            @Parameter(description = "어린이집 정원(명수)", required = true, example = "100")
-            @RequestParam Integer kindergartenCapacity,
-            @Parameter(description = "어린이집 전화번호", required = true, example = "031-1234-5678")
-            @RequestParam String kindergartenNo,
-            @Parameter(description = "어린이집 운영시간", required = true, example = "7:00 - 22:00")
-            @RequestParam String kindergartenTime,
-            @Parameter(description = "어린이집 기타 정보", required = true, example = "- 저희 어린이집은 어쩌구이고\n- 어쩌구입니다.")
-            @RequestParam String kindergartenInfo,
-            @Parameter(description = "어린이집 이미지 URL 리스트", required = true, example = "[\"path/file1.png\", \"path/file2.png\"]")
-            @RequestParam List<String> kindergartenImages) {
-
-        KindergartenRegisterRequest request = KindergartenRegisterRequest.builder()
-                .kindergartenNm(kindergartenNm)
-                .kindergartenAddr(kindergartenAddr)
-                .kindergartenScale(kindergartenScale)
-                .kindergartenCapacity(kindergartenCapacity)
-                .kindergartenNo(kindergartenNo)
-                .kindergartenTime(kindergartenTime)
-                .kindergartenInfo(kindergartenInfo)
-                .kindergartenImages(kindergartenImages)
-                .build();
+            KindergartenRegisterRequest request) {
 
         KindergartenRegisterResponse result = kindergartenCommandService.registerKindergarten(request);
 
@@ -82,38 +63,19 @@ public class KindergartenController {
         return ApiResponse.onSuccess(result);
     }
 
-    @Operation(summary = "어린이집 정보 일부 수정", description = "어린이집 정보를 일부 수정하는 API입니다. \n 관리자용 API입니다.")
+    @Operation(summary = "어린이집 정보 일부 수정", description = "어린이집 정보를 일부 수정하는 API입니다. \n 관리자용 API입니다."
+            + "\n kindergartenNm: 어린이집 이름 // "
+            + "\n kindergartenAddr: 어린이집 주소 // "
+            + "\n kindergartenScale: 어린이집 평수(integer) // "
+            + "\n kindergartenNo: 어린이집 전화번호 // "
+            + "\n kindergartenTime: 어린이집 영업시간 // "
+            + "\n kindergartenInfo: 어린이집 정보 // "
+            + "\n kindergartenImages: 어린이집 이미지(List<String(url)>)")
     @Parameter(name = "kindergartenId", description = "어린이집 ID", required = true, example = "1")
     @PatchMapping("/admin/kindergartens/{kindergartenId}")
     public ApiResponse<KindergartenUpdateResponse> updateKindergarten(
-            @Parameter(description = "어린이집 이름", required = true, example = "샛별 어린이집")
-            @RequestParam String kindergartenNm,
-            @Parameter(description = "어린이집 주소", required = true, example = "경기도 성남시")
-            @RequestParam String kindergartenAddr,
-            @Parameter(description = "어린이집 규모(평수)", required = true, example = "500")
-            @RequestParam Integer kindergartenScale,
-            @Parameter(description = "어린이집 정원(명수)", required = true, example = "100")
-            @RequestParam Integer kindergartenCapacity,
-            @Parameter(description = "어린이집 전화번호", required = true, example = "031-1234-5678")
-            @RequestParam String kindergartenNo,
-            @Parameter(description = "어린이집 운영시간", required = true, example = "7:00 - 22:00")
-            @RequestParam String kindergartenTime,
-            @Parameter(description = "어린이집 기타 정보", required = true, example = "- 저희 어린이집은 어쩌구이고\n- 어쩌구입니다.")
-            @RequestParam String kindergartenInfo,
-            @Parameter(description = "어린이집 이미지 URL 리스트", required = true, example = "[\"path/file1.png\", \"path/file2.png\"]")
-            @RequestParam List<String> kindergartenImage,
+            KindergartenUpdateRequest request,
             @PathVariable("kindergartenId") Long kindergartenId) {
-
-        KindergartenUpdateRequest request = KindergartenUpdateRequest.builder()
-                .kindergartenNm(kindergartenNm)
-                .kindergartenAddr(kindergartenAddr)
-                .kindergartenScale(kindergartenScale)
-                .kindergartenCapacity(kindergartenCapacity)
-                .kindergartenNo(kindergartenNo)
-                .kindergartenTime(kindergartenTime)
-                .kindergartenInfo(kindergartenInfo)
-                .kindergartenImages(kindergartenImage)
-                .build();
 
         KindergartenUpdateResponse result = kindergartenCommandService.updateKindergarten(kindergartenId, request);
 
