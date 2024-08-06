@@ -9,6 +9,7 @@ import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
 import clovider.clovider_be.domain.lottery.service.LotteryQueryService;
 import clovider.clovider_be.domain.recruit.Recruit;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse;
+import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruit;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruitInfo;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.RecruitKdgInfo;
 import clovider.clovider_be.domain.recruit.service.RecruitQueryService;
@@ -34,7 +35,8 @@ public class RecruitController {
     @GetMapping
     public ApiResponse<NowRecruitInfo> getRecruitInfo() {
 
-        List<Recruit> recruits = recruitQueryService.getNowRecruitOrderByClass();
+        List<NowRecruit> recruits = recruitQueryService.getNowRecruitOrderByClass()
+                .getNowRecruits();
         if (recruits.isEmpty()) {
             return ApiResponse.onSuccess(toNotRecruitInfo());
         }

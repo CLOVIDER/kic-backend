@@ -35,7 +35,7 @@ public class LotteryRepositoryCustomImpl implements LotteryRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<CompetitionRate> findCompetitionRates(List<Recruit> recruits) {
+    public List<CompetitionRate> findCompetitionRates(List<Long> recruitIds) {
 
         return jpaQueryFactory.select(Projections.fields(CompetitionRate.class,
                         lottery.recruit.id.as("recruitId"),
@@ -45,34 +45,34 @@ public class LotteryRepositoryCustomImpl implements LotteryRepositoryCustom {
                                 lottery.recruit.recruitCnt
                         ).as("competitionRate")))
                 .from(lottery)
-                .where(lottery.recruit.in(recruits))
+                .where(lottery.recruit.id.in(recruitIds))
                 .groupBy(lottery.recruit.id)
                 .fetch();
     }
 
     @Override
-    public Long findTotalApplication(List<Recruit> recruits) {
+    public Long findTotalApplication(List<Long> recruitIds) {
 
         return jpaQueryFactory
                 .select(lottery.count().as("cnt"))
                 .from(lottery)
-                .where(lottery.recruit.in(recruits))
+                .where(lottery.recruit.id.in(recruitIds))
                 .fetchFirst();
     }
 
     @Override
-    public Long findUnAcceptApplication(List<Recruit> recruits) {
+    public Long findUnAcceptApplication(List<Long> recruitIds) {
 
         return jpaQueryFactory
                 .select(lottery.count().as("cnt"))
                 .from(lottery)
                 .join(lottery.application, application)
-                .where(lottery.recruit.in(recruits).and(application.isAccept.eq(Accept.WAIT)))
+                .where(lottery.recruit.id.in(recruitIds).and(application.isAccept.eq(Accept.WAIT)))
                 .fetchFirst();
     }
 
     @Override
-    public List<AcceptResult> findAcceptStatus(List<Recruit> recruits) {
+    public List<AcceptResult> findAcceptStatus(List<Long> recruitIds) {
 
         List<Tuple> results = jpaQueryFactory
                 .select(recruit.kindergarten.kindergartenNm,
@@ -81,7 +81,7 @@ public class LotteryRepositoryCustomImpl implements LotteryRepositoryCustom {
                 .from(lottery)
                 .join(lottery.recruit, recruit)
                 .join(lottery.application, application)
-                .where(lottery.recruit.in(recruits))
+                .where(lottery.recruit.id.in(recruitIds))
                 .groupBy(recruit.kindergarten.id, application.isAccept)
                 .fetch();
 

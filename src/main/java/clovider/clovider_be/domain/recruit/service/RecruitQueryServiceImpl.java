@@ -3,12 +3,15 @@ package clovider.clovider_be.domain.recruit.service;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitInfo;
 import clovider.clovider_be.domain.recruit.Recruit;
+import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruit;
+import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruits;
 import clovider.clovider_be.domain.recruit.repository.RecruitRepository;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,13 +28,18 @@ public class RecruitQueryServiceImpl implements RecruitQueryService {
     }
 
     @Override
-    public List<Recruit> getNowRecruitOrderByClass() {
+    @Cacheable(value = "nowRecruit", key = "'sorted'")
+    public NowRecruits getNowRecruitOrderByClass() {
 
-        return recruitRepository.findNowRecruitOrderByClass(LocalDateTime.now());
+        List<NowRecruit> recruits = recruitRepository.findNowRecruitOrderByClass(
+                LocalDateTime.now());
+
+        return new NowRecruits(recruits);
     }
 
     @Override
-    public List<Recruit> getRecruitIngAndScheduled() {
+    @Cacheable(value = "recruit", key = "'ing'")
+    public List<Long> getRecruitIngAndScheduled() {
         return recruitRepository.findRecruitIngAndScheduled(LocalDateTime.now());
     }
 

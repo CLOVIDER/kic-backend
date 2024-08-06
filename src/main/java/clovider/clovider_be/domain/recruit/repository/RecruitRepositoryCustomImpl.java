@@ -4,7 +4,8 @@ import static clovider.clovider_be.domain.kindergarten.QKindergarten.kindergarte
 import static clovider.clovider_be.domain.recruit.QRecruit.recruit;
 
 import clovider.clovider_be.domain.enums.AgeClass;
-import clovider.clovider_be.domain.recruit.Recruit;
+import clovider.clovider_be.domain.recruit.dto.RecruitResponse;
+import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruit;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.NumberExpression;
@@ -21,22 +22,23 @@ public class RecruitRepositoryCustomImpl implements RecruitRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<Recruit> findNowRecruitOrderByClass(LocalDateTime now) {
+    public List<NowRecruit> findNowRecruitOrderByClass(LocalDateTime now) {
 
         return jpaQueryFactory
                 .selectFrom(recruit)
-                .join(recruit.kindergarten, kindergarten)
-                .fetchJoin()
+                .join(recruit.kindergarten, kindergarten).fetchJoin()
                 .where(recruiting(now).or(scheduledRecruit(now)))
                 .orderBy(recruit.kindergarten.id.asc(), ageOrder().asc())
-                .fetch();
+                .fetch()
+                .stream().map(RecruitResponse::toNowRecruit).toList();
     }
 
     @Override
-    public List<Recruit> findRecruitIngAndScheduled(LocalDateTime now) {
+    public List<Long> findRecruitIngAndScheduled(LocalDateTime now) {
 
         return jpaQueryFactory
-                .selectFrom(recruit)
+                .select(recruit.id)
+                .from(recruit)
                 .where(recruiting(now).or(scheduledRecruit(now)))
                 .fetch();
     }

@@ -118,8 +118,8 @@ public class AdminResponse {
 
         @Schema(description = "신청서 작성일", example = "2024.07.25")
         private String createdAt;
-        @Schema(description = "신청자 아이디", example = "rlagusrua258")
-        private String accountId;
+        @Schema(description = "신청자 이름", example = "김성민")
+        private String nameKo;
         @Schema(description = "신청자 사내 번호", example = "201930303")
         private String employeeNo;
         @Schema(description = "신청서 ID", example = "1")
@@ -132,7 +132,7 @@ public class AdminResponse {
 
         return ApplicationList.builder()
                 .createdAt(TimeUtil.formattedDate(application.getCreatedAt()))
-                .accountId(application.getEmployee().getAccountId())
+                .nameKo(application.getEmployee().getNameKo())
                 .employeeNo(application.getEmployee().getEmployeeNo())
                 .applicationId(application.getId())
                 .isAccept(application.getIsAccept().getDescription())
