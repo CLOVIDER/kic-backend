@@ -66,8 +66,7 @@ public class QnaController {
     @Operation(summary = "Q&A 조회 - Q&A 상세 페이지", description = "특정 Q&A의 세부정보를 조회합니다.")
     @Parameter(name = "qnaId", description = "qna ID", required = true, example = "1")
     @GetMapping("/qnas/{qnaId}")
-    public ApiResponse<QnaResponse> getQna(
-            @PathVariable Long qnaId) {
+    public ApiResponse<QnaResponse> getQna(@PathVariable Long qnaId) {
         return ApiResponse.onSuccess(qnaQueryService.getQna(qnaId));
     }
 
@@ -75,8 +74,8 @@ public class QnaController {
     @GetMapping("/qnas")
     public ApiResponse<CustomPage<QnaResponse>> getAllQnas(
             @RequestParam(defaultValue = "0") @Parameter(description = "페이지 번호") int page,
-            @RequestParam(defaultValue = "10") @Parameter(description = "페이지 크기") int size,
-            @RequestParam SearchType type, @RequestParam(required = false) String keyword) {
+            @RequestParam(defaultValue = "5") @Parameter(description = "페이지 크기") int size,
+            @RequestParam(required = false) SearchType type, @RequestParam(required = false) String keyword) {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<QnaResponse> allQnas = qnaQueryService.getAllQnas(pageRequest, type, keyword);
         return ApiResponse.onSuccess(new CustomPage<> (allQnas));
