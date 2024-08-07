@@ -206,6 +206,13 @@ public class AdminResponse {
 
         @Schema(description = "어린이집의 분반 리스트")
         private List<RecruitClassInfo> classInfoList;
+
+        public static KindergartenClassInfo createEmpty() {
+            return KindergartenClassInfo.builder()
+                    .kindergartenName(null)
+                    .classInfoList(null)
+                    .build();
+        }
     }
 
     @Schema(description = "모집 생성 정보 DTO")
@@ -220,13 +227,17 @@ public class AdminResponse {
 
         @Schema(description = "모집 기간 상세 및 가중치 설정 정보")
         private RecruitDateAndWeightInfo recruitDateAndWeightInfo;
+
+        @Schema(description = "이미 생성된 모집 여부")
+        private Boolean isCreated;
     }
 
     public static RecruitCreationInfo toRecruitCreationInfo(List<KindergartenClassInfo> kindergartenClassInfos,
-            RecruitDateAndWeightInfo recruitDetails) {
+            RecruitDateAndWeightInfo recruitDetails, Boolean isCreated) {
         return RecruitCreationInfo.builder()
                 .kindergartenClassInfoList(kindergartenClassInfos)  // 어린이집 및 분반 정보 리스트
-                .recruitDateAndWeightInfo(recruitDetails)  // 모집 기간 상세 및 가중치 설정 정보
+                .recruitDateAndWeightInfo(recruitDetails) // 모집 기간 상세 및 가중치 설정 정보
+                .isCreated(isCreated)
                 .build();
     }
 
