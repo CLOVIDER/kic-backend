@@ -276,6 +276,17 @@ public class RecruitResponse {
 
         @Schema(description = "2차 등록 마감 기간", example = "2024-08-05T19:03:40")
         private LocalDateTime secondEndDt;
+
+        public static RecruitDateInfo createEmpty() {
+            return RecruitDateInfo.builder()
+                    .recruitStartDt(null)
+                    .recruitEndDt(null)
+                    .firstStartDt(null)
+                    .firstEndDt(null)
+                    .secondStartDt(null)
+                    .secondEndDt(null)
+                    .build();
+        }
     }
 
 
@@ -317,6 +328,18 @@ public class RecruitResponse {
 
         @Schema(description = "형제/자매 가중치 설정 여부 (0 미설정/ 1 설정)", example = "1")
         private Character isSiblingUsage;
+
+        public static RecruitWeightInfo createEmpty() {
+            return RecruitWeightInfo.builder()
+                    .workYearsUsage(null)
+                    .isSingleParentUsage(null)
+                    .childrenCntUsage(null)
+                    .isDisabilityUsage(null)
+                    .isDualIncomeUsage(null)
+                    .isEmployeeCoupleUsage(null)
+                    .isSiblingUsage(null)
+                    .build();
+        }
     }
 
     public static RecruitWeightInfo toRecruitWeightInfo(Recruit recruit) {
@@ -344,6 +367,13 @@ public class RecruitResponse {
 
         @Schema(description = "가중치 설정 상태")
         private RecruitWeightInfo recruitWeightInfo;
+
+        public static RecruitDateAndWeightInfo createEmpty() {
+            return RecruitDateAndWeightInfo.builder()
+                    .recruitDateInfo(RecruitDateInfo.createEmpty())
+                    .recruitWeightInfo(RecruitWeightInfo.createEmpty())
+                    .build();
+        }
     }
 
     public static RecruitDateAndWeightInfo toRecruitDateAndWeightInfo(Recruit recruit) {
