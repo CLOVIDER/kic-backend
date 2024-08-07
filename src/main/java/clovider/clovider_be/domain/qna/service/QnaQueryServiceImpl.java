@@ -5,7 +5,7 @@ import clovider.clovider_be.domain.enums.Role;
 import clovider.clovider_be.domain.enums.SearchType;
 import clovider.clovider_be.domain.qna.Qna;
 import clovider.clovider_be.domain.qna.dto.QnaResponse.BaseQnaResponse;
-import clovider.clovider_be.domain.qna.dto.QnaResponse.DetailedQnaResponse;
+import clovider.clovider_be.domain.qna.dto.QnaResponse.BaseQnaResponse.DetailedQnaResponse;
 import clovider.clovider_be.domain.qna.repository.QnaRepository;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;

@@ -4,7 +4,7 @@ import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.enums.SearchType;
 import clovider.clovider_be.domain.qna.Qna;
 import clovider.clovider_be.domain.qna.dto.QnaResponse.BaseQnaResponse;
-import clovider.clovider_be.domain.qna.dto.QnaResponse.DetailedQnaResponse;
+import clovider.clovider_be.domain.qna.dto.QnaResponse.BaseQnaResponse.DetailedQnaResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

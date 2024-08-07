@@ -6,7 +6,7 @@ import clovider.clovider_be.domain.employee.service.EmployeeQueryService;
 import clovider.clovider_be.domain.qna.Qna;
 import clovider.clovider_be.domain.qna.dto.QnaRequest.QnaAnswerRequest;
 import clovider.clovider_be.domain.qna.dto.QnaRequest.QnaCreateRequest;
-import clovider.clovider_be.domain.qna.dto.QnaResponse.QnaUpdateResponse;
+import clovider.clovider_be.domain.qna.dto.QnaResponse.BaseQnaResponse.QnaUpdateResponse;
 import clovider.clovider_be.domain.qna.repository.QnaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

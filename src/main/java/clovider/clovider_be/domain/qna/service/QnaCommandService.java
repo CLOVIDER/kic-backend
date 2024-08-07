@@ -4,7 +4,7 @@ import clovider.clovider_be.domain.common.CustomResult;
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.qna.dto.QnaRequest.QnaAnswerRequest;
 import clovider.clovider_be.domain.qna.dto.QnaRequest.QnaCreateRequest;
-import clovider.clovider_be.domain.qna.dto.QnaResponse.QnaUpdateResponse;
+import clovider.clovider_be.domain.qna.dto.QnaResponse.BaseQnaResponse.QnaUpdateResponse;
 import org.springframework.stereotype.Service;
 
 @Service
