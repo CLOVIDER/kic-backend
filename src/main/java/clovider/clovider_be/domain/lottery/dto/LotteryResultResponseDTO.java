@@ -24,5 +24,6 @@ public class LotteryResultResponseDTO {
         private clovider.clovider_be.domain.enums.Result result;
         // 해당 어린이집
         String kindergartenNm;
+        Integer waitingNum;
     }
 }

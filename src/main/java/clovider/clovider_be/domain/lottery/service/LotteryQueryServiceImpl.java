@@ -47,7 +47,7 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
         return new LotteryResultResponseDTO(
 
                 new LotteryResultResponseDTO.Result(lottery.getId(), lottery.getCreatedAt(),
-                        lottery.getResult(), KindergartenNm)
+                        lottery.getResult(), KindergartenNm, lottery.getRankNo())
         );
     }
 
