@@ -3,6 +3,7 @@ package clovider.clovider_be.domain.lottery.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.joda.time.DateTime;
 
 import java.time.LocalDateTime;
 
@@ -25,5 +26,6 @@ public class LotteryResultResponseDTO {
         // 해당 어린이집
         String kindergartenNm;
         Integer waitingNum;
+        LocalDateTime endDate;
     }
 }
