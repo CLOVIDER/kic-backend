@@ -23,7 +23,6 @@ jib {
         tags = [project.findProperty('jib.to.tags') ?: 'latest']
     }
     container {
-        entrypoint = ['java', '-Dspring profiles.active=prod', '-jar', 'app.jar']
         ports = ['8080']
         jvmFlags = ['-Xms512m', '-Xmx512m']
         environment = [SPRING_OUTPUT_ANSI_ENABLED: "ALWAYS"]
