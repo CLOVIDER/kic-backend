@@ -34,18 +34,7 @@ public class ApplicationQueryServiceImpl implements ApplicationQueryService {
         Application savedApplication = applicationRepository.findFirstByEmployeeOrderByCreatedAtDesc(employee);
 
         if (savedApplication == null) {
-            return ApplicationResponse.builder()
-                    .id(null)
-                    .employee(null)
-                    .workYears(null)
-                    .isSingleParent(null)
-                    .ChildrenCnt(null)
-                    .isDisability(null)
-                    .isDualIncome(null)
-                    .isEmployeeCouple(null)
-                    .isSibling(null)
-                    .isTemp(null)
-                    .build();
+            return ApplicationResponse.emptyEntity();
         }
 
         return ApplicationResponse.toEntity(savedApplication);

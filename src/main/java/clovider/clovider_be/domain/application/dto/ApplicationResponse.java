@@ -56,4 +56,8 @@ public class ApplicationResponse {
                 .documents(application.getDocuments())
                 .build();
     }
+
+    public static ApplicationResponse emptyEntity() {
+        return new ApplicationResponse();
+    }
 }
