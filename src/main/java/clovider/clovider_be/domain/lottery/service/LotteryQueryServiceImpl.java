@@ -2,7 +2,9 @@ package clovider.clovider_be.domain.lottery.service;
 
 import clovider.clovider_be.domain.admin.dto.AdminResponse.AcceptResult;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.LotteryResult;
+import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.lottery.Lottery;
+import clovider.clovider_be.domain.lottery.dto.LotteryIdAndChildNameDTO;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.ChildInfo;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
@@ -24,6 +26,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static clovider.clovider_be.domain.lottery.service.ConvertStringToList.convertStringToList;
 
 
 @Service
@@ -110,4 +114,33 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
     public Page<LotteryResult> getLotteryResult(Long kindergartenId, Pageable pageable, String value) {
         return lotteryRepository.getLotteryResults(kindergartenId,pageable,value);
     }
+
+    @Override
+    public List<LotteryIdAndChildNameDTO> getLotteryGroupedByChildNameByEmployeeId(Employee employee) {
+        if (employee == null) {
+            throw new ApiException(ErrorStatus._EMPLOYEE_NOT_FOUND);
+        }
+
+        List<Object[]> results = lotteryRepository.findLotteryGroupedByChildNameByEmployee(employee);
+
+        List<LotteryIdAndChildNameDTO> dtoList = new ArrayList<>();
+        for (Object[] result : results) {
+            String childName = (String) result[0];
+            String lotteryIdsStr = (String) result[1];
+            List<Long> lotteryIds = convertStringToList(lotteryIdsStr);
+
+            dtoList.add(LotteryIdAndChildNameDTO.builder()
+                    .childName(childName)
+                    .lotteryIds(lotteryIds)
+                    .build());
+        }
+
+        if (dtoList.isEmpty()) {
+            throw new ApiException(ErrorStatus._APPLICATION_NOT_FOUND);
+        }
+
+        return dtoList;
+    }
+
+
 }

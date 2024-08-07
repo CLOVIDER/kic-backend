@@ -1,11 +1,14 @@
 package clovider.clovider_be.domain.lottery.controller;
 
+import clovider.clovider_be.domain.employee.Employee;
+import clovider.clovider_be.domain.lottery.dto.LotteryIdAndChildNameDTO;
 import clovider.clovider_be.domain.lottery.dto.LotteryResisterResponseDTO;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.ChildInfo;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponseDTO;
 import clovider.clovider_be.domain.lottery.dto.LotteryResultResponseDTO;
 import clovider.clovider_be.domain.lottery.service.LotteryCommandService;
 import clovider.clovider_be.domain.lottery.service.LotteryQueryService;
+import clovider.clovider_be.global.annotation.AuthEmployee;
 import clovider.clovider_be.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -69,6 +72,13 @@ public class LotteryController {
     @GetMapping("/lotteries/children/{applicationId}")
     public ApiResponse<List<ChildInfo>> getChildrenInfos(@PathVariable Long applicationId) {
         return ApiResponse.onSuccess(lotteryQueryService.getChildInfos(applicationId));
+    }
+
+    @Operation(summary = "직원에 따른 아이이름과 그에 맞는 추첨ID 반환")
+    @GetMapping("/lotteries/employee")
+    public ApiResponse<List<LotteryIdAndChildNameDTO>> getLotteryIdAndChildNameByEmployeeId(@AuthEmployee Employee employee) {
+        List<LotteryIdAndChildNameDTO> result = lotteryQueryService.getLotteryGroupedByChildNameByEmployeeId(employee);
+        return ApiResponse.onSuccess(result);
     }
 
 }
