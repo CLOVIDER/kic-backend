@@ -30,6 +30,6 @@ jobs:
       - name: Build and push Docker image
         run: |
           ./gradlew clean jib \
-            -Djib.to.tags=${{ github.sha }} 
+            -Djib.to.tags=${{ github.sha }} \
             -Djib.to.auth.username=${{ secrets.KAKAO_ACCESS_ID }} \
             -Djib.to.auth.password=${{ secrets.KAKAO_ACCESS_SECRET }}
