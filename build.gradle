@@ -20,7 +20,7 @@ jib {
     }
     to {
         image = 'kids-in-company.kr-central-2.kcr.dev/clovider-registry/clovider-be-app'
-        tags = [System.getenv('GITHUB_SHA')?: 'latest']
+        tags = [project.findProperty('jib.to.tags') ?: 'latest']
     }
     container {
         entrypoint = ['java', '-Dspring profiles.active=prod', '-jar', 'app.jar']
