@@ -44,6 +44,7 @@ jobs:
           docker build -t kids-in-company.kr-central-2.kcr.dev/clovider-registry/clovider-be-app:${{ github.sha }} .
           docker push kids-in-company.kr-central-2.kcr.dev/clovider-registry/clovider-be-app:${{ github.sha }}
 
+
   update-manifest-state:
     runs-on: ubuntu-latest
     needs: build-and-push-image
@@ -68,4 +69,5 @@ jobs:
           git config --global user.name "${{ secrets.USERNAME }}"
           git add clovider-app/be-deployment.yaml
           git commit -m "[skip ci] Update image tag to ${{ github.sha }}"
-          git pus
+          git push
+
