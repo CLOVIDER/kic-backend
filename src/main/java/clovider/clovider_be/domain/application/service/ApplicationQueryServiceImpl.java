@@ -7,13 +7,12 @@ import clovider.clovider_be.domain.application.dto.ApplicationResponse;
 import clovider.clovider_be.domain.application.repository.ApplicationRepository;
 import clovider.clovider_be.domain.common.CustomPage;
 import clovider.clovider_be.domain.employee.Employee;
-import clovider.clovider_be.domain.enums.Save;
 import clovider.clovider_be.domain.lottery.service.LotteryQueryService;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Hibernate;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,18 +22,31 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class ApplicationQueryServiceImpl implements ApplicationQueryService {
 
     private final ApplicationRepository applicationRepository;
     private final LotteryQueryService lotteryQueryService;
 
     @Override
+    @Cacheable(value = "myApplication", key="#employee.id")
     public ApplicationResponse applicationRead(Employee employee) {
-        Application savedApplication = applicationRepository.findFirstByEmployeeOrderByCreatedAtDesc(
-                employee).orElseThrow(
-                () -> new ApiException(ErrorStatus._APPLICATION_NOT_CREATED)
-        );
+        Application savedApplication = applicationRepository.findFirstByEmployeeOrderByCreatedAtDesc(employee);
+
+        if (savedApplication == null) {
+            return ApplicationResponse.builder()
+                    .id(null)
+                    .employee(null)
+                    .workYears(null)
+                    .isSingleParent(null)
+                    .ChildrenCnt(null)
+                    .isDisability(null)
+                    .isDualIncome(null)
+                    .isEmployeeCouple(null)
+                    .isSibling(null)
+                    .isTemp(null)
+                    .build();
+        }
 
         return ApplicationResponse.toEntity(savedApplication);
     }
@@ -46,8 +58,9 @@ public class ApplicationQueryServiceImpl implements ApplicationQueryService {
         return applicationRepository.getApplicationPage(applicationIds, pageable, searchVO);
     }
 
+    @Override
     public ApplicationResponse applicationIdRead(
-            Long Id) { //applicationId 기반 말고 유저 기반 정보를 가져오는 것이 필요
+            Long Id) {
         Application savedApplication = applicationRepository.findById(Id).orElseThrow(
                 () -> new ApiException(ErrorStatus._APPLICATION_NOT_FOUND)
         );
