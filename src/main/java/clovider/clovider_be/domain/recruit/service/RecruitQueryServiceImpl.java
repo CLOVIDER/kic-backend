@@ -84,6 +84,7 @@ public class RecruitQueryServiceImpl implements RecruitQueryService {
     public RecruitCreationInfo getRecruitCreationInfo() {
         List<Recruit> nowRecruit = getRecruitAndKindergarten();
 
+        // 현재 생성돼있는 모집이 없을 시
         if (nowRecruit.isEmpty()) {
             return createEmptyRecruitCreationInfo();
         }
@@ -92,6 +93,7 @@ public class RecruitQueryServiceImpl implements RecruitQueryService {
     }
 
     private RecruitCreationInfo createEmptyRecruitCreationInfo() {
+        // 빈 응답 생성 메소드를 DTO 클래스로 분리
         RecruitDateAndWeightInfo recruitDateAndWeightInfo = RecruitDateAndWeightInfo.createEmpty();
         KindergartenClassInfo emptyKindergartenClassInfo = KindergartenClassInfo.createEmpty();
         List<KindergartenClassInfo> kindergartenClassInfoList = Collections.singletonList(emptyKindergartenClassInfo);
@@ -100,6 +102,7 @@ public class RecruitQueryServiceImpl implements RecruitQueryService {
     }
 
     private RecruitCreationInfo createRecruitCreationInfoForNonEmpty(List<Recruit> nowRecruit) {
+        // 기존 응답 생성 로직
         Map<String, List<Recruit>> groupByKindergarten = nowRecruit.stream()
                 .collect(Collectors.groupingBy(recruit -> recruit.getKindergarten().getKindergartenNm()));
 
