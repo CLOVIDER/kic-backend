@@ -30,13 +30,6 @@ jib {
         labels = [Iversion: project.version, name: project.name, group: project.group]
         format = 'Docker'
     }
-    extraDirectories {
-        paths {
-            path {
-                from = file('build/libs')
-            }
-        }
-    }
 }
 
 configurations {
