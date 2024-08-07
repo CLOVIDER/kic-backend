@@ -28,8 +28,6 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
 
     @Override
     public CustomResult applicationCreate(ApplicationRequest applicationRequest, Employee employee) {
-
-
         Application savedApplication = Application.builder()
                 .employee(employee)
                 .workYears(LocalDate.now().getYear() - employee.getJoinDt().getYear()) //현재 년도 - 입사 년도
@@ -42,9 +40,7 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
                 .isTemp(Save.APPLIED)
                 .build();
 
-        applicationRepository.save(
-                savedApplication
-        );
+        applicationRepository.save(savedApplication);
 
         applicationDocumentCommandService.createApplicationDocuments(applicationRequest.getImageUrls(), savedApplication);
 

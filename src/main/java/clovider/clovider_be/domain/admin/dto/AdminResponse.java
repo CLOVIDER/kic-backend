@@ -241,5 +241,13 @@ public class AdminResponse {
                 .build();
     }
 
+    public static RecruitCreationInfo toRecruitCreationInfo(List<KindergartenClassInfo> kindergartenClassInfos,
+            RecruitDateAndWeightInfo recruitDetails) {
+        return RecruitCreationInfo.builder()
+                .kindergartenClassInfoList(kindergartenClassInfos)  // 어린이집 및 분반 정보 리스트
+                .recruitDateAndWeightInfo(recruitDetails)  // 모집 기간 상세 및 가중치 설정 정보
+                .build();
+    }
+
 
 }

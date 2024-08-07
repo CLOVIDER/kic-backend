@@ -8,6 +8,8 @@ import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.enums.SearchType;
 import clovider.clovider_be.domain.qna.dto.QnaRequest;
 import clovider.clovider_be.domain.qna.dto.QnaResponse.BaseQnaResponse;
+import clovider.clovider_be.domain.qna.dto.QnaResponse.BaseQnaResponse.DetailedQnaResponse;
+import clovider.clovider_be.domain.qna.dto.QnaResponse.BaseQnaResponse.QnaUpdateResponse;
 import clovider.clovider_be.domain.qna.dto.QnaResponse.DetailedQnaResponse;
 import clovider.clovider_be.domain.qna.dto.QnaResponse.QnaUpdateResponse;
 import clovider.clovider_be.domain.qna.service.QnaCommandService;

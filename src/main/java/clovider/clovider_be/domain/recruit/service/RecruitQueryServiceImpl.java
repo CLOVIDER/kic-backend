@@ -113,6 +113,7 @@ public class RecruitQueryServiceImpl implements RecruitQueryService {
                 .collect(Collectors.toList());
 
         return AdminResponse.toRecruitCreationInfo(kindergartenClassInfoList, recruitDateAndWeightInfo, true);
+
     }
 
     private RecruitDateAndWeightInfo getRecruitDateAndWeightInfo(Long recruitId) {

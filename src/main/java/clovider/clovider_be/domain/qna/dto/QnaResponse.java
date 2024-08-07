@@ -15,6 +15,7 @@ public class QnaResponse {
     @NoArgsConstructor
     @SuperBuilder
     public static class BaseQnaResponse {
+
         private Long qnaId;
         private String title;
         private String question;
@@ -34,41 +35,41 @@ public class QnaResponse {
                     .createdAt(qna.getCreatedAt().toLocalDate())
                     .build();
         }
-    }
 
-    // 답변을 포함하는 DTO
-    @Getter
-    @SuperBuilder
-    public static class DetailedQnaResponse extends BaseQnaResponse {
-        private final String answer;
-        private final Boolean isAuthor;
+        // 답변을 포함하는 DTO
+        @Getter
+        @SuperBuilder
+        public static class DetailedQnaResponse extends BaseQnaResponse {
 
-        public static DetailedQnaResponse fromQna(Qna qna, Long employeeId) {
-            return DetailedQnaResponse.builder()
-                    .qnaId(qna.getId())
-                    .title(qna.getTitle())
-                    .question(qna.getQuestion())
-                    .isAnswerPresent(qna.getAnswer() != null)
-                    .isVisibility(qna.getIsVisibility())
-                    .writerName(qna.getEmployee().getNameKo())
-                    .createdAt(qna.getCreatedAt().toLocalDate())
-                    .answer(qna.getAnswer())
-                    .isAuthor(qna.getEmployee().getId().equals(employeeId))
-                    .build();
+            private final String answer;
+            private final Boolean isAuthor;
+
+            public static DetailedQnaResponse fromQna(Qna qna, Long employeeId) {
+                return DetailedQnaResponse.builder()
+                        .qnaId(qna.getId())
+                        .title(qna.getTitle())
+                        .question(qna.getQuestion())
+                        .isAnswerPresent(qna.getAnswer() != null)
+                        .isVisibility(qna.getIsVisibility())
+                        .writerName(qna.getEmployee().getNameKo())
+                        .createdAt(qna.getCreatedAt().toLocalDate())
+                        .answer(qna.getAnswer())
+                        .isAuthor(qna.getEmployee().getId().equals(employeeId))
+                        .build();
+            }
+        }
+
+        @Builder
+        @Getter
+        @AllArgsConstructor
+        @NoArgsConstructor
+        public static class QnaUpdateResponse {
+
+            private Long qnaId;
+
+            public static QnaUpdateResponse of(Long qnaId) {
+                return QnaUpdateResponse.builder().qnaId(qnaId).build();
+            }
         }
     }
-
-    @Builder
-    @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class QnaUpdateResponse {
-
-        private Long qnaId;
-
-        public static QnaUpdateResponse of(Long qnaId) {
-            return QnaUpdateResponse.builder().qnaId(qnaId).build();
-        }
-    }
-
 }
