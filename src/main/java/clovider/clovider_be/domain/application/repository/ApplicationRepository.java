@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 public interface ApplicationRepository extends JpaRepository<Application, Long>,
         ApplicationRepositoryCustom {
 
-    Optional<Application> findFirstByEmployeeOrderByCreatedAtDesc(Employee employee);
+   Application findFirstByEmployeeOrderByCreatedAtDesc(Employee employee);
 
     @Query("select a from Application a join fetch a.employee where a.id = :applicationId")
     Application findApplicationWithEmployee(Long applicationId);

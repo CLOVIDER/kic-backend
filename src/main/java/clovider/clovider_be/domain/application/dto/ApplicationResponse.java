@@ -4,6 +4,7 @@ import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.document.Document;
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.enums.Accept;
+import clovider.clovider_be.domain.enums.Save;
 import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.ChildInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -34,6 +35,7 @@ public class ApplicationResponse {
     private Character isEmployeeCouple;
     private Character isSibling;
     private Accept isAccept;
+    private Save isTemp;
 
     private List<Document> documents;
 
@@ -50,7 +52,12 @@ public class ApplicationResponse {
                 .isEmployeeCouple(application.getIsEmployeeCouple())
                 .isSibling(application.getIsSibling())
                 .isAccept(application.getIsAccept())
+                .isTemp(application.getIsTemp())
                 .documents(application.getDocuments())
                 .build();
+    }
+
+    public static ApplicationResponse emptyEntity() {
+        return new ApplicationResponse();
     }
 }
