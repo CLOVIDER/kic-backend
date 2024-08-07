@@ -14,7 +14,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface LotteryQueryService {
 
-    LotteryResultResponseDTO getLotteryResult(Long lotteryId);
+    LotteryResultResponseDTO getLotteryResultByLotteryId(Long lotteryId);
 
     List<CompetitionRate> getRecruitRates(List<NowRecruit> recruits);
 
@@ -30,5 +30,5 @@ public interface LotteryQueryService {
 
     List<ChildInfo> getChildInfos(Long applicationId);
 
-    Page<LotteryResult> getLotteryResult(Long kindergartenId, Pageable pageable, String value);
+    Page<LotteryResult> getLotteryResultByLotteryId(Long kindergartenId, Pageable pageable, String value);
 }

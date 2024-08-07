@@ -2,6 +2,7 @@ package clovider.clovider_be.domain.lottery.service;
 
 import clovider.clovider_be.domain.admin.dto.AdminResponse.AcceptResult;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.LotteryResult;
+import clovider.clovider_be.domain.application.repository.ApplicationRepository;
 import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.ChildInfo;
@@ -33,18 +34,23 @@ import org.springframework.transaction.annotation.Transactional;
 public class LotteryQueryServiceImpl implements LotteryQueryService {
 
     private final LotteryRepository lotteryRepository;
+    private final ApplicationRepository applicationRepository;
 
     @Override
-    public LotteryResultResponseDTO getLotteryResult(Long lotteryId) {
+    public LotteryResultResponseDTO getLotteryResultByLotteryId(Long lotteryId) {
         Lottery lottery = lotteryRepository.findById(lotteryId)
                 .orElseThrow(() -> new ApiException(ErrorStatus._LOTTERY_NOT_FOUND));
 
+
+        String KindergartenNm = applicationRepository.findKindergartenNameByLotteryId(lotteryId);
+
         return new LotteryResultResponseDTO(
-                "추첨 결과가 성공적으로 조회되었습니다.",
+
                 new LotteryResultResponseDTO.Result(lottery.getId(), lottery.getCreatedAt(),
-                        lottery.getResult())
+                        lottery.getResult(), KindergartenNm)
         );
     }
+
 
     @Override
     public List<CompetitionRate> getRecruitRates(List<NowRecruit> recruits) {
@@ -107,7 +113,7 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
     }
 
     @Override
-    public Page<LotteryResult> getLotteryResult(Long kindergartenId, Pageable pageable, String value) {
+    public Page<LotteryResult> getLotteryResultByLotteryId(Long kindergartenId, Pageable pageable, String value) {
         return lotteryRepository.getLotteryResults(kindergartenId,pageable,value);
     }
 }

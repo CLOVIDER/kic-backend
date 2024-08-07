@@ -222,7 +222,7 @@ public class AdminController {
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
             @RequestParam(name = "accountId", required = false) String value) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Page<LotteryResult> lotteryResultPage = lotteryQueryService.getLotteryResult(kindergartenId,
+        Page<LotteryResult> lotteryResultPage = lotteryQueryService.getLotteryResultByLotteryId(kindergartenId,
                 pageRequest, value);
 
         return ApiResponse.onSuccess(new CustomPage<>(lotteryResultPage));
