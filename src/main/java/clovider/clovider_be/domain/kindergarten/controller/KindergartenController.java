@@ -46,7 +46,7 @@ public class KindergartenController {
             + "\n kindergartenImages: 어린이집 이미지(List<String(url)>)")
     @PostMapping("/admin/kindergartens")
     public ApiResponse<KindergartenRegisterResponse> registerKindergarten(
-            KindergartenRegisterRequest request) {
+            @RequestBody KindergartenRegisterRequest request) {
 
         KindergartenRegisterResponse result = kindergartenCommandService.registerKindergarten(request);
 
@@ -74,7 +74,7 @@ public class KindergartenController {
     @Parameter(name = "kindergartenId", description = "어린이집 ID", required = true, example = "1")
     @PatchMapping("/admin/kindergartens/{kindergartenId}")
     public ApiResponse<KindergartenUpdateResponse> updateKindergarten(
-            KindergartenUpdateRequest request,
+            @RequestBody KindergartenUpdateRequest request,
             @PathVariable("kindergartenId") Long kindergartenId) {
 
         KindergartenUpdateResponse result = kindergartenCommandService.updateKindergarten(kindergartenId, request);
