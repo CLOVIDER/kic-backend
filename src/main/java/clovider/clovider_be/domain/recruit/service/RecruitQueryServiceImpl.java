@@ -16,6 +16,7 @@ import clovider.clovider_be.domain.recruit.repository.RecruitRepository;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -83,18 +84,36 @@ public class RecruitQueryServiceImpl implements RecruitQueryService {
     public RecruitCreationInfo getRecruitCreationInfo() {
         List<Recruit> nowRecruit = getRecruitAndKindergarten();
 
-        // 어린이집 이름으로 그룹핑 - 어린이집 별 모집 리스트 조회
+        // 현재 생성돼있는 모집이 없을 시
+        if (nowRecruit.isEmpty()) {
+            return createEmptyRecruitCreationInfo();
+        }
+
+        return createRecruitCreationInfoForNonEmpty(nowRecruit);
+    }
+
+    private RecruitCreationInfo createEmptyRecruitCreationInfo() {
+        // 빈 응답 생성 메소드를 DTO 클래스로 분리
+        RecruitDateAndWeightInfo recruitDateAndWeightInfo = RecruitDateAndWeightInfo.createEmpty();
+        KindergartenClassInfo emptyKindergartenClassInfo = KindergartenClassInfo.createEmpty();
+        List<KindergartenClassInfo> kindergartenClassInfoList = Collections.singletonList(emptyKindergartenClassInfo);
+
+        return AdminResponse.toRecruitCreationInfo(kindergartenClassInfoList, recruitDateAndWeightInfo, false);
+    }
+
+    private RecruitCreationInfo createRecruitCreationInfoForNonEmpty(List<Recruit> nowRecruit) {
+        // 기존 응답 생성 로직
         Map<String, List<Recruit>> groupByKindergarten = nowRecruit.stream()
                 .collect(Collectors.groupingBy(recruit -> recruit.getKindergarten().getKindergartenNm()));
 
-        // 진행중인 모집들의 기간 정보 및 가중치 설정은 동일하므로 첫번째 모집의 정보를 조회
         RecruitDateAndWeightInfo recruitDateAndWeightInfo = getRecruitDateAndWeightInfo(nowRecruit.get(0).getId());
 
         List<KindergartenClassInfo> kindergartenClassInfoList = groupByKindergarten.entrySet().stream()
                 .map(entry -> createKindergartenClassInfo(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
 
-        return AdminResponse.toRecruitCreationInfo(kindergartenClassInfoList, recruitDateAndWeightInfo);
+        return AdminResponse.toRecruitCreationInfo(kindergartenClassInfoList, recruitDateAndWeightInfo, true);
+
     }
 
     private RecruitDateAndWeightInfo getRecruitDateAndWeightInfo(Long recruitId) {

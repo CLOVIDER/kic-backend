@@ -28,10 +28,7 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
 
     @Override
     public CustomResult applicationCreate(ApplicationRequest applicationRequest, Employee employee) {
-
-
-        Application savedApplication = applicationRepository.save(
-                Application.builder()
+        Application savedApplication = Application.builder()
                 .employee(employee)
                 .workYears(LocalDate.now().getYear() - employee.getJoinDt().getYear()) //현재 년도 - 입사 년도
                 .isSingleParent(applicationRequest.getIsSingleParent())
@@ -41,8 +38,9 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
                 .isEmployeeCouple(applicationRequest.getIsEmployeeCouple())
                 .isSibling(applicationRequest.getIsSibling())
                 .isTemp(Save.APPLIED)
-                .build()
-        );
+                .build();
+
+        applicationRepository.save(savedApplication);
 
         applicationDocumentCommandService.createApplicationDocuments(applicationRequest.getImageUrls(), savedApplication);
 
