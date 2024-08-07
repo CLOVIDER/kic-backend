@@ -1,10 +1,7 @@
 package clovider.clovider_be.domain.lottery.controller;
 
-import clovider.clovider_be.domain.lottery.dto.LotteryResisterResponseDTO;
+import clovider.clovider_be.domain.lottery.dto.*;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.ChildInfo;
-import clovider.clovider_be.domain.lottery.dto.LotteryResponseDTO;
-import clovider.clovider_be.domain.lottery.dto.LotteryResultByEmployeeDTO;
-import clovider.clovider_be.domain.lottery.dto.LotteryResultResponseDTO;
 import clovider.clovider_be.domain.lottery.service.LotteryCommandService;
 import clovider.clovider_be.domain.lottery.service.LotteryQueryService;
 import clovider.clovider_be.global.response.ApiResponse;
@@ -75,8 +72,10 @@ public class LotteryController {
     @Operation(summary = "추첨 결과조회 ", description = "유저가 본인의 추첨에 대한 결과를 조회합니다.")
     @Parameter(name = "employeeId", description = "직원 ID")
     @GetMapping("/lottery/results/{employeeId}")
-    public List<LotteryResultByEmployeeDTO> getLotteryResultsByEmployeeId(@PathVariable Long employeeId) {
-        return ApiResponse.onSuccess(lotteryQueryService.getLotteryResultsByEmployeeId(employeeId)).getResult();
+    public List<LotteryResultsGroupedByChildDTO> getLotteryResultsByEmployeeId(@PathVariable Long employeeId) {
+        List<LotteryResultsGroupedByChildDTO> results = lotteryQueryService.getLotteryResultsByEmployeeId(employeeId);
+
+        return ApiResponse.onSuccess(results).getResult();
     }
 
 }

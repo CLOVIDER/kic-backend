@@ -13,6 +13,7 @@ import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitInfo;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitResult;
 import clovider.clovider_be.domain.lottery.dto.LotteryResultByEmployeeDTO;
 import clovider.clovider_be.domain.lottery.dto.LotteryResultResponseDTO;
+import clovider.clovider_be.domain.lottery.dto.LotteryResultsGroupedByChildDTO;
 import clovider.clovider_be.domain.lottery.repository.LotteryRepository;
 import clovider.clovider_be.domain.recruit.Recruit;
 import clovider.clovider_be.global.exception.ApiException;
@@ -116,7 +117,7 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
     }
 
     @Override
-    public List<LotteryResultByEmployeeDTO> getLotteryResultsByEmployeeId(Long employeeId) {
+    public List<LotteryResultsGroupedByChildDTO> getLotteryResultsByEmployeeId(Long employeeId) {
         if (employeeId == null) {
             throw new ApiException(ErrorStatus._EMPLOYEE_NOT_FOUND);
         }
@@ -127,27 +128,26 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
             throw new ApiException(ErrorStatus._APPLICATION_NOT_FOUND);
         }
 
-        return applications.stream()
+        Map<String, List<LotteryResultByEmployeeDTO>> groupedResults = applications.stream()
                 .flatMap(application -> lotteryRepository.findByApplicationId(application.getId()).stream())
-                .map(lottery -> {
-                    LotteryResultByEmployeeDTO dto = new LotteryResultByEmployeeDTO();
-                    dto.setApplicationId(lottery.getApplication().getId());
-                    dto.setRecruitId(lottery.getRecruit().getId());
-                    dto.setChildName(lottery.getChildNm());
-                    dto.setKindergartenNm(lottery.getRecruit().getKindergarten().getKindergartenNm());
-                    dto.setAgeClass(lottery.getRecruit().getAgeClass());
+                .map(lottery -> LotteryResultByEmployeeDTO.builder()
+                        .applicationId(lottery.getApplication().getId())
+                        .recruitId(lottery.getRecruit().getId())
+                        .childName(lottery.getChildNm())
+                        .kindergartenName(lottery.getRecruit().getKindergarten().getKindergartenNm())
+                        .ageClass(lottery.getRecruit().getAgeClass())
+                        .result(lottery.getResult().name())
+                        .waitingNumber(lottery.getResult() == Result.LOSE ? lottery.getRankNo() : null)
+                        .build())
+                .collect(Collectors.groupingBy(LotteryResultByEmployeeDTO::getChildName));
 
-                    if (lottery.getResult() == Result.WIN) {
-                        dto.setResult("WIN");
-                    } else if (lottery.getResult() == Result.LOSE){
-                        dto.setResult("LOSE");
-                        dto.setWaitingNumber(lottery.getRankNo());
-                    }
-                    else {
-                        dto.setResult("WAIT");
-                    }
-                    return dto;
-                })
+        return groupedResults.entrySet().stream()
+                .map(entry -> LotteryResultsGroupedByChildDTO.builder()
+                        .childName(entry.getKey())
+                        .lotteryResults(entry.getValue())
+                        .build())
                 .collect(Collectors.toList());
     }
+
+
 }

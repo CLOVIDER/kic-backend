@@ -2,9 +2,11 @@ package clovider.clovider_be.domain.lottery.dto;
 
 import clovider.clovider_be.domain.enums.AgeClass;
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class LotteryResultByEmployeeDTO {
 
     private Long applicationId;
@@ -16,31 +18,4 @@ public class LotteryResultByEmployeeDTO {
     private AgeClass ageClass;
 
 
-    public void setKindergartenNm(String kindergartenNm) {
-        this.kindergartenName = kindergartenNm;
-    }
-
-    public void setAgeClass(AgeClass ageClass) {
-        this.ageClass = ageClass;
-    }
-
-    public void setRecruitId(Long recruitId) {
-        this.recruitId = recruitId;
-    }
-
-    public void setChildName(String childName) {
-        this.childName = childName;
-    }
-
-    public void setResult(String result) {
-        this.result = result;
-    }
-
-    public void setWaitingNumber(Integer waitingNumber) {
-        this.waitingNumber = waitingNumber;
-    }
-
-    public void setApplicationId(Long applicationId) {
-        this.applicationId = applicationId;
-    }
 }
