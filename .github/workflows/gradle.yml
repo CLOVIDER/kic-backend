@@ -2,7 +2,7 @@ name: Build and Push Docker Image with Jib
 
 on:
   push:
-    branches: ["fix/CLO-71-build"]
+    branches: ["Fix/CLO-71-build"]
 permissions:
   contents: read
 
