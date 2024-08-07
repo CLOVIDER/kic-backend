@@ -4,6 +4,7 @@ import clovider.clovider_be.domain.admin.dto.AdminResponse.AcceptResult;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.LotteryResult;
 import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.application.repository.ApplicationRepository;
+import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.enums.Result;
 import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse;
@@ -117,12 +118,12 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
     }
 
     @Override
-    public List<LotteryResultsGroupedByChildDTO> getLotteryResultsByEmployeeId(Long employeeId) {
-        if (employeeId == null) {
+    public List<LotteryResultsGroupedByChildDTO> getLotteryResultsByEmployeeId(Employee employee) {
+        if (employee == null) {
             throw new ApiException(ErrorStatus._EMPLOYEE_NOT_FOUND);
         }
 
-        List<Application> applications = applicationRepository.findAllByEmployeeId(employeeId);
+        List<Application> applications = applicationRepository.findAllByEmployee(employee);
 
         if (applications.isEmpty()) {
             throw new ApiException(ErrorStatus._APPLICATION_NOT_FOUND);

@@ -16,5 +16,5 @@ public interface ApplicationRepository extends JpaRepository<Application, Long>,
     @Query("select a from Application a join fetch a.employee where a.id = :applicationId")
     Application findApplicationWithEmployee(Long applicationId);
 
-    List<Application> findAllByEmployeeId(Long employeeId);
+    List<Application> findAllByEmployee(Employee employee);
 }

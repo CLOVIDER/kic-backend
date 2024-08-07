@@ -2,6 +2,7 @@ package clovider.clovider_be.domain.lottery.service;
 
 import clovider.clovider_be.domain.admin.dto.AdminResponse.AcceptResult;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.LotteryResult;
+import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.ChildInfo;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitResult;
@@ -33,5 +34,5 @@ public interface LotteryQueryService {
 
     Page<LotteryResult> getLotteryResult(Long kindergartenId, Pageable pageable, String value);
 
-    List<LotteryResultsGroupedByChildDTO> getLotteryResultsByEmployeeId(Long employeeId);
+    List<LotteryResultsGroupedByChildDTO> getLotteryResultsByEmployeeId(Employee employee);
 }
