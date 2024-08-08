@@ -85,7 +85,7 @@ public class ApplicationController {
         return ApiResponse.onSuccess(applicationCommandService.applicationTempSave(dto, employee));
     }
 
-    @Operation(summary = "관리자 신청서 승인 API", description = "acceptRequest 값을 body로 '0' 또는 '1로' 입력받습니다. 0 이면 미승인 처리, 1 이면 승인 처리로 수정됩니다.")
+    @Operation(summary = "관리자 신청서 승인 API", description = "")
     @PatchMapping("/admin/applications/{applicationId}/{accept}")
     public ApiResponse<CustomResult> acceptApplication(@PathVariable Long applicationId, @PathVariable Accept accept
     ) {
