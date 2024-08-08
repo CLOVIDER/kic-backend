@@ -12,9 +12,8 @@ import clovider.clovider_be.domain.qna.Qna;
 import clovider.clovider_be.domain.qna.dto.QnaResponse.BaseQnaResponse;
 import clovider.clovider_be.domain.qna.dto.QnaResponse.BaseQnaResponse.DetailedQnaResponse;
 import clovider.clovider_be.domain.qna.repository.QnaRepository;
-import java.lang.reflect.Field;
+import clovider.clovider_be.domain.utils.TestUtils;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -44,58 +43,12 @@ class QnaQueryServiceImplTest {
 
     @BeforeEach
     void setup() {
-        admin = Employee.builder()
-                .id(1L)
-                .nameKo("홍길동")
-                .accountId("hong123")
-                .password("securePassword")
-                .employeeNo("E001")
-                .joinDt(LocalDate.of(2022, 1, 1))
-                .dept("IT")
-                .role(Role.ADMIN)
-                .build();
-
-        employee = Employee.builder()
-                .id(2L)
-                .nameKo("직원1")
-                .accountId("admin1")
-                .password("admin2")
-                .employeeNo("E002")
-                .joinDt(LocalDate.of(2023, 1, 1))
-                .dept("IT")
-                .role(Role.EMPLOYEE)
-                .build();
-
+        admin = TestUtils.createEmployee(1L, "홍길동", "hong123", "securePassword", "E001", LocalDate.of(2022, 1, 1), "IT", Role.ADMIN);
+        employee = TestUtils.createEmployee(2L, "직원1", "admin1", "admin2", "E002", LocalDate.of(2023, 1, 1), "IT", Role.EMPLOYEE);
     }
 
     private Qna createQna() throws NoSuchFieldException, IllegalAccessException {
-        Qna qna = Qna.builder()
-                .id(1L)
-                .title("문제입니다")
-                .answer(null)
-                .question("문제가 있어요")
-                .employee(employee)
-                .isVisibility('1')
-                .build();
-
-        setTimeField(qna, "createdAt", LocalDateTime.now().minusDays(2));
-        setTimeField(qna, "updatedAt", LocalDateTime.now());
-
-        return qna;
-    }
-
-    private void setTimeField(Object obj, String fieldName, Object value) throws NoSuchFieldException, IllegalAccessException {
-        Class<?> superclass = obj.getClass().getSuperclass();
-        Field field = superclass.getDeclaredField(fieldName);
-        field.setAccessible(true);
-        field.set(obj, value);
-    }
-
-    private void setField(Object obj, String fieldName, Object value)
-            throws NoSuchFieldException, IllegalAccessException {
-        Field field = obj.getClass().getDeclaredField(fieldName);
-        field.setAccessible(true); // Make the field accessible
-        field.set(obj, value);
+        return TestUtils.createQna(1L, employee);
     }
 
     @Test

@@ -1,5 +1,6 @@
 package clovider.clovider_be.domain.qna.service;
 
+import static clovider.clovider_be.domain.utils.TestUtils.setField;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -15,7 +16,7 @@ import clovider.clovider_be.domain.qna.dto.QnaRequest.QnaAnswerRequest;
 import clovider.clovider_be.domain.qna.dto.QnaRequest.QnaCreateRequest;
 import clovider.clovider_be.domain.qna.dto.QnaResponse.BaseQnaResponse.QnaUpdateResponse;
 import clovider.clovider_be.domain.qna.repository.QnaRepository;
-import java.lang.reflect.Field;
+import clovider.clovider_be.domain.utils.TestUtils;
 import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -41,43 +42,12 @@ class QnaCommandServiceImplTest {
 
     @BeforeEach
     void setup() {
-        admin = Employee.builder()
-                .nameKo("홍길동")
-                .accountId("hong123")
-                .password("securePassword")
-                .employeeNo("E001")
-                .joinDt(LocalDate.of(2022, 1, 1))
-                .dept("IT")
-                .role(Role.ADMIN)
-                .build();
-
-        employee = Employee.builder()
-                .nameKo("직원1")
-                .accountId("admin1")
-                .password("admin2")
-                .employeeNo("E002")
-                .joinDt(LocalDate.of(2023, 1, 1))
-                .dept("IT")
-                .role(Role.EMPLOYEE)
-                .build();
-
+        admin = TestUtils.createEmployee(1L, "홍길동", "hong123", "securePassword", "E001", LocalDate.of(2022, 1, 1), "IT", Role.ADMIN);
+        employee = TestUtils.createEmployee(2L, "직원1", "admin1", "admin2", "E002", LocalDate.of(2023, 1, 1), "IT", Role.EMPLOYEE);
     }
 
-    private Qna createQna(){
-        return Qna.builder()
-                .id(1L)
-                .title("문제입니다")
-                .answer(null)
-                .question("문제가 있어요")
-                .employee(employee)
-                .isVisibility('1')
-                .build();
-    }
-
-    private void setField(Object obj, String fieldName, Object value) throws NoSuchFieldException, IllegalAccessException {
-        Field field = obj.getClass().getDeclaredField(fieldName);
-        field.setAccessible(true); // Make the field accessible
-        field.set(obj, value);
+    private Qna createQna() throws NoSuchFieldException, IllegalAccessException {
+        return TestUtils.createQna(1L, employee);
     }
 
     @Test
