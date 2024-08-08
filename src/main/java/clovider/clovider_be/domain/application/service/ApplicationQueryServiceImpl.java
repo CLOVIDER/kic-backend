@@ -31,7 +31,6 @@ public class ApplicationQueryServiceImpl implements ApplicationQueryService {
     private final LotteryQueryService lotteryQueryService;
 
     @Override
-    @Cacheable(value = "myApplication", key="#employee.id")
     public ApplicationResponse applicationRead(Employee employee) {
         Application savedApplication = applicationRepository.findFirstByEmployeeOrderByCreatedAtDesc(employee);
 
