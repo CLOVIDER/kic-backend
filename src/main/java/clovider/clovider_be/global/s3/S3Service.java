@@ -134,22 +134,14 @@ public class S3Service {
 
         long startTime = System.currentTimeMillis();
 
-        String uuid = UUID.randomUUID().toString();
-
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(file.getSize());
         metadata.setContentType(file.getContentType());
 
-        try {
-            amazonS3Client.putObject(bucket, folder + fileName, file.getInputStream(), metadata);
-        } catch (IOException e) {
-            throw new RuntimeException();
-        }
+        future.complete(uploadToS3(file, folder, fileName));
 
         long endTime = System.currentTimeMillis();
         log.info("{} - 실행 시간: {}", Thread.currentThread().getName(), endTime - startTime);
-
-        future.complete(amazonS3Client.getUrl(bucket, uuid).toString());
 
         return future;
     }

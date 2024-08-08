@@ -22,6 +22,7 @@ public class ImageService {
         }
 
         List<String> urls = new ArrayList<>();
+
         futures.forEach(future ->
                 urls.add(future.join())
         );
