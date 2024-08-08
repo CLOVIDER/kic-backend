@@ -75,7 +75,7 @@ public class LotteryController {
         return ApiResponse.onSuccess(lotteryQueryService.getChildInfos(applicationId));
     }
 
-    @Operation(summary = "아이 리스트 정보 조회 - 신청서 조회 페이지", description = "특정 신청서에 제출된 아이 리스트 정보를 조회합니다.")
+    @Operation(summary = "아이 리스트 정보 조회 - 신청서 조회 페이지", description = "사용자 신청서에 제출된 아이 리스트 정보를 조회합니다.")
     @GetMapping("/lotteries/children")
     public ApiResponse<List<ChildInfo>> getChildrenInfosUsingToken(@AuthEmployee Employee employee) {
         Long applicationId = applicationQueryService.getApplicationId(employee);
