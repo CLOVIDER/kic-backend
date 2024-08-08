@@ -203,9 +203,8 @@ public class AdminController {
 
     @Operation(summary = "모집 생성", description = "관리자가 모집을 생성합니다.")
     @PostMapping("/recruit")
-    public ApiResponse<RecruitCreateResponseDTO> createRecruit(
-            @RequestBody RecruitCreateRequestDTO requestDTO) {
-        RecruitCreateResponseDTO responseDTO = recruitCommandService.createRecruit(requestDTO);
+    public ApiResponse<RecruitCreationInfo> createRecruit(@RequestBody RecruitCreateRequestDTO requestDTO) {
+        RecruitCreationInfo responseDTO = recruitCommandService.createRecruit(requestDTO);
         return ApiResponse.onSuccess(responseDTO);
     }
 
