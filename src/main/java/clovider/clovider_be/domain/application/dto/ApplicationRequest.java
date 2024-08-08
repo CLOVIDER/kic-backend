@@ -60,5 +60,5 @@ public class ApplicationRequest {
             + "      \"MULTI_CHILDREN\": \"s3-5\",\n"
             + "      \"SIBLING\": \"s3-6\"\n"
             + "    }")
-    private Map<DocumentType, String> imageUrls;
+    private Map<DocumentType, String> fileUrls;
 }
