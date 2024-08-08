@@ -6,6 +6,8 @@ import clovider.clovider_be.domain.admin.dto.AdminResponse.AcceptResult;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
 import clovider.clovider_be.domain.lottery.repository.LotteryRepository;
 import clovider.clovider_be.domain.recruit.Recruit;
+import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruit;
+import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruits;
 import clovider.clovider_be.domain.recruit.repository.RecruitRepository;
 import clovider.clovider_be.domain.recruit.service.RecruitQueryService;
 import clovider.clovider_be.domain.recruit.service.RecruitQueryServiceImpl;
@@ -50,10 +52,13 @@ class LotteryQueryServiceImplTest {
     void getRecruitResult() {
 
         // given
-        List<Recruit> recruits = recruitQueryService.getNowRecruitOrderByClass();
+        NowRecruits recruits = recruitQueryService.getNowRecruitOrderByClass();
+        List<Long> recruitIds = recruits.getNowRecruits().stream()
+                .map(NowRecruit::getId)
+                .toList();
 
         // when
-        List<CompetitionRate> competitionRates = lotteryRepository.findCompetitionRates(recruits);
+        List<CompetitionRate> competitionRates = lotteryRepository.findCompetitionRates(recruitIds);
 
         List<Double> rates = competitionRates.stream()
                 .map(CompetitionRate::getCompetitionRate)
@@ -75,10 +80,10 @@ class LotteryQueryServiceImplTest {
     void getTotalApplication() {
 
         // given
-        List<Recruit> recruits = recruitQueryService.getRecruitIngAndScheduled();
+        List<Long> recruitIds = recruitQueryService.getRecruitIngAndScheduled();
 
         // when
-        Long totalApplication = lotteryRepository.findTotalApplication(recruits);
+        Long totalApplication = lotteryRepository.findTotalApplication(recruitIds);
 
         // then
         assertThat(totalApplication).isEqualTo(16);
@@ -89,10 +94,10 @@ class LotteryQueryServiceImplTest {
     void getUnAcceptApplication() {
 
         // given
-        List<Recruit> recruits = recruitQueryService.getRecruitIngAndScheduled();
+        List<Long> recruitIds = recruitQueryService.getRecruitIngAndScheduled();
 
         // when
-        Long unAcceptApplication = lotteryRepository.findUnAcceptApplication(recruits);
+        Long unAcceptApplication = lotteryRepository.findUnAcceptApplication(recruitIds);
 
         // then
         assertThat(unAcceptApplication).isEqualTo(0);
@@ -103,10 +108,10 @@ class LotteryQueryServiceImplTest {
     void getAcceptResult() {
 
         // given
-        List<Recruit> recruits = recruitQueryService.getRecruitIngAndScheduled();
+        List<Long> recruitIds = recruitQueryService.getRecruitIngAndScheduled();
 
         // when
-        List<AcceptResult> acceptStatus = lotteryRepository.findAcceptStatus(recruits);
+        List<AcceptResult> acceptStatus = lotteryRepository.findAcceptStatus(recruitIds);
         String kindergartenNm1 = acceptStatus.get(0).getKindergartenNm();
         String kindergartenNm2 = acceptStatus.get(1).getKindergartenNm();
         Integer acceptCnt = acceptStatus.get(0).getAcceptCnt();
