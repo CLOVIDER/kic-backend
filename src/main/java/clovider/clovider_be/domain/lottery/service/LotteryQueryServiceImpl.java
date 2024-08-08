@@ -2,13 +2,19 @@ package clovider.clovider_be.domain.lottery.service;
 
 import clovider.clovider_be.domain.admin.dto.AdminResponse.AcceptResult;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.LotteryResult;
+import clovider.clovider_be.domain.application.Application;
+import clovider.clovider_be.domain.application.repository.ApplicationRepository;
+import clovider.clovider_be.domain.employee.Employee;
+import clovider.clovider_be.domain.enums.Result;
 import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.ChildInfo;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitInfo;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitResult;
+import clovider.clovider_be.domain.lottery.dto.LotteryResultByEmployeeDTO;
 import clovider.clovider_be.domain.lottery.dto.LotteryResultResponseDTO;
+import clovider.clovider_be.domain.lottery.dto.LotteryResultsGroupedByChildDTO;
 import clovider.clovider_be.domain.lottery.repository.LotteryRepository;
 import clovider.clovider_be.domain.recruit.Recruit;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruit;
@@ -18,6 +24,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -33,6 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class LotteryQueryServiceImpl implements LotteryQueryService {
 
     private final LotteryRepository lotteryRepository;
+    private final ApplicationRepository applicationRepository;
 
     @Override
     public LotteryResultResponseDTO getLotteryResult(Long lotteryId) {
@@ -110,4 +119,39 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
     public Page<LotteryResult> getLotteryResult(Long kindergartenId, Pageable pageable, String value) {
         return lotteryRepository.getLotteryResults(kindergartenId,pageable,value);
     }
+
+    @Override
+    public List<LotteryResultsGroupedByChildDTO> getLotteryResultsByEmployeeId(Employee employee) {
+        if (employee == null) {
+            throw new ApiException(ErrorStatus._EMPLOYEE_NOT_FOUND);
+        }
+
+        List<Application> applications = applicationRepository.findAllByEmployee(employee);
+
+        if (applications.isEmpty()) {
+            throw new ApiException(ErrorStatus._APPLICATION_NOT_FOUND);
+        }
+
+        Map<String, List<LotteryResultByEmployeeDTO>> groupedResults = applications.stream()
+                .flatMap(application -> lotteryRepository.findByApplicationId(application.getId()).stream())
+                .map(lottery -> LotteryResultByEmployeeDTO.builder()
+                        .applicationId(lottery.getApplication().getId())
+                        .recruitId(lottery.getRecruit().getId())
+                        .childName(lottery.getChildNm())
+                        .kindergartenName(lottery.getRecruit().getKindergarten().getKindergartenNm())
+                        .ageClass(lottery.getRecruit().getAgeClass())
+                        .result(lottery.getResult().name())
+                        .waitingNumber(lottery.getResult() == Result.LOSE ? lottery.getRankNo() : null)
+                        .build())
+                .collect(Collectors.groupingBy(LotteryResultByEmployeeDTO::getChildName));
+
+        return groupedResults.entrySet().stream()
+                .map(entry -> LotteryResultsGroupedByChildDTO.builder()
+                        .childName(entry.getKey())
+                        .lotteryResults(entry.getValue())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+
 }
