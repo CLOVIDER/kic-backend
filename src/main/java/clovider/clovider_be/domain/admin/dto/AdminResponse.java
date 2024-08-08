@@ -3,7 +3,9 @@ package clovider.clovider_be.domain.admin.dto;
 import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.notice.dto.NoticeTop3;
+import clovider.clovider_be.domain.recruit.Recruit;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruitInfo;
+import clovider.clovider_be.domain.recruit.dto.RecruitResponse.RecruitDateAndWeightInfo;
 import clovider.clovider_be.global.util.TimeUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
@@ -118,8 +120,8 @@ public class AdminResponse {
 
         @Schema(description = "신청서 작성일", example = "2024.07.25")
         private String createdAt;
-        @Schema(description = "신청자 아이디", example = "rlagusrua258")
-        private String accountId;
+        @Schema(description = "신청자 이름", example = "김성민")
+        private String nameKo;
         @Schema(description = "신청자 사내 번호", example = "201930303")
         private String employeeNo;
         @Schema(description = "신청서 ID", example = "1")
@@ -132,7 +134,7 @@ public class AdminResponse {
 
         return ApplicationList.builder()
                 .createdAt(TimeUtil.formattedDate(application.getCreatedAt()))
-                .accountId(application.getEmployee().getAccountId())
+                .nameKo(application.getEmployee().getNameKo())
                 .employeeNo(application.getEmployee().getEmployeeNo())
                 .applicationId(application.getId())
                 .isAccept(application.getIsAccept().getDescription())
@@ -170,5 +172,82 @@ public class AdminResponse {
                 .applicationId(lottery.getApplication().getId())
                 .build();
     }
+
+    @Schema(description = "분반 정보 DTO")
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class RecruitClassInfo {
+        @Schema(description = "분반 이름", example = "0~3세반")
+        private String ageClass;
+
+        @Schema(description = "모집인원", example = "20")
+        private Integer recruitCnt;
+    }
+
+    public static RecruitClassInfo toRecruitClassInfo(Recruit recruit) {
+        return RecruitClassInfo.builder()
+                .ageClass(recruit.getAgeClass().getDescription())
+                .recruitCnt(recruit.getRecruitCnt())
+                .build();
+    }
+
+
+    @Schema(description = "어린이집의 클래스(분반) 정보 DTO")
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class KindergartenClassInfo {
+
+        @Schema(description = "어린이집 이름", example = "새빛 어린이집")
+        private String kindergartenName;
+
+        @Schema(description = "어린이집의 분반 리스트")
+        private List<RecruitClassInfo> classInfoList;
+
+        public static KindergartenClassInfo createEmpty() {
+            return KindergartenClassInfo.builder()
+                    .kindergartenName(null)
+                    .classInfoList(null)
+                    .build();
+        }
+    }
+
+    @Schema(description = "모집 생성 정보 DTO")
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class RecruitCreationInfo {
+
+        @Schema(description = "어린이집 및 분반 정보 리스트")
+        private List<KindergartenClassInfo> kindergartenClassInfoList;
+
+        @Schema(description = "모집 기간 상세 및 가중치 설정 정보")
+        private RecruitDateAndWeightInfo recruitDateAndWeightInfo;
+
+        @Schema(description = "이미 생성된 모집 여부")
+        private Boolean isCreated;
+    }
+
+    public static RecruitCreationInfo toRecruitCreationInfo(List<KindergartenClassInfo> kindergartenClassInfos,
+            RecruitDateAndWeightInfo recruitDetails, Boolean isCreated) {
+        return RecruitCreationInfo.builder()
+                .kindergartenClassInfoList(kindergartenClassInfos)  // 어린이집 및 분반 정보 리스트
+                .recruitDateAndWeightInfo(recruitDetails) // 모집 기간 상세 및 가중치 설정 정보
+                .isCreated(isCreated)
+                .build();
+    }
+
+    public static RecruitCreationInfo toRecruitCreationInfo(List<KindergartenClassInfo> kindergartenClassInfos,
+            RecruitDateAndWeightInfo recruitDetails) {
+        return RecruitCreationInfo.builder()
+                .kindergartenClassInfoList(kindergartenClassInfos)  // 어린이집 및 분반 정보 리스트
+                .recruitDateAndWeightInfo(recruitDetails)  // 모집 기간 상세 및 가중치 설정 정보
+                .build();
+    }
+
 
 }

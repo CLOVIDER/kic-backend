@@ -29,8 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class KindergartenCommandServiceImpl implements KindergartenCommandService {
     private final KindergartenRepository kindergartenRepository;
     private final KindergartenImageCommandService kindergartenImageCommandService;
-    private final KindergartenQueryService kindergartenQueryService;
-    private final KindergartenImageQueryService kindergartenImageQueryService;
     private final RecruitCommandService recruitCommandService;
 
     @Override
@@ -41,6 +39,7 @@ public class KindergartenCommandServiceImpl implements KindergartenCommandServic
                 .kindergartenNm(kindergartenRegisterRequest.getKindergartenNm())
                 .kindergartenAddr(kindergartenRegisterRequest.getKindergartenAddr())
                 .kindergartenScale(kindergartenRegisterRequest.getKindergartenScale())
+                .kindergartenCapacity(kindergartenRegisterRequest.getKindergartenCapacity())
                 .kindergartenNo(kindergartenRegisterRequest.getKindergartenNo())
                 .kindergartenTime(kindergartenRegisterRequest.getKindergartenTime())
                 .kindergartenInfo(kindergartenRegisterRequest.getKindergartenInfo())
@@ -48,9 +47,9 @@ public class KindergartenCommandServiceImpl implements KindergartenCommandServic
 
         kindergarten = kindergartenRepository.save(kindergarten);
 
-        Long kindergartenImageId = kindergartenImageCommandService.saveKindergartenImage(kindergarten, kindergartenRegisterRequest.getKindergartenImage());
+        List<Long> kindergartenImageIds = kindergartenImageCommandService.saveKindergartenImage(kindergarten, kindergartenRegisterRequest.getKindergartenImages());
 
-        return toKindergartenRegisterResponse(kindergarten, kindergartenImageId);
+        return toKindergartenRegisterResponse(kindergarten, kindergartenImageIds);
     }
 
     @Override
@@ -69,7 +68,6 @@ public class KindergartenCommandServiceImpl implements KindergartenCommandServic
 
     @Override
     public KindergartenUpdateResponse updateKindergarten(Long kindergartenId, KindergartenUpdateRequest request) {
-        Long kindergartenImageId = 0L;
 
         Kindergarten kindergarten = kindergartenRepository.findById(kindergartenId)
                 .orElseThrow(() -> new ApiException(ErrorStatus._KDG_NOT_FOUND));
@@ -78,18 +76,15 @@ public class KindergartenCommandServiceImpl implements KindergartenCommandServic
                 request.getKindergartenNm(),
                 request.getKindergartenAddr(),
                 request.getKindergartenScale(),
+                request.getKindergartenCapacity(),
                 request.getKindergartenNo(),
                 request.getKindergartenTime(),
                 request.getKindergartenInfo());
 
         Kindergarten savedKindergarten = kindergartenRepository.save(kindergarten);
 
-        if(request.getKindergartenImage() == null){
-            kindergartenImageId = kindergartenImageQueryService.getKindergartenImageId(kindergartenId);
-        } else {
-            kindergartenImageId = kindergartenImageCommandService.updateKindergartenImage(kindergarten, request.getKindergartenImage());
-        }
+        List<Long> kindergartenImageIds = kindergartenImageCommandService.updateKindergartenImage(kindergarten, request.getKindergartenImages());
 
-        return KindergartenUpdateResponse.toKindergartenUpdateResponse(savedKindergarten, kindergartenImageId);
+        return KindergartenUpdateResponse.toKindergartenUpdateResponse(savedKindergarten, kindergartenImageIds);
     }
 }

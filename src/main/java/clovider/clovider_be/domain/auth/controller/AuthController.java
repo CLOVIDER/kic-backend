@@ -49,6 +49,7 @@ public class AuthController {
         return ApiResponse.onSuccess("성공적으로 로그아웃되었습니다.");
     }
 
+    @Operation(summary = "액세스 토큰 재발급 API", description = "Body에 Refresh Token을 전달받아, 검증한 후 토큰을 재발급합니다.")
     @PostMapping("/reissue")
     public ApiResponse<TokenVo> reissueToken(@RequestBody String refreshToken) {
 

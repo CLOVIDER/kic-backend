@@ -3,8 +3,11 @@ package clovider.clovider_be.domain.kindergartenImage.service;
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import clovider.clovider_be.domain.kindergartenImage.KindergartenImage;
 import clovider.clovider_be.domain.kindergartenImage.repository.KindergartenImageRepository;
+import clovider.clovider_be.global.exception.ApiException;
+import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,30 +21,39 @@ public class KindergartenImageCommandServiceImpl implements KindergartenImageCom
     private final KindergartenImageQueryService kindergartenImageQueryService;
 
     @Override
-    public Long saveKindergartenImage(Kindergarten kindergarten, String kindergartenImageFile) {
-        KindergartenImage kindergartenImage = KindergartenImage.builder()
-                .image(kindergartenImageFile)
-                .kindergarten(kindergarten)
-                .build();
+    public List<Long> saveKindergartenImage(Kindergarten kindergarten, List<String> kindergardenUrls) {
+        List<KindergartenImage> kindergartenImages = kindergardenUrls.stream()
+                .map(url -> KindergartenImage.builder()
+                        .image(url)
+                        .kindergarten(kindergarten)
+                        .build())
+                .collect(Collectors.toList());
 
-        kindergartenImage = kindergartenImageRepository.save(kindergartenImage);
+        List<KindergartenImage> savedImages = kindergartenImageRepository.saveAll(kindergartenImages);
 
-        return kindergartenImage.getId();
+        return savedImages.stream()
+                .map(KindergartenImage::getId)
+                .collect(Collectors.toList());
     }
 
-    public Long updateKindergartenImage(Kindergarten kindergarten, String newImageUrl) {
-        Optional<KindergartenImage> existingImage = kindergartenImageQueryService.getKindergartenImage(kindergarten.getId());
+    public List<Long> updateKindergartenImage(Kindergarten kindergarten, List<String> newImageUrls) {
+        List<KindergartenImage> existingImages = kindergartenImageQueryService.getKindergartenImage(kindergarten.getId());
 
-        if (existingImage.isPresent()) {
-            kindergartenImageRepository.delete(existingImage.get());
-        }
+        // 기존 이미지 삭제
+        kindergartenImageRepository.deleteAll(existingImages);
 
-        KindergartenImage newImage = KindergartenImage.builder()
-                .image(newImageUrl)
-                .kindergarten(kindergarten)
-                .build();
-        newImage = kindergartenImageRepository.save(newImage);
+        // 새로운 이미지 추가
+        List<KindergartenImage> newImages = newImageUrls.stream()
+                .map(url -> KindergartenImage.builder()
+                        .kindergarten(kindergarten)
+                        .image(url)
+                        .build())
+                .collect(Collectors.toList());
 
-        return newImage.getId();
+        List<KindergartenImage> savedImages = kindergartenImageRepository.saveAll(newImages);
+
+        return savedImages.stream()
+                .map(KindergartenImage::getId)
+                .collect(Collectors.toList());
     }
 }

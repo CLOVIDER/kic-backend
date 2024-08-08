@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.7'
     id 'io.spring.dependency-management' version '1.1.5'
+    id 'com.google.cloud.tools.jib' version '3.1.4'
 }
 
 group = 'clovider'
@@ -10,6 +11,23 @@ version = '0.0.1-SNAPSHOT'
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+jib {
+    from {
+        image = 'eclipse-temurin:17-jre'
+    }
+    to {
+        image = 'kids-in-company.kr-central-2.kcr.dev/clovider-registry/clovider-be-app'
+        tags = [project.findProperty('jib.to.tags') ?: 'latest']
+    }
+    container {
+        ports = ['8080']
+        jvmFlags = ['-Xms512m', '-Xmx512m', '-Dspring.profiles.active=prod']
+        environment = [SPRING_OUTPUT_ANSI_ENABLED: "ALWAYS"]
+        labels = [Iversion: project.version, name: project.name, group: project.group]
+        format = 'Docker'
     }
 }
 

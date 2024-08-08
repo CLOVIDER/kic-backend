@@ -17,6 +17,7 @@ import clovider.clovider_be.domain.lottery.dto.LotteryResultResponseDTO;
 import clovider.clovider_be.domain.lottery.dto.LotteryResultsGroupedByChildDTO;
 import clovider.clovider_be.domain.lottery.repository.LotteryRepository;
 import clovider.clovider_be.domain.recruit.Recruit;
+import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruit;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import java.util.ArrayList;
@@ -54,25 +55,27 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
         );
     }
 
+    @Override
+    public List<CompetitionRate> getRecruitRates(List<NowRecruit> recruits) {
 
-    public List<CompetitionRate> getRecruitRates(List<Recruit> recruits) {
+        List<Long> recruitIds = recruits.stream().map(NowRecruit::getId).toList();
 
-        return lotteryRepository.findCompetitionRates(recruits);
+        return lotteryRepository.findCompetitionRates(recruitIds);
     }
 
     @Override
-    public Long getTotalApplication(List<Recruit> recruits) {
-        return lotteryRepository.findTotalApplication(recruits);
+    public Long getTotalApplication(List<Long> recruitIds) {
+        return lotteryRepository.findTotalApplication(recruitIds);
     }
 
     @Override
-    public Long getUnAcceptApplication(List<Recruit> recruits) {
-        return lotteryRepository.findUnAcceptApplication(recruits);
+    public Long getUnAcceptApplication(List<Long> recruitIds) {
+        return lotteryRepository.findUnAcceptApplication(recruitIds);
     }
 
     @Override
-    public List<AcceptResult> getAcceptResult(List<Recruit> recruits) {
-        return lotteryRepository.findAcceptStatus(recruits);
+    public List<AcceptResult> getAcceptResult(List<Long> recruitIds) {
+        return lotteryRepository.findAcceptStatus(recruitIds);
     }
 
     @Override

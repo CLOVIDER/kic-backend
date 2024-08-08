@@ -7,6 +7,7 @@ import clovider.clovider_be.domain.common.CustomResult;
 import clovider.clovider_be.domain.document.service.ApplicationDocumentCommandService;
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.enums.Accept;
+import clovider.clovider_be.domain.enums.Save;
 import clovider.clovider_be.domain.lottery.service.LotteryCommandService;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
@@ -14,10 +15,12 @@ import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class ApplicationCommandServiceImpl implements ApplicationCommandService {
+
 
     private final ApplicationRepository applicationRepository;
     private final ApplicationDocumentCommandService applicationDocumentCommandService;
@@ -25,10 +28,7 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
 
     @Override
     public CustomResult applicationCreate(ApplicationRequest applicationRequest, Employee employee) {
-
-
-        Application savedApplication = applicationRepository.save(
-                Application.builder()
+        Application savedApplication = Application.builder()
                 .employee(employee)
                 .workYears(LocalDate.now().getYear() - employee.getJoinDt().getYear()) //현재 년도 - 입사 년도
                 .isSingleParent(applicationRequest.getIsSingleParent())
@@ -37,9 +37,10 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
                 .isDualIncome(applicationRequest.getIsDualIncome())
                 .isEmployeeCouple(applicationRequest.getIsEmployeeCouple())
                 .isSibling(applicationRequest.getIsSibling())
-                .isTemp('0')
-                .build()
-        );
+                .isTemp(Save.APPLIED)
+                .build();
+
+        applicationRepository.save(savedApplication);
 
         applicationDocumentCommandService.createApplicationDocuments(applicationRequest.getImageUrls(), savedApplication);
 
@@ -69,7 +70,6 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
     @Override
     public CustomResult applicationTempSave(ApplicationRequest applicationRequest, Employee employee) {
 
-
         Application savedApplication = applicationRepository.save(
                 Application.builder()
                 .employee(employee)
@@ -80,7 +80,7 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
                 .isDualIncome(applicationRequest.getIsDualIncome())
                 .isEmployeeCouple(applicationRequest.getIsEmployeeCouple())
                 .isSibling(applicationRequest.getIsSibling())
-                .isTemp('1')
+                .isTemp(Save.TEMP)
                 .build()
         );
 

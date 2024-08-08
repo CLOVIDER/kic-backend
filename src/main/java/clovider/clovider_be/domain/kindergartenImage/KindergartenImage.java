@@ -37,4 +37,8 @@ public class KindergartenImage extends BaseTimeEntity {
     @JoinColumn(name = "kindergarten_id", nullable = false)
     @JsonBackReference
     private Kindergarten kindergarten;
+
+    public void updateImage(String newImageUrl) {
+        this.image = newImageUrl;
+    }
 }

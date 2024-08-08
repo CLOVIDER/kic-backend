@@ -12,13 +12,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LotteryRepositoryCustom {
 
-    List<CompetitionRate> findCompetitionRates(List<Recruit> recruits);
+    List<CompetitionRate> findCompetitionRates(List<Long> recruitIds);
 
-    Long findTotalApplication(List<Recruit> recruits);
+    Long findTotalApplication(List<Long> recruitIds);
 
-    Long findUnAcceptApplication(List<Recruit> recruits);
+    Long findUnAcceptApplication(List<Long> recruitIds);
 
-    List<AcceptResult> findAcceptStatus(List<Recruit> recruits);
+    List<AcceptResult> findAcceptStatus(List<Long> recruitIds);
 
     List<Long> findApplicationsAllByRecruits(List<Recruit> recruits);
 

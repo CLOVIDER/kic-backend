@@ -73,8 +73,8 @@ public class NoticeController {
     @Operation(summary = "전체 공지사항 목록 조회 - 공지사항 리스트 페이지", description = "페이지네이션과 타입별 키워드 검색을 적용하여 전체 공지사항 목록을 조회합니다.")
     public ApiResponse<CustomPage<NoticeResponse>> getAllNotices(
             @RequestParam(defaultValue = "0") @Parameter(description = "페이지 번호") int page,
-            @RequestParam(defaultValue = "10") @Parameter(description = "페이지 크기") int size,
-            @RequestParam SearchType type, @RequestParam(required = false) String keyword) {
+            @RequestParam(defaultValue = "3") @Parameter(description = "페이지 크기") int size,
+            @RequestParam(required = false) SearchType type, @RequestParam(required = false) String keyword) {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<NoticeResponse> allNotices = noticeQueryService.getAllNotices(pageRequest, type,
                 keyword);

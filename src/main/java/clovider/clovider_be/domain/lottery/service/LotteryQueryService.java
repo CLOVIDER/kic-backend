@@ -10,6 +10,7 @@ import clovider.clovider_be.domain.lottery.dto.LotteryResultByEmployeeDTO;
 import clovider.clovider_be.domain.lottery.dto.LotteryResultResponseDTO;
 import clovider.clovider_be.domain.lottery.dto.LotteryResultsGroupedByChildDTO;
 import clovider.clovider_be.domain.recruit.Recruit;
+import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruit;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,13 +19,13 @@ public interface LotteryQueryService {
 
     LotteryResultResponseDTO getLotteryResult(Long lotteryId);
 
-    List<CompetitionRate> getRecruitRates(List<Recruit> recruits);
+    List<CompetitionRate> getRecruitRates(List<NowRecruit> recruits);
 
-    Long getTotalApplication(List<Recruit> recruits);
+    Long getTotalApplication(List<Long> recruitIds);
 
-    Long getUnAcceptApplication(List<Recruit> recruits);
+    Long getUnAcceptApplication(List<Long> recruitIds);
 
-    List<AcceptResult> getAcceptResult(List<Recruit> recruits);
+    List<AcceptResult> getAcceptResult(List<Long> recruitIds);
 
     List<RecruitResult> getRecruitResult(Long recruitId);
 

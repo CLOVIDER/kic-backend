@@ -6,5 +6,5 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface KindergartenImageRepository extends JpaRepository<KindergartenImage, Long> {
-    Optional<KindergartenImage> findByKindergartenId(Long kindergartenId);
+    List<KindergartenImage> findByKindergartenId(Long kindergartenId);
 }
