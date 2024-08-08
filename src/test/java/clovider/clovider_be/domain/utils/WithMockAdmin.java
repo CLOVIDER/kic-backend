@@ -1,4 +1,4 @@
-package clovider.clovider_be.domain.notice.utils;
+package clovider.clovider_be.domain.utils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

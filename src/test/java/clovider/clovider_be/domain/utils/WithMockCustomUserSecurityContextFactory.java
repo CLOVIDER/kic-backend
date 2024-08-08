@@ -1,4 +1,4 @@
-package clovider.clovider_be.domain.notice.utils;
+package clovider.clovider_be.domain.utils;
 
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.enums.Role;
