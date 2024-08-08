@@ -111,4 +111,22 @@ public class Recruit extends BaseTimeEntity {
         recruit.isSiblingUsage = requestDTO.getIsSiblingUsage();
         return recruit;
     }
+    //모집 수정
+    public void updateRecruit(RecruitCreateRequestDTO requestDTO) {
+        this.recruitStartDt = requestDTO.getRecruitStartDt();
+        this.recruitEndDt = requestDTO.getRecruitEndDt();
+        this.recruitCnt = requestDTO.getRecruitCnt();
+        this.ageClass = requestDTO.getAgeClass();
+        this.firstStartDt = requestDTO.getFirstStartDt();
+        this.firstEndDt = requestDTO.getFirstEndDt();
+        this.secondStartDt = requestDTO.getSecondStartDt();
+        this.secondEndDt = requestDTO.getSecondEndDt();
+        this.workYearsUsage = requestDTO.getWorkYearsUsage();
+        this.isSingleParentUsage = requestDTO.getIsSingleParentUsage();
+        this.childrenCntUsage = requestDTO.getChildrenCntUsage();
+        this.isDisabilityUsage = requestDTO.getIsDisabilityUsage();
+        this.isDualIncomeUsage = requestDTO.getIsDualIncomeUsage();
+        this.isEmployeeCoupleUsage = requestDTO.getIsEmployeeCoupleUsage();
+        this.isSiblingUsage = requestDTO.getIsSiblingUsage();
+    }
 }

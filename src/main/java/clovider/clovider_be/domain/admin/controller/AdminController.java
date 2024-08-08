@@ -43,13 +43,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "관리자 기능 관련 API 명세서")
 @RestController
@@ -231,6 +225,16 @@ public class AdminController {
     @GetMapping("/recruits")
     public ApiResponse<RecruitCreationInfo> getRecruitCreationInfo() {
         return ApiResponse.onSuccess(recruitQueryService.getRecruitCreationInfo());
+    }
+
+    @Operation(summary = "관리자가 모집을 수정한다.", description = "관리자가 이미 생성된 모집을 수정한다.")
+    @PatchMapping("/recruit/{recruitId}")
+    public ApiResponse<RecruitCreationInfo> updateRecruit(
+            @PathVariable Long recruitId,
+            @RequestBody RecruitCreateRequestDTO requestDTO) {
+
+        RecruitCreationInfo responseDTO = recruitCommandService.updateRecruit(recruitId, requestDTO);
+        return ApiResponse.onSuccess(responseDTO);
     }
 
 

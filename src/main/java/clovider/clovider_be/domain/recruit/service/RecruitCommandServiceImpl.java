@@ -54,6 +54,20 @@ public class RecruitCommandServiceImpl implements RecruitCommandService{
         return createRecruitCreationInfo(savedRecruit);
     }
 
+    @Override
+    @Transactional
+    public AdminResponse.RecruitCreationInfo updateRecruit(Long recruitId, RecruitCreateRequestDTO requestDTO) {
+        Recruit recruit = recruitRepository.findById(recruitId)
+                .orElseThrow(() -> new ApiException(ErrorStatus._RECRUIT_NOT_FOUND));
+
+        // 업데이트 로직
+        recruit.updateRecruit(requestDTO);
+
+        // 저장 및 반환
+        Recruit savedRecruit = recruitRepository.save(recruit);
+        return createRecruitCreationInfo(savedRecruit);
+    }
+
     private AdminResponse.RecruitCreationInfo createRecruitCreationInfo(Recruit recruit) {
         RecruitResponse.RecruitDateAndWeightInfo recruitDateAndWeightInfo = toRecruitDateAndWeightInfo(recruit);
         AdminResponse.KindergartenClassInfo kindergartenClassInfo = createKindergartenClassInfo(recruit.getKindergarten().getKindergartenNm(), List.of(recruit));
