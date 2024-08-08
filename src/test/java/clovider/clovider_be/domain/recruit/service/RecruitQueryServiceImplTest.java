@@ -8,6 +8,7 @@ import clovider.clovider_be.domain.kindergarten.repository.KindergartenRepositor
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitInfo;
 import clovider.clovider_be.domain.recruit.Recruit;
+import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruit;
 import clovider.clovider_be.domain.recruit.repository.RecruitRepository;
 import clovider.clovider_be.global.config.QuerydslConfig;
 import java.time.LocalDateTime;
@@ -40,13 +41,13 @@ class RecruitQueryServiceImplTest {
     void getNowRecruitOrderByClass() {
 
         // given
-        List<Recruit> recruits = recruitRepository.findNowRecruitOrderByClass(
+        List<NowRecruit> recruits = recruitRepository.findNowRecruitOrderByClass(
                 LocalDateTime.now());
 
         // when
-        Long kdg1 = recruits.get(0).getKindergarten().getId();
-        Long kdg2 = recruits.get(5).getKindergarten().getId();
-        Recruit recruit = recruits.get(0);
+        String kdg1 = recruits.get(0).getKindergartenNm();
+        String kdg2 = recruits.get(5).getKindergartenNm();
+        NowRecruit recruit = recruits.get(0);
 
         // then
         assertThat(recruits.size()).isEqualTo(6);
