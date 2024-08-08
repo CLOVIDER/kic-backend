@@ -63,7 +63,7 @@ class QnaCommandServiceImplTest {
 
     }
 
-    private Qna createAndSaveQna(){
+    private Qna createQna(){
         return Qna.builder()
                 .id(1L)
                 .title("문제입니다")
@@ -84,7 +84,7 @@ class QnaCommandServiceImplTest {
     @DisplayName("QNA 생성 테스트")
     public void createQnaTest() throws NoSuchFieldException, IllegalAccessException {
         // given
-        Qna qna = createAndSaveQna();
+        Qna qna = createQna();
         QnaCreateRequest updateRequest = new QnaCreateRequest();
         setField(updateRequest, "title", "수정된 제목");
         setField(updateRequest, "question", "수정된 문제");
@@ -108,7 +108,7 @@ class QnaCommandServiceImplTest {
     @DisplayName("QNA 수정 테스트")
     public void updateQnaTest() throws NoSuchFieldException, IllegalAccessException {
         // given
-        Qna qna = createAndSaveQna();
+        Qna qna = createQna();
         QnaCreateRequest updateRequest = new QnaCreateRequest();
         setField(updateRequest, "title", "수정된 제목");
         setField(updateRequest, "question", "수정된 문제");
@@ -134,7 +134,7 @@ class QnaCommandServiceImplTest {
     @DisplayName("QNA 삭제 테스트")
     public void deleteQnaTest() throws NoSuchFieldException, IllegalAccessException {
         // given
-        Qna qna = createAndSaveQna();
+        Qna qna = createQna();
 
         // when
         qnaCommandService.deleteQna(qna.getId());
@@ -147,7 +147,7 @@ class QnaCommandServiceImplTest {
     @DisplayName("QNA 답변 수정 테스트")
     public void updateAnswerTest() throws NoSuchFieldException, IllegalAccessException {
         // given
-        Qna qna = createAndSaveQna();
+        Qna qna = createQna();
         QnaAnswerRequest answerRequest = new QnaAnswerRequest();
         setField(answerRequest,"answer","답변입니다.");
 
