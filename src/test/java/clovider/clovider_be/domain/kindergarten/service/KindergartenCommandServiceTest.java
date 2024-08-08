@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
@@ -53,34 +54,34 @@ class KindergartenCommandServiceTest {
     void setup() {
         kindergarten = Kindergarten.builder()
                 .id(1L)
-                .kindergartenNm("Kindergarten A")
-                .kindergartenAddr("123 Main St")
+                .kindergartenNm("애옹유치원")
+                .kindergartenAddr("경기도 성남시")
                 .kindergartenScale(50)
                 .kindergartenCapacity(100)
-                .kindergartenNo("KID-1234")
+                .kindergartenNo("031-1234-5678")
                 .kindergartenTime("08:00 - 18:00")
-                .kindergartenInfo("This is a great kindergarten.")
+                .kindergartenInfo("애옹이가 다니는 유치원")
                 .build();
 
         registerRequest = KindergartenRegisterRequest.builder()
-                .kindergartenNm("Kindergarten A")
-                .kindergartenAddr("123 Main St")
+                .kindergartenNm("애옹유치원")
+                .kindergartenAddr("경기도 성남시")
                 .kindergartenScale(50)
                 .kindergartenCapacity(100)
-                .kindergartenNo("KID-1234")
+                .kindergartenNo("031-1234-5678")
                 .kindergartenTime("08:00 - 18:00")
-                .kindergartenInfo("This is a great kindergarten.")
+                .kindergartenInfo("애옹이가 다니는 유치원")
                 .kindergartenImages(new ArrayList<>())
                 .build();
 
         updateRequest = KindergartenUpdateRequest.builder()
-                .kindergartenNm("Updated Kindergarten")
-                .kindergartenAddr("456 Elm St")
-                .kindergartenScale(60)
-                .kindergartenCapacity(120)
-                .kindergartenNo("KID-5678")
-                .kindergartenTime("09:00 - 17:00")
-                .kindergartenInfo("Updated information.")
+                .kindergartenNm("주애유치원")
+                .kindergartenAddr("경기도 안양시")
+                .kindergartenScale(50)
+                .kindergartenCapacity(100)
+                .kindergartenNo("031-1234-5678")
+                .kindergartenTime("08:00 - 18:00")
+                .kindergartenInfo("주애가 다니는 유치원")
                 .kindergartenImages(new ArrayList<>())
                 .build();
     }
@@ -89,7 +90,7 @@ class KindergartenCommandServiceTest {
     @DisplayName("Kindergarten 등록 테스트")
     void registerKindergarten() {
         // given
-        Kindergarten savedKindergarten = kindergarten.toBuilder().id(1L).build();
+        Kindergarten savedKindergarten = kindergarten.toBuilder().build();
         List<Long> imageIds = List.of(1L);
         when(kindergartenRepository.save(any(Kindergarten.class))).thenReturn(savedKindergarten);
         when(kindergartenImageCommandService.saveKindergartenImage(any(Kindergarten.class), anyList())).thenReturn(imageIds);
@@ -103,6 +104,7 @@ class KindergartenCommandServiceTest {
         assertEquals(imageIds, result.getKindergartenImageIds());
         verify(kindergartenRepository).save(any(Kindergarten.class));
         verify(kindergartenImageCommandService).saveKindergartenImage(any(Kindergarten.class), anyList());
+        verifyNoMoreInteractions(kindergartenRepository, kindergartenImageCommandService);
     }
 
     @Test
@@ -123,6 +125,7 @@ class KindergartenCommandServiceTest {
         verify(kindergartenRepository).findById(anyLong());
         verify(recruitCommandService).resetKindergarten(anyLong());
         verify(kindergartenRepository).deleteById(anyLong());
+        verifyNoMoreInteractions(kindergartenRepository, recruitCommandService);
     }
 
     @Test
@@ -133,13 +136,15 @@ class KindergartenCommandServiceTest {
 
         // when + then
         assertThrows(ApiException.class, () -> kindergartenCommandService.deleteKindergarten(1L));
+        verify(kindergartenRepository).findById(anyLong());
+        verifyNoMoreInteractions(kindergartenRepository);
     }
 
     @Test
     @DisplayName("Kindergarten 업데이트 테스트")
     void updateKindergarten() {
         // given
-        Kindergarten updatedKindergarten = kindergarten.toBuilder().kindergartenNm("Updated Kindergarten").build();
+        Kindergarten updatedKindergarten = kindergarten.toBuilder().kindergartenNm("업데이트유치원").build();
         List<Long> imageIds = List.of(1L);
         when(kindergartenRepository.findById(anyLong())).thenReturn(Optional.of(kindergarten));
         when(kindergartenRepository.save(any(Kindergarten.class))).thenReturn(updatedKindergarten);
@@ -155,6 +160,7 @@ class KindergartenCommandServiceTest {
         verify(kindergartenRepository).findById(anyLong());
         verify(kindergartenRepository).save(any(Kindergarten.class));
         verify(kindergartenImageCommandService).updateKindergartenImage(any(Kindergarten.class), anyList());
+        verifyNoMoreInteractions(kindergartenRepository, kindergartenImageCommandService);
     }
 
     @Test
@@ -165,5 +171,7 @@ class KindergartenCommandServiceTest {
 
         // when + then
         assertThrows(ApiException.class, () -> kindergartenCommandService.updateKindergarten(1L, updateRequest));
+        verify(kindergartenRepository).findById(anyLong());
+        verifyNoMoreInteractions(kindergartenRepository);
     }
 }
