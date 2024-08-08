@@ -35,6 +35,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
@@ -72,7 +73,8 @@ public class AdminController {
     public ApiResponse<DashBoard> getDashboard() {
 
         // 진행 중인 모집 정보, 기간, 경쟁률
-        List<NowRecruit> recruits = recruitQueryService.getNowRecruitOrderByClass()
+        List<NowRecruit> recruits = recruitQueryService.getNowRecruitOrderByClass(
+                        LocalDateTime.now())
                 .getNowRecruits();
 
         // Top3 공지글
@@ -171,7 +173,7 @@ public class AdminController {
         PageRequest pageRequest = PageRequest.of(page, size);
         SearchVO searchVO = SearchVO.of(filter, value);
 
-        List<Recruit> recruits = recruitQueryService.getNowRecruit();
+        List<Recruit> recruits = recruitQueryService.getNowRecruit(LocalDateTime.now());
 
         List<Long> applicationIds = lotteryQueryService.getApplicationsByLotteries(
                 recruits);

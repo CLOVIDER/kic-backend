@@ -39,10 +39,9 @@ public class RecruitQueryServiceImpl implements RecruitQueryService {
 
     @Override
     @Cacheable(value = "nowRecruit", key = "'sorted'")
-    public NowRecruits getNowRecruitOrderByClass() {
+    public NowRecruits getNowRecruitOrderByClass(LocalDateTime now) {
 
-        List<NowRecruit> recruits = recruitRepository.findNowRecruitOrderByClass(
-                LocalDateTime.now());
+        List<NowRecruit> recruits = recruitRepository.findNowRecruitOrderByClass(now);
 
         return new NowRecruits(recruits);
     }
@@ -54,8 +53,8 @@ public class RecruitQueryServiceImpl implements RecruitQueryService {
     }
 
     @Override
-    public List<Recruit> getNowRecruit() {
-        return recruitRepository.findNowRecruit(LocalDateTime.now());
+    public List<Recruit> getNowRecruit(LocalDateTime now) {
+        return recruitRepository.findNowRecruit(now);
     }
 
     @Override
