@@ -1,6 +1,7 @@
 package clovider.clovider_be.domain.document;
 
 import clovider.clovider_be.domain.application.Application;
+import clovider.clovider_be.domain.enums.Accept;
 import clovider.clovider_be.domain.enums.DocumentType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
@@ -19,6 +20,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
@@ -40,8 +42,17 @@ public class Document {
     @Column(nullable = false)
     private DocumentType documentType;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 15)
+    @ColumnDefault("'WAIT'")
+    private Accept isAccept;
+
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "application_id", nullable = false)
     private Application application;
+
+    public void isAccept(Accept accept) {
+        this.isAccept = accept;
+    }
 }

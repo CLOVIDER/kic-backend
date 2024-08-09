@@ -8,6 +8,7 @@ import clovider.clovider_be.domain.common.CustomPage;
 import clovider.clovider_be.domain.common.CustomResult;
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.enums.Accept;
+import clovider.clovider_be.domain.enums.DocumentType;
 import clovider.clovider_be.global.annotation.AuthEmployee;
 import clovider.clovider_be.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -85,13 +86,15 @@ public class ApplicationController {
         return ApiResponse.onSuccess(applicationCommandService.applicationTempSave(dto, employee));
     }
 
-    @Operation(summary = "관리자 신청서 승인 API", description = "acceptRequest 값을 body로 '0' 또는 '1로' 입력받습니다. 0 이면 미승인 처리, 1 이면 승인 처리로 수정됩니다.")
-    @PatchMapping("/admin/applications/{applicationId}/{accept}")
-    public ApiResponse<CustomResult> acceptApplication(@PathVariable Long applicationId, @PathVariable Accept accept
+    @Operation(
+            summary = "관리자 신청서 승인 API",
+            description = "문서 타입에 따라 승인 상태를 설정합니다. Request Body에 DocumentType과 Accept 값을 각각 담아 보냅니다.")
+    @PatchMapping("/admin/applications/{applicationId}")
+    public ApiResponse<CustomResult> acceptApplication(
+            @PathVariable Long applicationId,
+            @RequestBody Map<DocumentType, Accept> acceptList
     ) {
-
-        return ApiResponse.onSuccess(applicationCommandService.applicationAccept(applicationId, accept));
+        return ApiResponse.onSuccess(applicationCommandService.applicationAccept(applicationId, acceptList));
     }
-
 
 }

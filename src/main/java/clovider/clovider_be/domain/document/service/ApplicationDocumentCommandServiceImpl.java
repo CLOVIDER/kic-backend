@@ -3,7 +3,10 @@ package clovider.clovider_be.domain.document.service;
 import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.document.Document;
 import clovider.clovider_be.domain.document.repository.ApplicationDocumentRepository;
+import clovider.clovider_be.domain.enums.Accept;
 import clovider.clovider_be.domain.enums.DocumentType;
+import clovider.clovider_be.global.exception.ApiException;
+import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import jakarta.transaction.Transactional;
 import java.util.HashMap;
 import java.util.List;
@@ -33,5 +36,14 @@ public class ApplicationDocumentCommandServiceImpl implements ApplicationDocumen
                     .build();
             applicationDocumentRepository.save(document);
         });
+    }
+
+    @Override
+    public void acceptDocument(Long documentId, Accept accept){
+        Document document = applicationDocumentRepository.findById(documentId).orElseThrow(
+                () -> new ApiException(ErrorStatus._APPLICATION_NOT_FOUND)
+        );
+
+        document.isAccept(Accept.ACCEPT);
     }
 }
