@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.util.List;
 import lombok.Getter;
 
 @Getter
@@ -26,6 +27,10 @@ public class QnaRequest {
         @Schema(description = "공지사항의 공개 여부", example = "1", allowableValues = {"0", "1"})
         @NotNull(message = "공개여부는 필수입니다.")
         private Character isVisibility;
+
+        @Schema(description = "QNA에 첨부된 이미지 URL 목록", example = "[\"http://example.com/image1.jpg\", \"http://example.com/image2.jpg\"]")
+        @Size(max = 5, message = "이미지 URL 목록은 5개 이하의 URL만 포함할 수 있습니다.")
+        private List<String> imageUrls;
 
         public static Qna toQna(QnaCreateRequest qnaCreateRequest, Employee employee) {
             return Qna.builder()

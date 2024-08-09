@@ -30,7 +30,7 @@ public class S3Controller {
     public ApiResponse<String> createAndUploadImage(
         @Parameter(description = "업로드할 이미지 파일", required = true, schema = @Schema(type = "string", format = "binary"))
         @RequestPart("file") MultipartFile file,
-        @Parameter(description = "이미지가 업로드될 도메인 이름(notice or kindergarten)", required = true)
+        @Parameter(description = "이미지가 업로드될 도메인 이름(notice or kindergarten or qna)", required = true)
         @RequestParam("domainName") String domainName) {
         return ApiResponse.onSuccess(s3Service.uploadImage(file, domainName));
     }
