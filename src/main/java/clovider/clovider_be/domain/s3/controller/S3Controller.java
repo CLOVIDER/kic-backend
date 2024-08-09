@@ -1,6 +1,8 @@
 package clovider.clovider_be.domain.s3.controller;
 
+import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.s3.service.ImageService;
+import clovider.clovider_be.global.annotation.AuthEmployee;
 import clovider.clovider_be.global.response.ApiResponse;
 import clovider.clovider_be.global.s3.S3Service;
 import io.swagger.v3.oas.annotations.Operation;
@@ -62,9 +64,8 @@ public class S3Controller {
     public ApiResponse<String> createAndUploadDocument(
         @Parameter(description = "업로드할 도큐먼트 파일", required = true, schema = @Schema(type = "string", format = "binary"))
         @RequestPart("file") MultipartFile file,
-        @Parameter(description = "해당 도큐먼트의 신청서 아이디", required = true)
-        @RequestParam("applicationId") String applicationId) {
-        return ApiResponse.onSuccess(s3Service.uploadFile(file, applicationId));
+        @AuthEmployee Employee employee) {
+        return ApiResponse.onSuccess(s3Service.uploadFile(file, employee));
     }
 
     
