@@ -1,9 +1,12 @@
 package clovider.clovider_be.global.scheduler;
 
+import clovider.clovider_be.domain.document.repository.ApplicationDocumentRepository;
 import clovider.clovider_be.domain.kindergartenImage.KindergartenImage;
 import clovider.clovider_be.domain.kindergartenImage.repository.KindergartenImageRepository;
 import clovider.clovider_be.domain.noticeImage.NoticeImage;
 import clovider.clovider_be.domain.noticeImage.repository.NoticeImageRepository;
+import clovider.clovider_be.domain.qnaImage.QnaImage;
+import clovider.clovider_be.domain.qnaImage.repository.QnaImageRepository;
 import clovider.clovider_be.global.s3.S3Service;
 import java.util.List;
 import java.util.Set;
@@ -21,9 +24,12 @@ public class ImageCleanupScheduler {
     private final S3Service s3Service;
     private final NoticeImageRepository noticeImageRepository;
     private final KindergartenImageRepository kindergartenImageRepository;
+    private final QnaImageRepository qnaImageRepository;
+    private final ApplicationDocumentRepository applicationDocumentRepository;
     
     static final String NOTICE_FOLDER = "images/notice/";
     static final String KINDERGARTEN_FOLDER = "images/kindergarten/";
+    static final String QNA_FOLDER = "images/qna/";
 
     @Scheduled(cron = "0 0 2 * * ?")  // 매일 새벽 2시에 실행
     public void cleanUpUnusedImages() {
@@ -37,6 +43,11 @@ public class ImageCleanupScheduler {
         // 어린이집 이미지 삭제
         cleanUpFolder(KINDERGARTEN_FOLDER, kindergartenImageRepository.findAll().stream()
                 .map(KindergartenImage::getImage)
+                .collect(Collectors.toSet()));
+
+        // QNA 이미지 삭제
+        cleanUpFolder(QNA_FOLDER, qnaImageRepository.findAll().stream()
+                .map(QnaImage::getImage)
                 .collect(Collectors.toSet()));
     }
 
