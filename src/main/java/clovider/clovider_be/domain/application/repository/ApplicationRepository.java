@@ -16,5 +16,12 @@ public interface ApplicationRepository extends JpaRepository<Application, Long>,
     @Query("select a from Application a join fetch a.employee where a.id = :applicationId")
     Application findApplicationWithEmployee(Long applicationId);
 
+
+    @Query("SELECT k.kindergartenNm FROM Lottery l " +
+            "JOIN l.recruit r " +
+            "JOIN r.kindergarten k " +
+            "WHERE l.id = :lotteryId")
+    String findKindergartenNameByLotteryId(Long lotteryId);
     List<Application> findAllByEmployee(Employee employee);
+
 }
