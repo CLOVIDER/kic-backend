@@ -13,7 +13,7 @@ public interface RecruitQueryService {
 
     NowRecruits getNowRecruitOrderByClass(LocalDateTime now);
 
-    List<Long> getRecruitIngAndScheduled();
+    List<Long> getRecruitIngAndScheduled(LocalDateTime now);
 
     List<Recruit> getNowRecruit(LocalDateTime now);
 

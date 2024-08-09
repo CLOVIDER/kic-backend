@@ -128,7 +128,7 @@ public class AdminController {
     @GetMapping("/recruits/applications/status")
     public ApiResponse<ApplicationStatus> getApplicationsStatus() {
 
-        List<Long> recruitIds = recruitQueryService.getRecruitIngAndScheduled();
+        List<Long> recruitIds = recruitQueryService.getRecruitIngAndScheduled(LocalDateTime.now());
         Long totalCnt = lotteryQueryService.getTotalApplication(recruitIds);
         Long unAcceptCnt = lotteryQueryService.getUnAcceptApplication(
                 recruitIds);
@@ -140,7 +140,7 @@ public class AdminController {
     @GetMapping("/recruits/kindergartens/status")
     public ApiResponse<List<AcceptResult>> getAcceptStatus() {
 
-        List<Long> recruitIds = recruitQueryService.getRecruitIngAndScheduled();
+        List<Long> recruitIds = recruitQueryService.getRecruitIngAndScheduled(LocalDateTime.now());
 
         return ApiResponse.onSuccess(lotteryQueryService.getAcceptResult(recruitIds));
     }

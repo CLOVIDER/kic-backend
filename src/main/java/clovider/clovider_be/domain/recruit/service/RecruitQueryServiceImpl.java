@@ -48,8 +48,8 @@ public class RecruitQueryServiceImpl implements RecruitQueryService {
 
     @Override
     @Cacheable(value = "recruit", key = "'ing'")
-    public List<Long> getRecruitIngAndScheduled() {
-        return recruitRepository.findRecruitIngAndScheduled(LocalDateTime.now());
+    public List<Long> getRecruitIngAndScheduled(LocalDateTime now) {
+        return recruitRepository.findRecruitIngAndScheduled(now);
     }
 
     @Override
