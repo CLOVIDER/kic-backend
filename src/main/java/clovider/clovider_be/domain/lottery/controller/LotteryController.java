@@ -6,6 +6,7 @@ import clovider.clovider_be.domain.lottery.dto.LotteryResisterResponseDTO;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.ChildInfo;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponseDTO;
 import clovider.clovider_be.domain.lottery.dto.LotteryResultResponseDTO;
+import clovider.clovider_be.domain.lottery.dto.LotteryResultsGroupedByChildDTO;
 import clovider.clovider_be.domain.lottery.service.LotteryCommandService;
 import clovider.clovider_be.domain.lottery.service.LotteryQueryService;
 import clovider.clovider_be.global.annotation.AuthEmployee;
@@ -52,7 +53,7 @@ public class LotteryController {
     @Parameter(name = "lotteryId", description = "추첨ID")
     @GetMapping("/lotteries/{lotteryId}")
     public ApiResponse<LotteryResultResponseDTO> getLottery(@PathVariable Long lotteryId) {
-        return ApiResponse.onSuccess(lotteryQueryService.getLotteryResult(lotteryId));
+        return ApiResponse.onSuccess(lotteryQueryService.getLotteryResultByLotteryId(lotteryId));
     }
 
     @GetMapping("/recruits/{lotteryId}/percents")
