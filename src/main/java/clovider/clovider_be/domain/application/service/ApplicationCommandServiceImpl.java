@@ -103,8 +103,6 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
         ;
         List<Document> documents = savedApplication.getDocuments();
 
-        savedApplication.isAccept(Accept.ACCEPT);
-
         for (Document document : documents) {
 
             DocumentType documentType = document.getDocumentType();
@@ -115,7 +113,7 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
         }
 
         // document가 모두 승인상태일때 신청서 승인처리
-        savedApplication.isAccept(documents.stream()
+        savedApplication.changeAccept(documents.stream()
                 .allMatch(document -> acceptList.getOrDefault(document.getDocumentType(), Accept.UNACCEPT).equals(Accept.ACCEPT))
                 ? Accept.ACCEPT : Accept.UNACCEPT);
 

@@ -9,8 +9,6 @@ import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import jakarta.transaction.Transactional;
 import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -44,6 +42,6 @@ public class ApplicationDocumentCommandServiceImpl implements ApplicationDocumen
                 () -> new ApiException(ErrorStatus._APPLICATION_NOT_FOUND)
         );
 
-        document.isAccept(Accept.ACCEPT);
+        document.changeAccept(accept);
     }
 }

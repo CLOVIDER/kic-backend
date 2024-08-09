@@ -21,7 +21,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -105,7 +104,7 @@ public class Application extends BaseTimeEntity {
         this.isTemp = Save.APPLIED;
     }
 
-    public void isAccept(Accept accept) {
+    public void changeAccept(Accept accept) {
         this.isAccept = accept;
     }
 }
