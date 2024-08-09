@@ -46,6 +46,14 @@ public class NoticeController {
         return ApiResponse.onSuccess(noticeQueryService.getNotice(noticeId, request, response));
     }
 
+    @Operation(summary = "공지사항 조회2 - 공지사항 세부 페이지", description = "특정 공지사항의 정보를 조회합니다.")
+    @Parameter(name = "noticeId", description = "공지사항 ID", required = true, example = "1")
+    @GetMapping("/notices2/{noticeId}")
+    public ApiResponse<NoticeResponse> getNotice2(@PathVariable Long noticeId, @AuthEmployee Employee employee,
+            HttpServletRequest request, HttpServletResponse response) {
+        return ApiResponse.onSuccess(noticeQueryService.getNotice2(employee, noticeId, request, response));
+    }
+
     @Operation(summary = "공지사항 생성 - 공지사항 작성 페이지", description = "새로운 공지사항을 생성합니다.")
     @PostMapping("/admin/notices")
     public ApiResponse<CustomResult> createNotice(@AuthEmployee Employee employee,

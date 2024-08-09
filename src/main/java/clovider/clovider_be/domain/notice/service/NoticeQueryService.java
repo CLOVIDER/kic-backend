@@ -1,5 +1,6 @@
 package clovider.clovider_be.domain.notice.service;
 
+import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.enums.SearchType;
 import clovider.clovider_be.domain.notice.Notice;
 import clovider.clovider_be.domain.notice.dto.NoticeResponse;
@@ -17,6 +18,8 @@ public interface NoticeQueryService {
     Notice findById(Long id);
 
     NoticeResponse getNotice(Long id, HttpServletRequest request, HttpServletResponse response);
+
+    NoticeResponse getNotice2(Employee employee, Long id, HttpServletRequest request, HttpServletResponse response);
 
     Page<NoticeResponse> getAllNotices(Pageable pageable,SearchType type, String keyword);
 
