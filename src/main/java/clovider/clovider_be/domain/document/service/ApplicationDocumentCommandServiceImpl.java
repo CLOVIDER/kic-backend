@@ -19,15 +19,15 @@ public class ApplicationDocumentCommandServiceImpl implements ApplicationDocumen
     private final ApplicationDocumentRepository applicationDocumentRepository;
 
     @Override
-    public void createApplicationDocuments(Map<DocumentType, String> imageUrls, Application application) {
+    public void createApplicationDocuments(Map<DocumentType, String> fileUrls, Application application) {
 
-        if (imageUrls == null) {
-            imageUrls = new HashMap<>();
+        if (fileUrls == null) {
+            fileUrls = new HashMap<>();
         }
 
-        imageUrls.forEach((documentType, imageUrl) -> {
+        fileUrls.forEach((documentType, fileUrl) -> {
             Document document = Document.builder()
-                    .image(imageUrl)
+                    .image(fileUrl)
                     .application(application)
                     .documentType(documentType)
                     .build();

@@ -6,5 +6,5 @@ import java.util.List;
 import java.util.Map;
 
 public interface ApplicationDocumentCommandService {
-    void createApplicationDocuments(Map<DocumentType, String> imageUrls, Application application);
+    void createApplicationDocuments(Map<DocumentType, String> fileUrls, Application application);
 }

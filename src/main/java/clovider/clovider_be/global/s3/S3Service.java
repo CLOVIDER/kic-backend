@@ -1,5 +1,6 @@
 package clovider.clovider_be.global.s3;
 
+import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -61,9 +62,9 @@ public class S3Service {
     }
 
     // 파일 업로드
-    public String uploadFile(MultipartFile file, String applicationId) {
+    public String uploadFile(MultipartFile file, Employee employee) {
         String fileName = createFileName(file.getOriginalFilename());
-        String folder = DOCUMENTS_FOLDER + applicationId + "/";
+        String folder = DOCUMENTS_FOLDER + employee.getId() + "/";
         return uploadToS3(file, folder, fileName);
     }
 
@@ -108,10 +109,10 @@ public class S3Service {
 
     // TODO: 스케줄링 얘기하면서 수정헤야할 사항
     // 여러 개의 파일 업로드
-    public List<String> uploadFiles(List<MultipartFile> multipartFiles, String applicationId) {
+    public List<String> uploadFiles(List<MultipartFile> multipartFiles, Employee employee) {
         List<String> fileList = new ArrayList<>();
         for (MultipartFile file : multipartFiles) {
-            fileList.add(uploadFile(file, applicationId));
+            fileList.add(uploadFile(file, employee));
         }
         return fileList;
     }
