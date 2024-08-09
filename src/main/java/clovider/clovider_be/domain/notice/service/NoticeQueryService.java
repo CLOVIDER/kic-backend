@@ -19,7 +19,7 @@ public interface NoticeQueryService {
 
     NoticeResponse getNotice(Long id, HttpServletRequest request, HttpServletResponse response);
 
-    NoticeResponse getNotice2(Employee employee, Long id, HttpServletRequest request, HttpServletResponse response);
+    NoticeResponse getNotice(Employee employee, Long id, HttpServletRequest request, HttpServletResponse response);
 
     Page<NoticeResponse> getAllNotices(Pageable pageable,SearchType type, String keyword);
 
