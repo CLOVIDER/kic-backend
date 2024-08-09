@@ -161,7 +161,7 @@ public class AdminController {
             @Parameter(name = "page", description = "페이지 번호"),
             @Parameter(name = "size", description = "페이지 크기"),
             @Parameter(name = "filter", description = "승인 여부 필터링"),
-            @Parameter(name = "q", description = "신청자 아이디 검색")
+            @Parameter(name = "q", description = "신청자 이름 검색")
     })
     @GetMapping("/recruits/applications")
     public ApiResponse<CustomPage<ApplicationList>> findRecruitsApplications(
