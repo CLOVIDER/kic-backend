@@ -90,25 +90,26 @@ public class Recruit extends BaseTimeEntity {
     }
 
 
-    // 정적 팩토리 메서드 추가
-    public static Recruit createRecruit(RecruitCreateRequestDTO requestDTO, Kindergarten kindergarten) {
-        Recruit recruit = new Recruit();
-        recruit.recruitStartDt = requestDTO.getRecruitStartDt();
-        recruit.recruitEndDt = requestDTO.getRecruitEndDt();
-        recruit.recruitCnt = requestDTO.getRecruitCnt();
-        recruit.ageClass = requestDTO.getAgeClass();
-        recruit.firstStartDt = requestDTO.getFirstStartDt();
-        recruit.firstEndDt = requestDTO.getFirstEndDt();
-        recruit.secondStartDt = requestDTO.getSecondStartDt();
-        recruit.secondEndDt = requestDTO.getSecondEndDt();
-        recruit.kindergarten = kindergarten;
-        recruit.workYearsUsage = requestDTO.getWorkYearsUsage();
-        recruit.isSingleParentUsage = requestDTO.getIsSingleParentUsage();
-        recruit.childrenCntUsage = requestDTO.getChildrenCntUsage();
-        recruit.isDisabilityUsage = requestDTO.getIsDisabilityUsage();
-        recruit.isDualIncomeUsage = requestDTO.getIsDualIncomeUsage();
-        recruit.isEmployeeCoupleUsage = requestDTO.getIsEmployeeCoupleUsage();
-        recruit.isSiblingUsage = requestDTO.getIsSiblingUsage();
-        return recruit;
+    public static Recruit createRecruit(RecruitCreateRequestDTO.RecruitClassCreateRequestDTO requestDTO, Kindergarten kindergarten) {
+        return Recruit.builder()
+                .recruitStartDt(requestDTO.getRecruitStartDt())
+                .recruitEndDt(requestDTO.getRecruitEndDt())
+                .recruitCnt(requestDTO.getRecruitCnt())
+                .ageClass(requestDTO.getAgeClass())
+                .firstStartDt(requestDTO.getFirstStartDt())
+                .firstEndDt(requestDTO.getFirstEndDt())
+                .secondStartDt(requestDTO.getSecondStartDt())
+                .secondEndDt(requestDTO.getSecondEndDt())
+                .kindergarten(kindergarten)
+                .workYearsUsage(requestDTO.getWorkYearsUsage())
+                .isSingleParentUsage(requestDTO.getIsSingleParentUsage())
+                .childrenCntUsage(requestDTO.getChildrenCntUsage())
+                .isDisabilityUsage(requestDTO.getIsDisabilityUsage())
+                .isDualIncomeUsage(requestDTO.getIsDualIncomeUsage())
+                .isEmployeeCoupleUsage(requestDTO.getIsEmployeeCoupleUsage())
+                .isSiblingUsage(requestDTO.getIsSiblingUsage())
+                .build();
     }
+
+
 }

@@ -232,6 +232,8 @@ public class AdminResponse {
         private Boolean isCreated;
     }
 
+
+
     public static RecruitCreationInfo toRecruitCreationInfo(List<KindergartenClassInfo> kindergartenClassInfos,
             RecruitDateAndWeightInfo recruitDetails, Boolean isCreated) {
         return RecruitCreationInfo.builder()
