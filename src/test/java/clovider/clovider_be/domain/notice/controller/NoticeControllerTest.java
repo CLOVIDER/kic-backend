@@ -22,7 +22,7 @@ import clovider.clovider_be.domain.employee.service.EmployeeQueryService;
 import clovider.clovider_be.domain.enums.Role;
 import clovider.clovider_be.domain.enums.SearchType;
 import clovider.clovider_be.domain.notice.Notice;
-import clovider.clovider_be.domain.notice.utils.WithMockAdmin;
+import clovider.clovider_be.domain.utils.WithMockAdmin;
 import clovider.clovider_be.domain.notice.dto.NoticeRequest;
 import clovider.clovider_be.domain.notice.dto.NoticeResponse;
 import clovider.clovider_be.domain.notice.dto.NoticeUpdateResponse;

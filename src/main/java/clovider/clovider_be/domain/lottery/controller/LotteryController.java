@@ -81,4 +81,14 @@ public class LotteryController {
         Long applicationId = applicationQueryService.getApplicationId(employee);
         return ApiResponse.onSuccess(lotteryQueryService.getChildInfos(applicationId));
     }
+
+    @Operation(summary = "추첨 결과조회 ", description = "유저가 본인의 추첨에 대한 결과를 조회합니다.")
+    @Parameter(name = "employeeId", description = "직원 ID")
+    @GetMapping("/lottery/results/{employeeId}")
+    public List<LotteryResultsGroupedByChildDTO> getLotteryResultsByEmployeeId(@AuthEmployee Employee employee) {
+        List<LotteryResultsGroupedByChildDTO> results = lotteryQueryService.getLotteryResultsByEmployeeId(employee);
+
+        return ApiResponse.onSuccess(results).getResult();
+    }
+
 }
