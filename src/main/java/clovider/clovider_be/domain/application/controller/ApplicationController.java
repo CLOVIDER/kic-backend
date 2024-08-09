@@ -97,4 +97,5 @@ public class ApplicationController {
         return ApiResponse.onSuccess(applicationCommandService.applicationAccept(applicationId, acceptList));
     }
 
+
 }

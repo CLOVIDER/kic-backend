@@ -48,7 +48,7 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
 
         applicationRepository.save(savedApplication);
 
-        applicationDocumentCommandService.createApplicationDocuments(applicationRequest.getImageUrls(), savedApplication);
+        applicationDocumentCommandService.createApplicationDocuments(applicationRequest.getFileUrls(), savedApplication);
 
         lotteryCommandService.insertLottery(applicationRequest.getChildrenRecruitList(), savedApplication.getId());
 
@@ -59,7 +59,7 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
     public CustomResult applicationUpdate(Long Id, ApplicationRequest applicationRequest) {
         Application savedApplication = applicationRepository.findById(Id).orElseThrow();
         savedApplication.update(applicationRequest);
-        applicationDocumentCommandService.createApplicationDocuments(applicationRequest.getImageUrls(), savedApplication);
+        applicationDocumentCommandService.createApplicationDocuments(applicationRequest.getFileUrls(), savedApplication);
 
         return CustomResult.toCustomResult(savedApplication.getId());
     }
@@ -90,7 +90,7 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
                 .build()
         );
 
-        applicationDocumentCommandService.createApplicationDocuments(applicationRequest.getImageUrls(), savedApplication);
+        applicationDocumentCommandService.createApplicationDocuments(applicationRequest.getFileUrls(), savedApplication);
 
         return CustomResult.toCustomResult(savedApplication.getId());
     }

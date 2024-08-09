@@ -1,5 +1,6 @@
 package clovider.clovider_be.domain.notice.service;
 
+import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.enums.SearchType;
 import clovider.clovider_be.domain.notice.Notice;
 import clovider.clovider_be.domain.notice.dto.NoticeResponse;
@@ -7,6 +8,7 @@ import clovider.clovider_be.domain.notice.dto.NoticeTop3;
 import clovider.clovider_be.domain.notice.repository.NoticeRepository;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
+import clovider.clovider_be.global.util.RedisUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class NoticeQueryServiceImpl implements NoticeQueryService {
 
     private final NoticeRepository noticeRepository;
+    private final RedisUtil redisUtil;
 
     @Override
     public Notice findById(Long id) {
@@ -32,13 +35,28 @@ public class NoticeQueryServiceImpl implements NoticeQueryService {
     }
 
     @Cacheable(value = "notices", key = "#noticeId")
-    @Transactional
     @Override
     public NoticeResponse getNotice(Long noticeId, HttpServletRequest request, HttpServletResponse response) {
         Notice foundNotice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new ApiException(ErrorStatus._NOTICE_NOT_FOUND));
 
         handleViewCookie(foundNotice, noticeId, request, response);
+
+        return NoticeResponse.toNoticeResponse(foundNotice);
+    }
+
+    @Cacheable(value = "notices", key = "#noticeId")
+    @Override
+    public NoticeResponse getNotice(Employee employee, Long noticeId,
+            HttpServletRequest request, HttpServletResponse response) {
+        Notice foundNotice = noticeRepository.findById(noticeId)
+                .orElseThrow(() -> new ApiException(ErrorStatus._NOTICE_NOT_FOUND));
+
+        // 직원 ID를 사용하여 공지사항 조회 상태 관리
+        if (!redisUtil.hasViewedNotice(noticeId, employee.getId())) {
+            redisUtil.markNoticeAsViewed(noticeId, employee.getId());
+            foundNotice.incrementHits(); // 조회수가 증가하는 로직
+        }
 
         return NoticeResponse.toNoticeResponse(foundNotice);
     }
@@ -83,5 +101,7 @@ public class NoticeQueryServiceImpl implements NoticeQueryService {
         }
         return null;
     }
+
+
 
 }

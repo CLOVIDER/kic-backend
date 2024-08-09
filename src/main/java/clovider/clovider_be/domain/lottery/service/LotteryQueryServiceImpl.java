@@ -2,10 +2,13 @@ package clovider.clovider_be.domain.lottery.service;
 
 import clovider.clovider_be.domain.admin.dto.AdminResponse.AcceptResult;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.LotteryResult;
-import clovider.clovider_be.domain.application.Application;
+
 import clovider.clovider_be.domain.application.repository.ApplicationRepository;
+
+import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.enums.Result;
+
 import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.ChildInfo;
@@ -18,8 +21,11 @@ import clovider.clovider_be.domain.lottery.dto.LotteryResultsGroupedByChildDTO;
 import clovider.clovider_be.domain.lottery.repository.LotteryRepository;
 import clovider.clovider_be.domain.recruit.Recruit;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruit;
+import clovider.clovider_be.domain.recruit.repository.RecruitRepository;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +34,7 @@ import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.joda.time.DateTime;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -43,17 +50,27 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
     private final LotteryRepository lotteryRepository;
     private final ApplicationRepository applicationRepository;
 
+    private final RecruitRepository recruitRepository;
+
     @Override
-    public LotteryResultResponseDTO getLotteryResult(Long lotteryId) {
+    public LotteryResultResponseDTO getLotteryResultByLotteryId(Long lotteryId) {
         Lottery lottery = lotteryRepository.findById(lotteryId)
                 .orElseThrow(() -> new ApiException(ErrorStatus._LOTTERY_NOT_FOUND));
 
+
+        String KindergartenNm = applicationRepository.findKindergartenNameByLotteryId(lotteryId);
+
+
+
+        LocalDateTime endDate = lottery.getRecruit().getFirstEndDt();
+
         return new LotteryResultResponseDTO(
-                "추첨 결과가 성공적으로 조회되었습니다.",
+
                 new LotteryResultResponseDTO.Result(lottery.getId(), lottery.getCreatedAt(),
-                        lottery.getResult())
+                        lottery.getResult(), KindergartenNm, lottery.getRankNo(), endDate)
         );
     }
+
 
     @Override
     public List<CompetitionRate> getRecruitRates(List<NowRecruit> recruits) {
@@ -116,7 +133,7 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
     }
 
     @Override
-    public Page<LotteryResult> getLotteryResult(Long kindergartenId, Pageable pageable, String value) {
+    public Page<LotteryResult> getLotteryResultByLotteryId(Long kindergartenId, Pageable pageable, String value) {
         return lotteryRepository.getLotteryResults(kindergartenId,pageable,value);
     }
 

@@ -32,7 +32,6 @@ public class EmployeeQueryServiceImpl implements EmployeeQueryService {
         );
     }
 
-    // TODO: BCrypt 적용 부분 추가하기 (Before: 회원가입으로 더미데이터 넣기)
     @Override
     public Employee checkAccountIdAndPwd(LoginRequest loginRequest) {
 

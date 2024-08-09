@@ -52,7 +52,7 @@ public class ApplicationRepositoryCustomImpl implements ApplicationRepositoryCus
 
     private BooleanExpression searchEmployee(String value) {
 
-        return value != null ? employee.accountId.containsIgnoreCase(value) : null;
+        return value != null ? employee.nameKo.containsIgnoreCase(value) : null;
     }
 
     private BooleanExpression filterAccept(String filter) {

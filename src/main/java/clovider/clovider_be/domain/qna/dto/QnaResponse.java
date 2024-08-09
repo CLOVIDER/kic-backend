@@ -1,7 +1,9 @@
 package clovider.clovider_be.domain.qna.dto;
 
 import clovider.clovider_be.domain.qna.Qna;
+import clovider.clovider_be.domain.qnaImage.dto.QnaImageResponse;
 import java.time.LocalDate;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,8 +45,13 @@ public class QnaResponse {
 
             private final String answer;
             private final Boolean isAuthor;
+            private List<QnaImageResponse> qnaImageList;
 
             public static DetailedQnaResponse fromQna(Qna qna, Long employeeId) {
+                List<QnaImageResponse> qnaImageResponseList = qna.getImages().stream()
+                        .map(QnaImageResponse::toQnaImageResponse)
+                        .toList();
+
                 return DetailedQnaResponse.builder()
                         .qnaId(qna.getId())
                         .title(qna.getTitle())
@@ -55,6 +62,7 @@ public class QnaResponse {
                         .createdAt(qna.getCreatedAt().toLocalDate())
                         .answer(qna.getAnswer())
                         .isAuthor(qna.getEmployee().getId().equals(employeeId))
+                        .qnaImageList(qnaImageResponseList)
                         .build();
             }
         }
@@ -71,5 +79,7 @@ public class QnaResponse {
                 return QnaUpdateResponse.builder().qnaId(qnaId).build();
             }
         }
+
+
     }
 }
