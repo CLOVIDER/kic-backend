@@ -11,23 +11,23 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
 
-public class WithMockCustomUserSecurityContextFactory
-        implements WithSecurityContextFactory<WithMockAdmin> {
+public class WithMockCustomEmployeeSecurityContextFactory
+        implements WithSecurityContextFactory<WithMockEmployee> {
 
     @Override
-    public SecurityContext createSecurityContext(WithMockAdmin annotation) {
+    public SecurityContext createSecurityContext(WithMockEmployee annotation) {
 
         SecurityContext context = SecurityContextHolder.createEmptyContext();
 
         Employee employee = Employee.builder()
-                .id(Long.parseLong(annotation.username()))
+                .id(2L)
                 .nameKo("Test Name")
                 .accountId("testAccountId")
                 .password("testPassword")
                 .employeeNo("12345")
                 .joinDt(LocalDate.now())
                 .dept("Test Dept")
-                .role(Role.ADMIN)
+                .role(Role.EMPLOYEE)
                 .build();
 
         UserDetails userDetails = new CustomUserDetails(employee);
