@@ -8,6 +8,7 @@ import clovider.clovider_be.domain.qna.dto.QnaRequest.QnaAnswerRequest;
 import clovider.clovider_be.domain.qna.dto.QnaRequest.QnaCreateRequest;
 import clovider.clovider_be.domain.qna.dto.QnaResponse.BaseQnaResponse.QnaUpdateResponse;
 import clovider.clovider_be.domain.qna.repository.QnaRepository;
+import clovider.clovider_be.domain.qnaImage.QnaImage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +26,15 @@ public class QnaCommandServiceImpl implements QnaCommandService {
     public CustomResult createQna(Employee employee, QnaCreateRequest qnaCreateRequest) {
 
         Qna savedQna = qnaRepository.save(QnaCreateRequest
-                .toQna(qnaCreateRequest, employeeQueryService.getEmployee(employee.getId())));
+                .toQna(qnaCreateRequest, employee));
+
+        qnaCreateRequest.getImageUrls().forEach(url -> {
+            QnaImage image = QnaImage.builder()
+                    .image(url)
+                    .qna(savedQna)
+                    .build();
+            savedQna.getImages().add(image);
+        });
 
         return CustomResult.toCustomResult(savedQna.getId());
     }
