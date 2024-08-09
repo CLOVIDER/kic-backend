@@ -4,17 +4,18 @@ import clovider.clovider_be.domain.admin.dto.AdminResponse.RecruitCreationInfo;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitInfo;
 import clovider.clovider_be.domain.recruit.Recruit;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruits;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface RecruitQueryService {
 
     List<Recruit> getRecruitByKindergarten(Long kindergartenId);
 
-    NowRecruits getNowRecruitOrderByClass();
+    NowRecruits getNowRecruitOrderByClass(LocalDateTime now);
 
-    List<Long> getRecruitIngAndScheduled();
+    List<Long> getRecruitIngAndScheduled(LocalDateTime now);
 
-    List<Recruit> getNowRecruit();
+    List<Recruit> getNowRecruit(LocalDateTime now);
 
     RecruitInfo getRecruitInfo(Long recruitId);
 

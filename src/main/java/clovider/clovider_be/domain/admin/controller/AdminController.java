@@ -35,6 +35,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
@@ -43,13 +44,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "관리자 기능 관련 API 명세서")
 @RestController
@@ -72,7 +67,8 @@ public class AdminController {
     public ApiResponse<DashBoard> getDashboard() {
 
         // 진행 중인 모집 정보, 기간, 경쟁률
-        List<NowRecruit> recruits = recruitQueryService.getNowRecruitOrderByClass()
+        List<NowRecruit> recruits = recruitQueryService.getNowRecruitOrderByClass(
+                        LocalDateTime.now())
                 .getNowRecruits();
 
         // Top3 공지글
@@ -126,7 +122,7 @@ public class AdminController {
     @GetMapping("/recruits/applications/status")
     public ApiResponse<ApplicationStatus> getApplicationsStatus() {
 
-        List<Long> recruitIds = recruitQueryService.getRecruitIngAndScheduled();
+        List<Long> recruitIds = recruitQueryService.getRecruitIngAndScheduled(LocalDateTime.now());
         Long totalCnt = lotteryQueryService.getTotalApplication(recruitIds);
         Long unAcceptCnt = lotteryQueryService.getUnAcceptApplication(
                 recruitIds);
@@ -138,7 +134,7 @@ public class AdminController {
     @GetMapping("/recruits/kindergartens/status")
     public ApiResponse<List<AcceptResult>> getAcceptStatus() {
 
-        List<Long> recruitIds = recruitQueryService.getRecruitIngAndScheduled();
+        List<Long> recruitIds = recruitQueryService.getRecruitIngAndScheduled(LocalDateTime.now());
 
         return ApiResponse.onSuccess(lotteryQueryService.getAcceptResult(recruitIds));
     }
@@ -159,7 +155,7 @@ public class AdminController {
             @Parameter(name = "page", description = "페이지 번호"),
             @Parameter(name = "size", description = "페이지 크기"),
             @Parameter(name = "filter", description = "승인 여부 필터링"),
-            @Parameter(name = "q", description = "신청자 아이디 검색")
+            @Parameter(name = "q", description = "신청자 이름 검색")
     })
     @GetMapping("/recruits/applications")
     public ApiResponse<CustomPage<ApplicationList>> findRecruitsApplications(
@@ -171,7 +167,7 @@ public class AdminController {
         PageRequest pageRequest = PageRequest.of(page, size);
         SearchVO searchVO = SearchVO.of(filter, value);
 
-        List<Recruit> recruits = recruitQueryService.getNowRecruit();
+        List<Recruit> recruits = recruitQueryService.getNowRecruit(LocalDateTime.now());
 
         List<Long> applicationIds = lotteryQueryService.getApplicationsByLotteries(
                 recruits);
@@ -203,9 +199,8 @@ public class AdminController {
 
     @Operation(summary = "모집 생성", description = "관리자가 모집을 생성합니다.")
     @PostMapping("/recruit")
-    public ApiResponse<RecruitCreateResponseDTO> createRecruit(
-            @RequestBody RecruitCreateRequestDTO requestDTO) {
-        RecruitCreateResponseDTO responseDTO = recruitCommandService.createRecruit(requestDTO);
+    public ApiResponse<RecruitCreationInfo> createRecruit(@RequestBody RecruitCreateRequestDTO requestDTO) {
+        RecruitCreationInfo responseDTO = recruitCommandService.createRecruit(requestDTO);
         return ApiResponse.onSuccess(responseDTO);
     }
 
@@ -222,7 +217,7 @@ public class AdminController {
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
             @RequestParam(name = "accountId", required = false) String value) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Page<LotteryResult> lotteryResultPage = lotteryQueryService.getLotteryResult(kindergartenId,
+        Page<LotteryResult> lotteryResultPage = lotteryQueryService.getLotteryResultByLotteryId(kindergartenId,
                 pageRequest, value);
 
         return ApiResponse.onSuccess(new CustomPage<>(lotteryResultPage));
@@ -233,6 +228,17 @@ public class AdminController {
     public ApiResponse<RecruitCreationInfo> getRecruitCreationInfo() {
         return ApiResponse.onSuccess(recruitQueryService.getRecruitCreationInfo());
     }
+
+//    @Operation(summary = "관리자가 모집을 수정한다.", description = "관리자가 이미 생성된 모집을 수정한다.")
+//    @Parameter(name = "recruitId", description = "모집 ID")
+//    @PatchMapping("/recruit/{recruitId}")
+//    public ApiResponse<RecruitCreationInfo> updateRecruit(
+//            @PathVariable Long recruitId,
+//            @RequestBody RecruitCreateRequestDTO requestDTO) {
+//
+//        RecruitCreationInfo responseDTO = recruitCommandService.updateRecruit(recruitId, requestDTO);
+//        return ApiResponse.onSuccess(responseDTO);
+//    }
 
 
 }

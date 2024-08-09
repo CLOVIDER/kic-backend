@@ -16,6 +16,7 @@ import clovider.clovider_be.domain.recruit.service.RecruitQueryService;
 import clovider.clovider_be.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,7 +36,7 @@ public class RecruitController {
     @GetMapping
     public ApiResponse<NowRecruitInfo> getRecruitInfo() {
 
-        List<NowRecruit> recruits = recruitQueryService.getNowRecruitOrderByClass()
+        List<NowRecruit> recruits = recruitQueryService.getNowRecruitOrderByClass(LocalDateTime.now())
                 .getNowRecruits();
         if (recruits.isEmpty()) {
             return ApiResponse.onSuccess(toNotRecruitInfo());
@@ -59,7 +60,7 @@ public class RecruitController {
     @GetMapping("/recruits/weights")
     public ApiResponse<RecruitWeight> recruitWeight() {
 
-        Recruit recruit = recruitQueryService.getNowRecruit().get(0);
+        Recruit recruit = recruitQueryService.getNowRecruit(LocalDateTime.now()).get(0);
 
         return ApiResponse.onSuccess(RecruitResponse.toRecruitWeight(recruit));
     }
