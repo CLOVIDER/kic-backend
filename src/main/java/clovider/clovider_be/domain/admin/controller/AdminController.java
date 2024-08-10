@@ -12,6 +12,7 @@ import clovider.clovider_be.domain.admin.dto.AdminResponse.RecruitCreationInfo;
 import clovider.clovider_be.domain.admin.dto.SearchVO;
 import clovider.clovider_be.domain.application.service.ApplicationQueryService;
 import clovider.clovider_be.domain.common.CustomPage;
+import clovider.clovider_be.domain.enums.AgeClass;
 import clovider.clovider_be.domain.kindergarten.service.KindergartenQueryService;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitInfo;
@@ -23,7 +24,6 @@ import clovider.clovider_be.domain.notice.service.NoticeQueryService;
 import clovider.clovider_be.domain.qna.service.QnaQueryService;
 import clovider.clovider_be.domain.recruit.Recruit;
 import clovider.clovider_be.domain.recruit.dto.RecruitCreateRequestDTO;
-import clovider.clovider_be.domain.recruit.dto.RecruitCreateResponseDTO;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruit;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruitInfo;
@@ -44,7 +44,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "관리자 기능 관련 API 명세서")
 @RestController
@@ -213,11 +219,12 @@ public class AdminController {
     @GetMapping("/lotteries/result/{kindergartenId}")
     public ApiResponse<CustomPage<LotteryResult>> getLotteryResult(
             @PathVariable(name = "kindergartenId") Long kindergartenId,
+            @RequestParam(name = "class", required = true) AgeClass ageClass,
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
             @RequestParam(name = "accountId", required = false) String value) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Page<LotteryResult> lotteryResultPage = lotteryQueryService.getLotteryResultByLotteryId(kindergartenId,
+        Page<LotteryResult> lotteryResultPage = lotteryQueryService.getLotteryResultByLotteryId(ageClass, kindergartenId,
                 pageRequest, value);
 
         return ApiResponse.onSuccess(new CustomPage<>(lotteryResultPage));

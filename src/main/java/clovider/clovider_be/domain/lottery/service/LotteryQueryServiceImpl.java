@@ -2,13 +2,11 @@ package clovider.clovider_be.domain.lottery.service;
 
 import clovider.clovider_be.domain.admin.dto.AdminResponse.AcceptResult;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.LotteryResult;
-
-import clovider.clovider_be.domain.application.repository.ApplicationRepository;
-
 import clovider.clovider_be.domain.application.Application;
+import clovider.clovider_be.domain.application.repository.ApplicationRepository;
 import clovider.clovider_be.domain.employee.Employee;
+import clovider.clovider_be.domain.enums.AgeClass;
 import clovider.clovider_be.domain.enums.Result;
-
 import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.ChildInfo;
@@ -24,17 +22,14 @@ import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruit;
 import clovider.clovider_be.domain.recruit.repository.RecruitRepository;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.joda.time.DateTime;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -133,8 +128,8 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
     }
 
     @Override
-    public Page<LotteryResult> getLotteryResultByLotteryId(Long kindergartenId, Pageable pageable, String value) {
-        return lotteryRepository.getLotteryResults(kindergartenId,pageable,value);
+    public Page<LotteryResult> getLotteryResultByLotteryId(AgeClass ageClass, Long kindergartenId, Pageable pageable, String value) {
+        return lotteryRepository.getLotteryResults(ageClass, kindergartenId,pageable,value);
     }
 
     @Override

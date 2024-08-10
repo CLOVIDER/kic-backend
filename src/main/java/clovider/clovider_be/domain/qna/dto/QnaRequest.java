@@ -19,9 +19,8 @@ public class QnaRequest {
         @Size(max = 100, message = "질문 제목은 100자 이내로 입력해 주세요.")
         private String title;
 
-        @Schema(description = "질문 내용", example = "시스템 오류가 발생했습니다. 도움을 요청합니다.", maxLength = 500)
+        @Schema(description = "질문 내용", example = "시스템 오류가 발생했습니다. 도움을 요청합니다.")
         @NotEmpty(message = "질문 내용은 필수입니다.")
-        @Size(max = 500, message = "제목은 500자 이내로 입력해 주세요.")
         private String question;
 
         @Schema(description = "공지사항의 공개 여부", example = "1", allowableValues = {"0", "1"})
