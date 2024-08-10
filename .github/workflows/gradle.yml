@@ -52,7 +52,7 @@ jobs:
 
       - name: Update image tag in deployment file
         run: |
-          yq e ".spec.template.spec.containers[0].image = \"kids-in-company.kr-central-2.kcr.dev/clovider-registry/clovider-be-app:${{ github.sha }}\"" -i clovider-app/be-deployment.yaml
+          yq w -i clovider-app/be-deployment.yaml spec.template.spec.containers[0].image "kids-in-company.kr-central-2.kcr.dev/clovider-registry/clovider-be-app:${{ github.sha }}"
 
       - name: Commit and Push changes
         run: |
