@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   build-and-push-image:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout Repository and Submodules
         uses: actions/checkout@v3
@@ -35,7 +35,7 @@ jobs:
             -Djib.to.auth.password=${{ secrets.KAKAO_ACCESS_SECRET }}
 
   update-manifest-state:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: build-and-push-image
     steps:
       - name: Checkout kic-k8s Repository
