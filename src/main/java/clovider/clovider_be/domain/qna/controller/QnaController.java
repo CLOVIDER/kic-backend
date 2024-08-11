@@ -86,7 +86,7 @@ public class QnaController {
 
     @Operation(summary = "Q&A 답변 수정 - Q&A 답변 작성 페이지", description = "관리자가 Q&A에 답변을 수정합니다.")
     @Parameter(name = "qnaId", description = "qna ID", required = true, example = "1")
-    @PatchMapping("/admin/qnas/{qnaId}")
+    @PatchMapping("/admin/qnas/{qnaId}/answer")
     public ApiResponse<QnaUpdateResponse> updateQnaAnswer(
             @AuthEmployee Employee admin,
             @PathVariable Long qnaId,
@@ -96,7 +96,7 @@ public class QnaController {
 
     @Operation(summary = "Q&A 답변 조회 - Q&A 답변 수정 페이지", description = "관리자가 Q&A 답변 수정을 위해 답변을 조회합니다.")
     @Parameter(name = "qnaId", description = "qna ID", required = true, example = "1")
-    @GetMapping("/admin/qnas/answer/{qnaId}")
+    @GetMapping("/admin/qnas/{qnaId}/answer")
     public ApiResponse<QnaAnswerResponse> getQnaAnswer(@PathVariable Long qnaId){
         return ApiResponse.onSuccess(qnaQueryService.getQnaAnswer(qnaId));
     }
