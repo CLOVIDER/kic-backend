@@ -13,8 +13,7 @@ import clovider.clovider_be.global.annotation.AuthEmployee;
 import clovider.clovider_be.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -49,10 +48,10 @@ public class LotteryController {
         return  ApiResponse.onSuccess(lotteryService.updateRegistry(lotteryId));
     }
 
-    @Operation(summary = "추첨 결과 조회", description = "추첨ID에 따라서 추첨 결과를 조회한다.")
+    @Operation(summary = "추첨ID(아이이름)에 따른 추첨 결과 조회 ", description = "추첨ID에 따라서 추첨 결과를 조회한다.")
     @Parameter(name = "lotteryId", description = "추첨ID")
     @GetMapping("/lotteries/{lotteryId}")
-    public ApiResponse<LotteryResultResponseDTO> getLottery(@PathVariable Long lotteryId) {
+    public ApiResponse<LotteryResultResponseDTO> getLotteryByLotteryId(@PathVariable Long lotteryId) {
         return ApiResponse.onSuccess(lotteryQueryService.getLotteryResultByLotteryId(lotteryId));
     }
 

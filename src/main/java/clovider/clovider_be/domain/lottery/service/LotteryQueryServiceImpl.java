@@ -5,9 +5,12 @@ import clovider.clovider_be.domain.admin.dto.AdminResponse.LotteryResult;
 
 import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.application.repository.ApplicationRepository;
+
+import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.enums.AgeClass;
 import clovider.clovider_be.domain.enums.Result;
+
 import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.ChildInfo;
@@ -23,6 +26,7 @@ import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruit;
 import clovider.clovider_be.domain.recruit.repository.RecruitRepository;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
