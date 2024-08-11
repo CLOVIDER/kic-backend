@@ -3,6 +3,8 @@ package clovider.clovider_be.domain.qna;
 import clovider.clovider_be.domain.common.BaseTimeEntity;
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.qna.dto.QnaRequest.QnaCreateRequest;
+import clovider.clovider_be.domain.qnaImage.QnaImage;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,7 +13,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,6 +38,10 @@ public class Qna extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "qna_id")
     private Long id;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "qna", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<QnaImage> images = new ArrayList<>();
 
     @Column(nullable = false, length = 100)
     private String title;
@@ -59,6 +68,21 @@ public class Qna extends BaseTimeEntity {
         this.title = qnaCreateRequest.getTitle();
         this.question = qnaCreateRequest.getQuestion();
         this.isVisibility = qnaCreateRequest.getIsVisibility();
+        updateImages(qnaCreateRequest.getImageUrls());
+    }
+
+    private void updateImages(List<String> imageUrls) {
+        // 기존 이미지를 제거
+        this.images.clear();
+
+        // 새로운 이미지를 추가
+        imageUrls.forEach(url -> {
+            QnaImage image = QnaImage.builder()
+                    .image(url)
+                    .qna(this)
+                    .build();
+            this.images.add(image);
+        });
     }
 
     public void updateAnswer(String answer, Employee admin) {

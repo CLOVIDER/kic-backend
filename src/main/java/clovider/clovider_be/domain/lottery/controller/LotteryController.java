@@ -1,8 +1,12 @@
 package clovider.clovider_be.domain.lottery.controller;
 
+import clovider.clovider_be.domain.application.service.ApplicationQueryService;
 import clovider.clovider_be.domain.employee.Employee;
-import clovider.clovider_be.domain.lottery.dto.*;
+import clovider.clovider_be.domain.lottery.dto.LotteryResisterResponseDTO;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.ChildInfo;
+import clovider.clovider_be.domain.lottery.dto.LotteryResponseDTO;
+import clovider.clovider_be.domain.lottery.dto.LotteryResultResponseDTO;
+import clovider.clovider_be.domain.lottery.dto.LotteryResultsGroupedByChildDTO;
 import clovider.clovider_be.domain.lottery.service.LotteryCommandService;
 import clovider.clovider_be.domain.lottery.service.LotteryQueryService;
 import clovider.clovider_be.global.annotation.AuthEmployee;
@@ -27,6 +31,7 @@ public class LotteryController {
 
     private final LotteryCommandService lotteryService;
     private final LotteryQueryService lotteryQueryService;
+    private final ApplicationQueryService applicationQueryService;
 
     @Operation(summary = "추첨 생성 및 진행", description = "관리자가 추첨을 생성함과 동시에 실행한다. 모집의 가중치 사용여부에 따라서 진행된다.")
     @Parameter(name = "recruitId", description = "모집ID")
@@ -68,7 +73,14 @@ public class LotteryController {
     @GetMapping("/lotteries/children/{applicationId}")
     public ApiResponse<List<ChildInfo>> getChildrenInfos(@PathVariable Long applicationId) {
         return ApiResponse.onSuccess(lotteryQueryService.getChildInfos(applicationId));
-    }   
+    }
+
+    @Operation(summary = "아이 리스트 정보 조회 - 신청서 조회 페이지", description = "사용자 신청서에 제출된 아이 리스트 정보를 조회합니다.")
+    @GetMapping("/lotteries/children")
+    public ApiResponse<List<ChildInfo>> getChildrenInfosUsingToken(@AuthEmployee Employee employee) {
+        Long applicationId = applicationQueryService.getApplicationId(employee);
+        return ApiResponse.onSuccess(lotteryQueryService.getChildInfos(applicationId));
+    }
 
     @Operation(summary = "추첨 결과조회 ", description = "유저가 본인의 추첨에 대한 결과를 조회합니다.")
     @Parameter(name = "employeeId", description = "직원 ID")

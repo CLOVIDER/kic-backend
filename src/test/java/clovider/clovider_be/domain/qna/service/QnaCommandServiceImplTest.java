@@ -18,6 +18,7 @@ import clovider.clovider_be.domain.qna.dto.QnaResponse.BaseQnaResponse.QnaUpdate
 import clovider.clovider_be.domain.qna.repository.QnaRepository;
 import clovider.clovider_be.domain.utils.TestUtils;
 import java.time.LocalDate;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -59,8 +60,8 @@ class QnaCommandServiceImplTest {
         setField(updateRequest, "title", "수정된 제목");
         setField(updateRequest, "question", "수정된 문제");
         setField(updateRequest, "isVisibility", '0');
+        setField(updateRequest,"imageUrls", List.of("123","456"));
 
-        when(employeeQueryService.getEmployee(employee.getId())).thenReturn(employee);
         when(qnaRepository.save(any(Qna.class))).thenReturn(qna);
 
         // when
@@ -71,7 +72,6 @@ class QnaCommandServiceImplTest {
         assertThat(result.getId()).isEqualTo(qna.getId());
 
         verify(qnaRepository).save(any(Qna.class));
-        verify(employeeQueryService).getEmployee(employee.getId());
     }
 
     @Test
@@ -83,6 +83,7 @@ class QnaCommandServiceImplTest {
         setField(updateRequest, "title", "수정된 제목");
         setField(updateRequest, "question", "수정된 문제");
         setField(updateRequest, "isVisibility", '0');
+        TestUtils.setField(updateRequest,"imageUrls", List.of("123","456"));
 
         when(qnaQueryService.findById(qna.getId())).thenReturn(qna);
 

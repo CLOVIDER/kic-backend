@@ -14,6 +14,7 @@ import clovider.clovider_be.domain.qna.dto.QnaResponse.BaseQnaResponse;
 import clovider.clovider_be.domain.utils.TestUtils;
 import clovider.clovider_be.global.config.QuerydslConfig;
 import java.time.LocalDate;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -73,6 +74,7 @@ class QnaRepositoryTest {
         TestUtils.setField(updateRequest, "title", "수정된 제목");
         TestUtils.setField(updateRequest, "question", "수정된 문제");
         TestUtils.setField(updateRequest, "isVisibility", '0');
+        TestUtils.setField(updateRequest,"imageUrls", List.of("123","456"));
 
         // when
         savedQna.updateQna(updateRequest);

@@ -20,6 +20,7 @@ public interface ApplicationQueryService {
     CustomPage<ApplicationResponse> applicationListRead(int page, int size);
 
     Application getApplication(Long Id);
-
     Application getApplicationWithEmployee(Long applicationId);
+
+    Long getApplicationId(Employee employee);
 }

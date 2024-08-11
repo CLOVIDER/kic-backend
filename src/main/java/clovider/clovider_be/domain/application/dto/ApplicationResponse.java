@@ -9,6 +9,8 @@ import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.ChildInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,7 +29,6 @@ public class ApplicationResponse {
     @JsonIgnore
     private Employee employee;
 
-    private Integer workYears;
     private Character isSingleParent;
     private Integer ChildrenCnt;
     private Character isDisability;
@@ -37,14 +38,17 @@ public class ApplicationResponse {
     private Accept isAccept;
     private Save isTemp;
 
+    private LocalDate joinDt;
     private List<Document> documents;
 
     public static ApplicationResponse toEntity(Application application) {
 
+        Employee employee = application.getEmployee();
+
         return ApplicationResponse.builder()
                 .id(application.getId())
-                .employee(application.getEmployee())
-                .workYears(application.getWorkYears())
+                .employee(employee)
+                .joinDt(employee.getJoinDt())
                 .isSingleParent(application.getIsSingleParent())
                 .ChildrenCnt(application.getChildrenCnt())
                 .isDisability(application.getIsDisability())

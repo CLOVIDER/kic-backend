@@ -6,6 +6,8 @@ import clovider.clovider_be.domain.application.dto.ApplicationRequest;
 import clovider.clovider_be.domain.common.CustomResult;
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.enums.Accept;
+import clovider.clovider_be.domain.enums.DocumentType;
+import java.util.Map;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,5 +17,5 @@ public interface ApplicationCommandService {
     CustomResult applicationUpdate(Long Id, ApplicationRequest applicationRequest);
     CustomResult applicationDelete(Long Id);
     CustomResult applicationTempSave(ApplicationRequest ApplicationRequest, Employee employee);
-    CustomResult applicationAccept(Long Id, Accept accept);
+    CustomResult applicationAccept(Long Id, Map<DocumentType, Accept> acceptList);
 }
