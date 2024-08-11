@@ -62,19 +62,49 @@ public class RecruitCommandServiceImpl implements RecruitCommandService{
         return createRecruitCreationInfo(allRecruits);
     }
 
-//    @Override
-//    @Transactional
-//    public AdminResponse.RecruitCreationInfo updateRecruit(Long recruitId, RecruitCreateRequestDTO requestDTO) {
-//        Recruit recruit = recruitRepository.findById(recruitId)
-//                .orElseThrow(() -> new ApiException(ErrorStatus._RECRUIT_NOT_FOUND));
-//
-//        // 업데이트 로직
-//        recruit.updateRecruit(requestDTO);
-//
-//        // 저장 및 반환
-//        Recruit savedRecruit = recruitRepository.save(recruit);
-//        return createRecruitCreationInfo(savedRecruit);
-//    }
+    @Override
+    public AdminResponse.RecruitCreationInfo updateRecruit(Long recruitId, RecruitCreateRequestDTO requestDTO) {
+        // 기존 모집 정보 조회
+        Recruit recruit = recruitRepository.findById(recruitId)
+                .orElseThrow(() -> new ApiException(ErrorStatus._RECRUIT_NOT_FOUND));
+
+        // 어린이집 정보 가져오기
+        Kindergarten kindergarten = kindergartenRepository.findById(requestDTO.getKindergartens().get(0).getKindergartenId())
+                .orElseThrow(() -> new ApiException(ErrorStatus._KDG_NOT_FOUND));
+
+        // 업데이트 로직
+        for (RecruitCreateRequestDTO.KindergartenRecruitRequest kindergartenRequest : requestDTO.getKindergartens()) {
+            if (kindergartenRequest.getKindergartenId().equals(kindergarten.getId())) {
+                for (RecruitCreateRequestDTO.RecruitClassCreateRequestDTO classDTO : kindergartenRequest.getClasses()) {
+                    // Update or create new recruit for each class
+                    Recruit updatedRecruit = recruitRepository.findByKindergartenAndAgeClass(kindergarten, classDTO.getAgeClass())
+                            .orElseThrow(() -> new ApiException(ErrorStatus._RECRUIT_NOT_FOUND));
+
+                    updatedRecruit.updateFromDTO(classDTO);
+                    recruitRepository.save(updatedRecruit);
+                }
+            }
+        }
+
+        // 생성된 모집 정보 반환
+        List<AdminResponse.RecruitClassInfo> classInfos = recruitRepository.findAllByKindergarten(kindergarten).stream()
+                .map(this::toRecruitClassInfo)
+                .collect(Collectors.toList());
+
+        AdminResponse.KindergartenClassInfo kindergartenClassInfo = AdminResponse.KindergartenClassInfo.builder()
+                .kindergartenName(kindergarten.getKindergartenNm())
+                .classInfoList(classInfos)
+                .build();
+
+        return AdminResponse.RecruitCreationInfo.builder()
+                .kindergartenClassInfoList(List.of(kindergartenClassInfo))
+                .isCreated(true)
+                .build();
+    }
+
+
+
+
 
     private AdminResponse.RecruitCreationInfo createRecruitCreationInfo(List<Recruit> recruits) {
         // 어린이집별로 Recruit를 그룹화

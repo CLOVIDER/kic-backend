@@ -111,22 +111,21 @@ public class Recruit extends BaseTimeEntity {
                 .isSiblingUsage(requestDTO.getIsSiblingUsage())
                 .build();
     }
-//    //모집 수정
-//    public void updateRecruit(RecruitCreateRequestDTO requestDTO) {
-//        this.recruitStartDt = requestDTO.getRecruitStartDt();
-//        this.recruitEndDt = requestDTO.getRecruitEndDt();
-//        this.recruitCnt = requestDTO.getRecruitCnt();
-//        this.ageClass = requestDTO.getAgeClass();
-//        this.firstStartDt = requestDTO.getFirstStartDt();
-//        this.firstEndDt = requestDTO.getFirstEndDt();
-//        this.secondStartDt = requestDTO.getSecondStartDt();
-//        this.secondEndDt = requestDTO.getSecondEndDt();
-//        this.workYearsUsage = requestDTO.getWorkYearsUsage();
-//        this.isSingleParentUsage = requestDTO.getIsSingleParentUsage();
-//        this.childrenCntUsage = requestDTO.getChildrenCntUsage();
-//        this.isDisabilityUsage = requestDTO.getIsDisabilityUsage();
-//        this.isDualIncomeUsage = requestDTO.getIsDualIncomeUsage();
-//        this.isEmployeeCoupleUsage = requestDTO.getIsEmployeeCoupleUsage();
-//        this.isSiblingUsage = requestDTO.getIsSiblingUsage();
-//    }
+    public void updateFromDTO(RecruitCreateRequestDTO.RecruitClassCreateRequestDTO dto) {
+        this.ageClass = dto.getAgeClass();
+        this.recruitStartDt = dto.getRecruitStartDt();
+        this.recruitEndDt = dto.getRecruitEndDt();
+        this.recruitCnt = dto.getRecruitCnt();
+        this.firstStartDt = dto.getFirstStartDt();
+        this.firstEndDt = dto.getFirstEndDt();
+        this.secondStartDt = dto.getSecondStartDt();
+        this.secondEndDt = dto.getSecondEndDt();
+        this.workYearsUsage = dto.getWorkYearsUsage();
+        this.isSingleParentUsage = dto.getIsSingleParentUsage();
+        this.childrenCntUsage = dto.getChildrenCntUsage();
+        this.isDisabilityUsage = dto.getIsDisabilityUsage();
+        this.isDualIncomeUsage = dto.getIsDualIncomeUsage();
+        this.isEmployeeCoupleUsage = dto.getIsEmployeeCoupleUsage();
+        this.isSiblingUsage = dto.getIsSiblingUsage();
+    }
 }

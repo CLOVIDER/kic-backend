@@ -227,16 +227,16 @@ public class AdminController {
         return ApiResponse.onSuccess(recruitQueryService.getRecruitCreationInfo());
     }
 
-//    @Operation(summary = "관리자가 모집을 수정한다.", description = "관리자가 이미 생성된 모집을 수정한다.")
-//    @Parameter(name = "recruitId", description = "모집 ID")
-//    @PatchMapping("/recruit/{recruitId}")
-//    public ApiResponse<RecruitCreationInfo> updateRecruit(
-//            @PathVariable Long recruitId,
-//            @RequestBody RecruitCreateRequestDTO requestDTO) {
-//
-//        RecruitCreationInfo responseDTO = recruitCommandService.updateRecruit(recruitId, requestDTO);
-//        return ApiResponse.onSuccess(responseDTO);
-//    }
+    @Operation(summary = "관리자가 모집을 수정한다.", description = "관리자가 이미 생성된 모집을 수정한다.")
+    @Parameter(name = "recruitId", description = "모집 ID")
+    @PatchMapping("/recruit/{recruitId}")
+    public ApiResponse<RecruitCreationInfo> updateRecruit(
+            @PathVariable Long recruitId,
+            @RequestBody RecruitCreateRequestDTO requestDTO) {
+
+        RecruitCreationInfo responseDTO = recruitCommandService.updateRecruit(recruitId, requestDTO);
+        return ApiResponse.onSuccess(responseDTO);
+    }
 
 
 }
