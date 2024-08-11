@@ -66,20 +66,32 @@ public class QnaResponse {
                         .build();
             }
         }
+    }
 
-        @Builder
-        @Getter
-        @AllArgsConstructor
-        @NoArgsConstructor
-        public static class QnaUpdateResponse {
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class QnaUpdateResponse {
 
-            private Long qnaId;
+        private Long qnaId;
 
-            public static QnaUpdateResponse of(Long qnaId) {
-                return QnaUpdateResponse.builder().qnaId(qnaId).build();
-            }
+        public static QnaUpdateResponse of(Long qnaId) {
+            return QnaUpdateResponse.builder().qnaId(qnaId).build();
         }
+    }
 
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class QnaAnswerResponse {
+        private String answer;
 
+        public static QnaAnswerResponse fromQna(Qna qna){
+            return QnaAnswerResponse.builder()
+                    .answer(qna.getAnswer())
+                    .build();
+        }
     }
 }

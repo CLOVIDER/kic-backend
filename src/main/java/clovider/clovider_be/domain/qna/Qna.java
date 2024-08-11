@@ -46,10 +46,10 @@ public class Qna extends BaseTimeEntity {
     @Column(nullable = false, length = 100)
     private String title;
 
-    @Column(nullable = false, length = 500)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String question;
 
-    @Column(length = 500)
+    @Column(columnDefinition = "TEXT")
     private String answer;
 
     @Column(nullable = false, length = 1)

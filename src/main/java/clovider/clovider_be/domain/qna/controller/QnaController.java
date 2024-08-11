@@ -6,10 +6,11 @@ import clovider.clovider_be.domain.common.CustomPage;
 import clovider.clovider_be.domain.common.CustomResult;
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.enums.SearchType;
-import clovider.clovider_be.domain.qna.dto.QnaRequest;
+import clovider.clovider_be.domain.qna.dto.QnaRequest.QnaAnswerRequest;
 import clovider.clovider_be.domain.qna.dto.QnaResponse.BaseQnaResponse;
 import clovider.clovider_be.domain.qna.dto.QnaResponse.BaseQnaResponse.DetailedQnaResponse;
-import clovider.clovider_be.domain.qna.dto.QnaResponse.BaseQnaResponse.QnaUpdateResponse;
+import clovider.clovider_be.domain.qna.dto.QnaResponse.QnaAnswerResponse;
+import clovider.clovider_be.domain.qna.dto.QnaResponse.QnaUpdateResponse;
 import clovider.clovider_be.domain.qna.service.QnaCommandService;
 import clovider.clovider_be.domain.qna.service.QnaQueryService;
 import clovider.clovider_be.global.annotation.AuthEmployee;
@@ -85,12 +86,18 @@ public class QnaController {
 
     @Operation(summary = "Q&A 답변 수정 - Q&A 답변 작성 페이지", description = "관리자가 Q&A에 답변을 수정합니다.")
     @Parameter(name = "qnaId", description = "qna ID", required = true, example = "1")
-    @PatchMapping("/qnas/admin/{qnaId}")
+    @PatchMapping("/admin/qnas/{qnaId}")
     public ApiResponse<QnaUpdateResponse> updateQnaAnswer(
             @AuthEmployee Employee admin,
             @PathVariable Long qnaId,
-            @Valid @RequestBody QnaRequest.QnaAnswerRequest qnaAnswerRequest) {
+            @Valid @RequestBody QnaAnswerRequest qnaAnswerRequest) {
         return ApiResponse.onSuccess(qnaCommandService.updateAnswer(admin, qnaId, qnaAnswerRequest));
     }
-    
+
+    @Operation(summary = "Q&A 답변 조회 - Q&A 답변 수정 페이지", description = "관리자가 Q&A 답변 수정을 위해 답변을 조회합니다.")
+    @Parameter(name = "qnaId", description = "qna ID", required = true, example = "1")
+    @GetMapping("/admin/qnas/answer/{qnaId}")
+    public ApiResponse<QnaAnswerResponse> getQnaAnswer(@PathVariable Long qnaId){
+        return ApiResponse.onSuccess(qnaQueryService.getQnaAnswer(qnaId));
+    }
 }
