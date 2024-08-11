@@ -3,6 +3,7 @@ package clovider.clovider_be.domain.lottery.service;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.AcceptResult;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.LotteryResult;
 import clovider.clovider_be.domain.employee.Employee;
+import clovider.clovider_be.domain.lottery.dto.LotteryIdAndChildNameDTO;
 import clovider.clovider_be.domain.enums.AgeClass;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.ChildInfo;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
@@ -41,4 +42,6 @@ public interface LotteryQueryService {
 
     List<LotteryResultsGroupedByChildDTO> getLotteryResultsByEmployeeId(Employee employee);
 
+
+    List<LotteryIdAndChildNameDTO> getLotteryGroupedByChildNameByEmployeeId(Employee employee);
 }
