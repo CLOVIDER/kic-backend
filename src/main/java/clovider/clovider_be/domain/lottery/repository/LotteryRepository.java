@@ -34,6 +34,8 @@ public interface LotteryRepository extends JpaRepository<Lottery, Long>, Lottery
 
 
 
+
+
     @Query("SELECT l.childNm AS childName, GROUP_CONCAT(l.id) AS lotteryIds " +
             "FROM Lottery l " +
             "JOIN l.application a " +

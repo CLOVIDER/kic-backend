@@ -1,5 +1,6 @@
 package clovider.clovider_be.global.s3;
 
+import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -13,14 +14,18 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -28,6 +33,7 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 @RequiredArgsConstructor
 @PropertySource("classpath:application-dev.yml")
+@Slf4j
 public class S3Service {
     private final AmazonS3Client amazonS3Client;
 
@@ -56,9 +62,9 @@ public class S3Service {
     }
 
     // 파일 업로드
-    public String uploadFile(MultipartFile file, String applicationId) {
+    public String uploadFile(MultipartFile file, Employee employee) {
         String fileName = createFileName(file.getOriginalFilename());
-        String folder = DOCUMENTS_FOLDER + applicationId + "/";
+        String folder = DOCUMENTS_FOLDER + employee.getId() + "/";
         return uploadToS3(file, folder, fileName);
     }
 
@@ -66,7 +72,23 @@ public class S3Service {
     public String uploadImage(MultipartFile file, String domainName) {
         String fileName = createFileName(file.getOriginalFilename());
         String folder = IMAGES_FOLDER + domainName + "/";
-        return uploadToS3(file, folder, fileName);
+
+        // 시작 시간 기록
+        Instant start = Instant.now();
+
+        log.info("Starting upload for file: {} on thread: {}", fileName, Thread.currentThread().getName());
+
+        // 업로드 수행
+        String url = uploadToS3(file, folder, fileName);
+
+        // 종료 시간 기록
+        Instant end = Instant.now();
+        long duration = Duration.between(start, end).toMillis();
+
+        // 완료 로그와 소요 시간 출력
+        log.info("Completed upload for file: {} on thread: {}. Duration: {} ms", fileName, Thread.currentThread().getName(), duration);
+
+        return url;
     }
 
     // S3에 업로드 공통 로직
@@ -87,10 +109,10 @@ public class S3Service {
 
     // TODO: 스케줄링 얘기하면서 수정헤야할 사항
     // 여러 개의 파일 업로드
-    public List<String> uploadFiles(List<MultipartFile> multipartFiles, String applicationId) {
+    public List<String> uploadFiles(List<MultipartFile> multipartFiles, Employee employee) {
         List<String> fileList = new ArrayList<>();
         for (MultipartFile file : multipartFiles) {
-            fileList.add(uploadFile(file, applicationId));
+            fileList.add(uploadFile(file, employee));
         }
         return fileList;
     }
@@ -102,6 +124,27 @@ public class S3Service {
             imageList.add(uploadImage(file, domainName));
         }
         return imageList;
+    }
+
+    // 이미지 업로드 - 비동기
+    @Async("imageUploadExecutor")
+    public CompletableFuture<String> uploadImageAsync(MultipartFile file, String domainName) {
+        CompletableFuture<String> future = new CompletableFuture<>();
+        String fileName = createFileName(file.getOriginalFilename());
+        String folder = IMAGES_FOLDER + domainName + "/";
+
+        long startTime = System.currentTimeMillis();
+
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(file.getSize());
+        metadata.setContentType(file.getContentType());
+
+        future.complete(uploadToS3(file, folder, fileName));
+
+        long endTime = System.currentTimeMillis();
+        log.info("{} - 실행 시간: {}", Thread.currentThread().getName(), endTime - startTime);
+
+        return future;
     }
 
     // 이미지, 문서 삭제

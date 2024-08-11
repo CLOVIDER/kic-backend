@@ -9,6 +9,7 @@ import clovider.clovider_be.domain.admin.dto.AdminResponse.AcceptResult;
 import clovider.clovider_be.domain.admin.dto.AdminResponse;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.LotteryResult;
 import clovider.clovider_be.domain.enums.Accept;
+import clovider.clovider_be.domain.enums.AgeClass;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
 import clovider.clovider_be.domain.recruit.Recruit;
 import com.querydsl.core.Tuple;
@@ -99,7 +100,7 @@ public class LotteryRepositoryCustomImpl implements LotteryRepositoryCustom {
     }
 
     @Override
-    public Page<LotteryResult> getLotteryResults(Long kindergartenId, Pageable pageable,
+    public Page<LotteryResult> getLotteryResults(AgeClass ageClass, Long kindergartenId, Pageable pageable,
             String value) {
 
         List<LotteryResult> content = jpaQueryFactory
@@ -111,14 +112,17 @@ public class LotteryRepositoryCustomImpl implements LotteryRepositoryCustom {
                 // 만약 결과에 recruit와 kindergarten의 정보가 필요하고 이 정보를 바탕으로 데이터 조작을 해야 한다면 필요
                 .where(lottery.recruit.kindergarten.id.in(kindergartenId),
                         searchEmployee(value),
-                        lottery.recruit.recruitEndDt.lt(LocalDateTime.now()))
-                .orderBy(lottery.id.desc())
+                        lottery.recruit.recruitEndDt.lt(LocalDateTime.now()),
+                        lottery.recruit.ageClass.eq(ageClass))
+                .orderBy(lottery.rankNo.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch()
                 .stream()
                 .map(AdminResponse::toLotteryResult)
                 .toList();
+
+
 
         // 카운트 쿼리: 전체 결과 수를 계산하는 쿼리
         JPAQuery<Long> countQuery = jpaQueryFactory

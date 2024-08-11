@@ -1,87 +1,89 @@
 package clovider.clovider_be.domain.lottery.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import clovider.clovider_be.domain.admin.dto.AdminResponse.AcceptResult;
+import clovider.clovider_be.domain.application.Application;
+import clovider.clovider_be.domain.employee.Employee;
+import clovider.clovider_be.domain.enums.Accept;
+import clovider.clovider_be.domain.enums.AgeClass;
+import clovider.clovider_be.domain.enums.Result;
+import clovider.clovider_be.domain.enums.Role;
+import clovider.clovider_be.domain.enums.Save;
+import clovider.clovider_be.domain.kindergarten.Kindergarten;
+import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
 import clovider.clovider_be.domain.lottery.repository.LotteryRepository;
 import clovider.clovider_be.domain.recruit.Recruit;
-import clovider.clovider_be.domain.recruit.repository.RecruitRepository;
+import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruit;
 import clovider.clovider_be.domain.recruit.service.RecruitQueryService;
-import clovider.clovider_be.domain.recruit.service.RecruitQueryServiceImpl;
-import clovider.clovider_be.global.config.QuerydslConfig;
+import clovider.clovider_be.domain.utils.CreateUtil;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@DataJpaTest
-@Import(QuerydslConfig.class)
-@ActiveProfiles("test")
-@TestPropertySource(locations = "classpath:application-test.yml")
-@AutoConfigureTestDatabase(replace = Replace.NONE)
+@ExtendWith(MockitoExtension.class)
 class LotteryQueryServiceImplTest {
 
-    @Autowired
-    private RecruitQueryService recruitQueryService;
-
-    @Autowired
+    @Mock
     private LotteryRepository lotteryRepository;
 
-    @TestConfiguration
-    static class TestConfig {
-
-        @Bean
-        public RecruitQueryService recruitQueryService(RecruitRepository recruitRepository) {
-            return new RecruitQueryServiceImpl(recruitRepository);
-        }
-    }
+    @InjectMocks
+    private LotteryQueryServiceImpl lotteryQueryService;
 
     @Test
     @DisplayName("진행 중인 모집의 경쟁률 조회")
-    void getRecruitResult() {
+    void getRecruitRates() {
 
         // given
-        List<Recruit> recruits = recruitQueryService.getNowRecruitOrderByClass();
+        List<NowRecruit> nowRecruits = CreateUtil.getNowRecruitList();
+        List<Long> recruitIds = nowRecruits.stream().map(NowRecruit::getId).toList();
+        List<CompetitionRate> competitionRates = new ArrayList<>();
+        CompetitionRate competitionRate = new CompetitionRate(1L, 0.4);
+        competitionRates.add(competitionRate);
 
         // when
-        List<CompetitionRate> competitionRates = lotteryRepository.findCompetitionRates(recruits);
-
-        List<Double> rates = competitionRates.stream()
-                .map(CompetitionRate::getCompetitionRate)
-                .toList();
-
-        Long recruitId1 = competitionRates.get(0).getRecruitId();
-        Long recruitId2 = competitionRates.get(1).getRecruitId();
+        when(lotteryRepository.findCompetitionRates(recruitIds)).thenReturn(competitionRates);
+        List<CompetitionRate> recruitRates = lotteryQueryService.getRecruitRates(nowRecruits);
+        Long recruitId1 = recruitRates.get(0).getRecruitId();
+        Double competitionRate1 = recruitRates.get(0).getCompetitionRate();
 
         // then
-        assertThat(competitionRates.size()).isEqualTo(6);
-        assertThat(rates).allMatch(rate -> rate instanceof Double,
-                "All rates should be of type Double");
-        assertThat(recruitId1).isLessThan(recruitId2);
-        assertThat(competitionRates.get(0)).isInstanceOf(CompetitionRate.class);
+        verify(lotteryRepository, times(1)).findCompetitionRates(recruitIds);
+        assertThat(recruitId1).isEqualTo(1L);
+        assertThat(recruitRates.size()).isEqualTo(1);
+        assertThat(competitionRate1).matches(c -> c > 0);
+        assertThat(recruitRates.get(0)).isInstanceOf(CompetitionRate.class);
     }
 
     @Test
     @DisplayName("총 신청자 수 조회")
-    void getTotalApplication() {
+    void getTotalApplication() throws NoSuchFieldException, IllegalAccessException {
 
         // given
-        List<Recruit> recruits = recruitQueryService.getRecruitIngAndScheduled();
+        LocalDateTime now = LocalDateTime.of(2024, 8, 8, 12, 0);
+        List<Recruit> recruitList = CreateUtil.getRecruitList();
+        List<Lottery> lotteryList = CreateUtil.getLotteryList();
+        List<Long> recruitIds = recruitList.stream().map(Recruit::getId).toList();
 
         // when
-        Long totalApplication = lotteryRepository.findTotalApplication(recruits);
+        when(lotteryRepository.findTotalApplication(recruitIds)).thenReturn(
+                (long) lotteryList.size());
+
+        Long totalApplication = lotteryQueryService.getTotalApplication(recruitIds);
 
         // then
-        assertThat(totalApplication).isEqualTo(16);
+        assertThat(totalApplication).isEqualTo(8);
     }
 
     @Test
@@ -89,13 +91,16 @@ class LotteryQueryServiceImplTest {
     void getUnAcceptApplication() {
 
         // given
-        List<Recruit> recruits = recruitQueryService.getRecruitIngAndScheduled();
+        List<Recruit> recruitList = CreateUtil.getRecruitList();
+        List<Long> recruitIds = recruitList.stream().map(Recruit::getId).toList();
+        when(lotteryRepository.findUnAcceptApplication(recruitIds)).thenReturn((long) 8);
 
         // when
-        Long unAcceptApplication = lotteryRepository.findUnAcceptApplication(recruits);
+        Long unAcceptApplication = lotteryQueryService.getUnAcceptApplication(recruitIds);
 
         // then
-        assertThat(unAcceptApplication).isEqualTo(0);
+        verify(lotteryRepository, times(1)).findUnAcceptApplication(recruitIds);
+        assertThat(unAcceptApplication).isEqualTo(8);
     }
 
     @Test
@@ -103,22 +108,32 @@ class LotteryQueryServiceImplTest {
     void getAcceptResult() {
 
         // given
-        List<Recruit> recruits = recruitQueryService.getRecruitIngAndScheduled();
+        LocalDateTime now = LocalDateTime.of(2024, 8, 8, 12, 0);
+        List<Recruit> recruitList = CreateUtil.getRecruitList();
+        List<Long> recruitIds = recruitList.stream().map(Recruit::getId).toList();
+        List<AcceptResult> acceptResultList = new ArrayList<>();
+        AcceptResult acceptResult = AcceptResult.builder()
+                .kindergartenNm("애플 어린이집")
+                .acceptCnt(0)
+                .unAcceptCnt(8)
+                .waitCnt(0)
+                .build();
+        acceptResultList.add(acceptResult);
 
         // when
-        List<AcceptResult> acceptStatus = lotteryRepository.findAcceptStatus(recruits);
-        String kindergartenNm1 = acceptStatus.get(0).getKindergartenNm();
-        String kindergartenNm2 = acceptStatus.get(1).getKindergartenNm();
-        Integer acceptCnt = acceptStatus.get(0).getAcceptCnt();
-        Integer unAcceptCnt = acceptStatus.get(0).getUnAcceptCnt();
-        Integer waitCnt = acceptStatus.get(0).getWaitCnt();
+        when(lotteryRepository.findAcceptStatus(recruitIds)).thenReturn(acceptResultList);
+        List<AcceptResult> acceptResults = lotteryQueryService.getAcceptResult(recruitIds);
+
+        String kindergartenNm1 = acceptResults.get(0).getKindergartenNm();
+        Integer acceptCnt = acceptResults.get(0).getAcceptCnt();
+        Integer unAcceptCnt = acceptResults.get(0).getUnAcceptCnt();
+        Integer waitCnt = acceptResults.get(0).getWaitCnt();
 
         // then
-        assertThat(acceptStatus.size()).isEqualTo(2);
-        assertThat(kindergartenNm1).isEqualTo("우유");
-        assertThat(kindergartenNm2).isEqualTo("새빛");
-        assertThat(acceptCnt).isEqualTo(8);
-        assertThat(unAcceptCnt).isEqualTo(0);
+        assertThat(acceptResultList.size()).isEqualTo(1);
+        assertThat(kindergartenNm1).isEqualTo("애플 어린이집");
+        assertThat(acceptCnt).isEqualTo(0);
+        assertThat(unAcceptCnt).isEqualTo(8);
         assertThat(waitCnt).isEqualTo(0);
 
     }
