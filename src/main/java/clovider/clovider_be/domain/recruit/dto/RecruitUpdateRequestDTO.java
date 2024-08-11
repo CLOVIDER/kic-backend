@@ -6,12 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class RecruitUpdateRequestDTO {
-    private Long kindergartenId;
+    private List<Long> recruitIds; // 여러 recruit ID를 포함
     private AgeClass ageClass;
     private LocalDateTime recruitStartDt;
     private LocalDateTime recruitEndDt;

@@ -12,6 +12,6 @@ public interface RecruitCommandService {
 
     List<Long> resetKindergarten(Long kindergartenId);
     AdminResponse.RecruitCreationInfo createRecruit(RecruitCreateRequestDTO requestDTO);
-    public AdminResponse.RecruitCreationInfo updateRecruit(Long recruitId, RecruitUpdateRequestDTO requestDTO);
+    AdminResponse.RecruitCreationInfo updateRecruit(RecruitUpdateRequestDTO requestDTO);
 
 }

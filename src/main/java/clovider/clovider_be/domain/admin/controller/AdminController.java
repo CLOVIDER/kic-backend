@@ -230,13 +230,12 @@ public class AdminController {
 
     @Operation(summary = "관리자가 모집을 수정한다.", description = "관리자가 이미 생성된 모집을 수정한다.")
     @Parameter(name = "recruitId", description = "모집 ID")
-    @PatchMapping("/recruit/{recruitId}")
+    @PatchMapping("/recruit")
     public ApiResponse<RecruitCreationInfo> updateRecruit(
-            @PathVariable Long recruitId,
             @RequestBody
             RecruitUpdateRequestDTO requestDTO) {
 
-        RecruitCreationInfo responseDTO = recruitCommandService.updateRecruit(recruitId, requestDTO);
+        RecruitCreationInfo responseDTO = recruitCommandService.updateRecruit(requestDTO);
         return ApiResponse.onSuccess(responseDTO);
     }
 

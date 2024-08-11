@@ -65,39 +65,45 @@ public class RecruitCommandServiceImpl implements RecruitCommandService{
     }
 
     @Override
-    public AdminResponse.RecruitCreationInfo updateRecruit(Long recruitId, RecruitUpdateRequestDTO requestDTO) {
-        // 기존 모집 정보 조회
-        Recruit recruit = recruitRepository.findById(recruitId)
-                .orElseThrow(() -> new ApiException(ErrorStatus._RECRUIT_NOT_FOUND));
+    public AdminResponse.RecruitCreationInfo updateRecruit(RecruitUpdateRequestDTO requestDTO) {
+        // 다수의 모집 정보 조회
+        List<Recruit> recruits = recruitRepository.findAllById(requestDTO.getRecruitIds());
 
-        // 어린이집 정보 가져오기
-        Kindergarten kindergarten = kindergartenRepository.findById(requestDTO.getKindergartenId())
+        if (recruits.size() != requestDTO.getRecruitIds().size()) {
+            throw new ApiException(ErrorStatus._RECRUIT_NOT_FOUND);
+        }
+
+        // 어린이집 정보 조회 (가정: 모든 recruit가 동일한 kindergarten에 속함)
+        // 만약 여러 kindergarten을 처리해야 한다면 이 부분을 조정해야 합니다.
+        Long kindergartenId = recruits.get(0).getKindergarten().getId();
+        Kindergarten kindergarten = kindergartenRepository.findById(kindergartenId)
                 .orElseThrow(() -> new ApiException(ErrorStatus._KDG_NOT_FOUND));
 
         // 업데이트 로직
-        recruit.setKindergarten(kindergarten);
-        recruit.setAgeClass(requestDTO.getAgeClass());
-        recruit.setRecruitStartDt(requestDTO.getRecruitStartDt());
-        recruit.setRecruitEndDt(requestDTO.getRecruitEndDt());
-        recruit.setRecruitCnt(requestDTO.getRecruitCnt());
-        recruit.setFirstStartDt(requestDTO.getFirstStartDt());
-        recruit.setFirstEndDt(requestDTO.getFirstEndDt());
-        recruit.setSecondStartDt(requestDTO.getSecondStartDt());
-        recruit.setSecondEndDt(requestDTO.getSecondEndDt());
+        for (Recruit recruit : recruits) {
+            recruit.setAgeClass(requestDTO.getAgeClass());
+            recruit.setRecruitStartDt(requestDTO.getRecruitStartDt());
+            recruit.setRecruitEndDt(requestDTO.getRecruitEndDt());
+            recruit.setRecruitCnt(requestDTO.getRecruitCnt());
+            recruit.setFirstStartDt(requestDTO.getFirstStartDt());
+            recruit.setFirstEndDt(requestDTO.getFirstEndDt());
+            recruit.setSecondStartDt(requestDTO.getSecondStartDt());
+            recruit.setSecondEndDt(requestDTO.getSecondEndDt());
 
-        // 가중치 정보 업데이트
-        recruit.setWorkYearsUsage(requestDTO.getRecruitWeightInfo().getWorkYearsUsage());
-        recruit.setIsSingleParentUsage(requestDTO.getRecruitWeightInfo().getIsSingleParentUsage());
-        recruit.setChildrenCntUsage(requestDTO.getRecruitWeightInfo().getChildrenCntUsage());
-        recruit.setIsDisabilityUsage(requestDTO.getRecruitWeightInfo().getIsDisabilityUsage());
-        recruit.setIsDualIncomeUsage(requestDTO.getRecruitWeightInfo().getIsDualIncomeUsage());
-        recruit.setIsEmployeeCoupleUsage(requestDTO.getRecruitWeightInfo().getIsEmployeeCoupleUsage());
-        recruit.setIsSiblingUsage(requestDTO.getRecruitWeightInfo().getIsSiblingUsage());
+            // 가중치 정보 업데이트
+            recruit.setWorkYearsUsage(requestDTO.getRecruitWeightInfo().getWorkYearsUsage());
+            recruit.setIsSingleParentUsage(requestDTO.getRecruitWeightInfo().getIsSingleParentUsage());
+            recruit.setChildrenCntUsage(requestDTO.getRecruitWeightInfo().getChildrenCntUsage());
+            recruit.setIsDisabilityUsage(requestDTO.getRecruitWeightInfo().getIsDisabilityUsage());
+            recruit.setIsDualIncomeUsage(requestDTO.getRecruitWeightInfo().getIsDualIncomeUsage());
+            recruit.setIsEmployeeCoupleUsage(requestDTO.getRecruitWeightInfo().getIsEmployeeCoupleUsage());
+            recruit.setIsSiblingUsage(requestDTO.getRecruitWeightInfo().getIsSiblingUsage());
+        }
 
-        recruitRepository.save(recruit);
+        recruitRepository.saveAll(recruits);
 
         // DTO 생성
-        RecruitResponse.RecruitDateAndWeightInfo recruitDateAndWeightInfo = RecruitResponse.toRecruitDateAndWeightInfo(recruit);
+        RecruitResponse.RecruitDateAndWeightInfo recruitDateAndWeightInfo = RecruitResponse.toRecruitDateAndWeightInfo(recruits.get(0));
 
         // 반환할 정보 생성
         List<AdminResponse.KindergartenClassInfo> kindergartenClassInfos = Collections.singletonList(
@@ -105,8 +111,8 @@ public class RecruitCommandServiceImpl implements RecruitCommandService{
                         .kindergartenName(kindergarten.getKindergartenNm())
                         .classInfoList(Collections.singletonList(
                                 AdminResponse.RecruitClassInfo.builder()
-                                        .ageClass(recruit.getAgeClass().getDescription())
-                                        .recruitCnt(recruit.getRecruitCnt())
+                                        .ageClass(recruits.get(0).getAgeClass().getDescription())
+                                        .recruitCnt(recruits.get(0).getRecruitCnt())
                                         .build()
                         ))
                         .build()
@@ -118,6 +124,7 @@ public class RecruitCommandServiceImpl implements RecruitCommandService{
                 .isCreated(true)
                 .build();
     }
+
 
 
 
