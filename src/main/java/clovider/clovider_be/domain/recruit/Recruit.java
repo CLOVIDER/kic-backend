@@ -17,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @Getter
+@Setter
 @Table(name = "recruit_tb")
 public class Recruit extends BaseTimeEntity {
 

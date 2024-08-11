@@ -7,8 +7,10 @@ import clovider.clovider_be.domain.recruit.Recruit;
 import clovider.clovider_be.domain.recruit.dto.RecruitCreateRequestDTO;
 import clovider.clovider_be.domain.recruit.dto.RecruitCreateResponseDTO;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse;
+import clovider.clovider_be.domain.recruit.dto.RecruitUpdateRequestDTO;
 import clovider.clovider_be.domain.recruit.repository.RecruitRepository;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -63,44 +65,60 @@ public class RecruitCommandServiceImpl implements RecruitCommandService{
     }
 
     @Override
-    public AdminResponse.RecruitCreationInfo updateRecruit(Long recruitId, RecruitCreateRequestDTO requestDTO) {
+    public AdminResponse.RecruitCreationInfo updateRecruit(Long recruitId, RecruitUpdateRequestDTO requestDTO) {
         // 기존 모집 정보 조회
         Recruit recruit = recruitRepository.findById(recruitId)
                 .orElseThrow(() -> new ApiException(ErrorStatus._RECRUIT_NOT_FOUND));
 
         // 어린이집 정보 가져오기
-        Kindergarten kindergarten = kindergartenRepository.findById(requestDTO.getKindergartens().get(0).getKindergartenId())
+        Kindergarten kindergarten = kindergartenRepository.findById(requestDTO.getKindergartenId())
                 .orElseThrow(() -> new ApiException(ErrorStatus._KDG_NOT_FOUND));
 
         // 업데이트 로직
-        for (RecruitCreateRequestDTO.KindergartenRecruitRequest kindergartenRequest : requestDTO.getKindergartens()) {
-            if (kindergartenRequest.getKindergartenId().equals(kindergarten.getId())) {
-                for (RecruitCreateRequestDTO.RecruitClassCreateRequestDTO classDTO : kindergartenRequest.getClasses()) {
-                    // Update or create new recruit for each class
-                    Recruit updatedRecruit = recruitRepository.findByKindergartenAndAgeClass(kindergarten, classDTO.getAgeClass())
-                            .orElseThrow(() -> new ApiException(ErrorStatus._RECRUIT_NOT_FOUND));
+        recruit.setKindergarten(kindergarten);
+        recruit.setAgeClass(requestDTO.getAgeClass());
+        recruit.setRecruitStartDt(requestDTO.getRecruitStartDt());
+        recruit.setRecruitEndDt(requestDTO.getRecruitEndDt());
+        recruit.setRecruitCnt(requestDTO.getRecruitCnt());
+        recruit.setFirstStartDt(requestDTO.getFirstStartDt());
+        recruit.setFirstEndDt(requestDTO.getFirstEndDt());
+        recruit.setSecondStartDt(requestDTO.getSecondStartDt());
+        recruit.setSecondEndDt(requestDTO.getSecondEndDt());
 
-                    updatedRecruit.updateFromDTO(classDTO);
-                    recruitRepository.save(updatedRecruit);
-                }
-            }
-        }
+        // 가중치 정보 업데이트
+        recruit.setWorkYearsUsage(requestDTO.getRecruitWeightInfo().getWorkYearsUsage());
+        recruit.setIsSingleParentUsage(requestDTO.getRecruitWeightInfo().getIsSingleParentUsage());
+        recruit.setChildrenCntUsage(requestDTO.getRecruitWeightInfo().getChildrenCntUsage());
+        recruit.setIsDisabilityUsage(requestDTO.getRecruitWeightInfo().getIsDisabilityUsage());
+        recruit.setIsDualIncomeUsage(requestDTO.getRecruitWeightInfo().getIsDualIncomeUsage());
+        recruit.setIsEmployeeCoupleUsage(requestDTO.getRecruitWeightInfo().getIsEmployeeCoupleUsage());
+        recruit.setIsSiblingUsage(requestDTO.getRecruitWeightInfo().getIsSiblingUsage());
 
-        // 생성된 모집 정보 반환
-        List<AdminResponse.RecruitClassInfo> classInfos = recruitRepository.findAllByKindergarten(kindergarten).stream()
-                .map(this::toRecruitClassInfo)
-                .collect(Collectors.toList());
+        recruitRepository.save(recruit);
 
-        AdminResponse.KindergartenClassInfo kindergartenClassInfo = AdminResponse.KindergartenClassInfo.builder()
-                .kindergartenName(kindergarten.getKindergartenNm())
-                .classInfoList(classInfos)
-                .build();
+        // DTO 생성
+        RecruitResponse.RecruitDateAndWeightInfo recruitDateAndWeightInfo = RecruitResponse.toRecruitDateAndWeightInfo(recruit);
+
+        // 반환할 정보 생성
+        List<AdminResponse.KindergartenClassInfo> kindergartenClassInfos = Collections.singletonList(
+                AdminResponse.KindergartenClassInfo.builder()
+                        .kindergartenName(kindergarten.getKindergartenNm())
+                        .classInfoList(Collections.singletonList(
+                                AdminResponse.RecruitClassInfo.builder()
+                                        .ageClass(recruit.getAgeClass().getDescription())
+                                        .recruitCnt(recruit.getRecruitCnt())
+                                        .build()
+                        ))
+                        .build()
+        );
 
         return AdminResponse.RecruitCreationInfo.builder()
-                .kindergartenClassInfoList(List.of(kindergartenClassInfo))
+                .kindergartenClassInfoList(kindergartenClassInfos)
+                .recruitDateAndWeightInfo(recruitDateAndWeightInfo)
                 .isCreated(true)
                 .build();
     }
+
 
 
 

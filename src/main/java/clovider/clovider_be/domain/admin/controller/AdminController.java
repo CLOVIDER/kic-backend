@@ -27,6 +27,7 @@ import clovider.clovider_be.domain.recruit.dto.RecruitCreateResponseDTO;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruit;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruitInfo;
+import clovider.clovider_be.domain.recruit.dto.RecruitUpdateRequestDTO;
 import clovider.clovider_be.domain.recruit.service.RecruitCommandService;
 import clovider.clovider_be.domain.recruit.service.RecruitQueryService;
 import clovider.clovider_be.global.response.ApiResponse;
@@ -232,7 +233,8 @@ public class AdminController {
     @PatchMapping("/recruit/{recruitId}")
     public ApiResponse<RecruitCreationInfo> updateRecruit(
             @PathVariable Long recruitId,
-            @RequestBody RecruitCreateRequestDTO requestDTO) {
+            @RequestBody
+            RecruitUpdateRequestDTO requestDTO) {
 
         RecruitCreationInfo responseDTO = recruitCommandService.updateRecruit(recruitId, requestDTO);
         return ApiResponse.onSuccess(responseDTO);
