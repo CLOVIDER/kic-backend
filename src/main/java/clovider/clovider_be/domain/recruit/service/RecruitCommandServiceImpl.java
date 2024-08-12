@@ -4,10 +4,7 @@ import clovider.clovider_be.domain.admin.dto.AdminResponse;
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import clovider.clovider_be.domain.kindergarten.repository.KindergartenRepository;
 import clovider.clovider_be.domain.recruit.Recruit;
-import clovider.clovider_be.domain.recruit.dto.RecruitCreateRequestDTO;
-import clovider.clovider_be.domain.recruit.dto.RecruitCreateResponseDTO;
-import clovider.clovider_be.domain.recruit.dto.RecruitResponse;
-import clovider.clovider_be.domain.recruit.dto.RecruitUpdateRequestDTO;
+import clovider.clovider_be.domain.recruit.dto.*;
 import clovider.clovider_be.domain.recruit.repository.RecruitRepository;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -65,7 +62,7 @@ public class RecruitCommandServiceImpl implements RecruitCommandService{
     }
 
     @Override
-    public AdminResponse.RecruitCreationInfo updateRecruit(RecruitUpdateRequestDTO requestDTO) {
+    public RecruitResponseDTO updateRecruit(RecruitUpdateRequestDTO requestDTO) {
         // 다수의 모집 정보 조회
         List<Recruit> recruits = recruitRepository.findAllById(requestDTO.getRecruitIds());
 
@@ -102,27 +99,19 @@ public class RecruitCommandServiceImpl implements RecruitCommandService{
 
         recruitRepository.saveAll(recruits);
 
-        // DTO 생성
-        RecruitResponse.RecruitDateAndWeightInfo recruitDateAndWeightInfo = RecruitResponse.toRecruitDateAndWeightInfo(recruits.get(0));
+        // 반환할 DTO 생성
+        RecruitResponseDTO.Result result = new RecruitResponseDTO.Result();
+        result.setId(recruits.get(0).getId()); // 첫 번째 모집의 ID를 설정
+        result.setCreatedAt(recruits.get(0).getCreatedAt()); // 첫 번째 모집의 생성일시를 설정
 
-        // 반환할 정보 생성
-        List<AdminResponse.KindergartenClassInfo> kindergartenClassInfos = Collections.singletonList(
-                AdminResponse.KindergartenClassInfo.builder()
-                        .kindergartenName(kindergarten.getKindergartenNm())
-                        .classInfoList(Collections.singletonList(
-                                AdminResponse.RecruitClassInfo.builder()
-                                        .ageClass(recruits.get(0).getAgeClass().getDescription())
-                                        .recruitCnt(recruits.get(0).getRecruitCnt())
-                                        .build()
-                        ))
-                        .build()
-        );
+        RecruitResponseDTO responseDTO = new RecruitResponseDTO();
+        responseDTO.setSuccess(true);
+        responseDTO.setCode("SUCCESS"); // 성공 코드 설정 (필요에 따라 수정)
+        responseDTO.setMessage("모집 정보가 성공적으로 업데이트되었습니다.");
+        responseDTO.setResult(result);
 
-        return AdminResponse.RecruitCreationInfo.builder()
-                .kindergartenClassInfoList(kindergartenClassInfos)
-                .recruitDateAndWeightInfo(recruitDateAndWeightInfo)
-                .isCreated(true)
-                .build();
+        return responseDTO;
+
     }
 
 
