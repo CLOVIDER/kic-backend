@@ -1,6 +1,8 @@
 package clovider.clovider_be.domain.kindergarten.dto;
 
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
+import clovider.clovider_be.domain.kindergarten.KindergartenClass;
+import clovider.clovider_be.domain.kindergarten.KindergartenClass;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,7 +29,7 @@ public class KindergartenResponse {
         private String kindergartenNo;
         private String kindergartenTime;
         private String kindergartenInfo;
-        private List<String> kindergartenClass;
+        private List<KindergartenClass> kindergartenClass;
         private LocalDateTime createdAt;
 
         public static KindergartenRegisterResponse toKindergartenRegisterResponse(Kindergarten kindergarten, List<Long> kindergartenImageIds) {
@@ -82,7 +84,7 @@ public class KindergartenResponse {
         private String kindergartenNo;
         private String kindergartenTime;
         private String kindergartenInfo;
-        private List<String> kindergartenClass;
+        private List<KindergartenClass> kindergartenClass;
         private LocalDateTime updatedAt;
 
         public static KindergartenUpdateResponse toKindergartenUpdateResponse(
@@ -120,7 +122,7 @@ public class KindergartenResponse {
         private String kindergartenNo;
         private String kindergartenTime;
         private String kindergartenInfo;
-        private List<String> kindergartenClass;
+        private List<KindergartenClass> kindergartenClass;
 
         private List<String> kindergartenImageUrls;
 
