@@ -32,13 +32,11 @@ public class RecruitCommandServiceImpl implements RecruitCommandService{
     @Override
     public List<Long> resetKindergarten(Long kindergartenId) {
         List<Recruit> recruits = recruitQueryService.getRecruitByKindergarten(kindergartenId);
-        List<Long> recruitIds = new ArrayList<>();
+        List<Long> recruitIds = recruits.stream()
+                .map(Recruit::getId)
+                .collect(Collectors.toList());
 
-        for (Recruit recruit : recruits) {
-            recruit.changeKindergarten(null);
-            recruitRepository.save(recruit);
-            recruitIds.add(recruit.getId());
-        }
+        recruitRepository.deleteAll(recruits);
 
         return recruitIds;
     }
