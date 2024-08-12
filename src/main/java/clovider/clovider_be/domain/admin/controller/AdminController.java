@@ -12,6 +12,7 @@ import clovider.clovider_be.domain.admin.dto.AdminResponse.RecruitCreationInfo;
 import clovider.clovider_be.domain.admin.dto.SearchVO;
 import clovider.clovider_be.domain.application.service.ApplicationQueryService;
 import clovider.clovider_be.domain.common.CustomPage;
+import clovider.clovider_be.domain.enums.AgeClass;
 import clovider.clovider_be.domain.kindergarten.service.KindergartenQueryService;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitInfo;
@@ -23,6 +24,8 @@ import clovider.clovider_be.domain.notice.service.NoticeQueryService;
 import clovider.clovider_be.domain.qna.service.QnaQueryService;
 import clovider.clovider_be.domain.recruit.Recruit;
 import clovider.clovider_be.domain.recruit.dto.*;
+import clovider.clovider_be.domain.recruit.dto.RecruitCreateRequestDTO;
+import clovider.clovider_be.domain.recruit.dto.RecruitResponse;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruit;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruitInfo;
 import clovider.clovider_be.domain.recruit.service.RecruitCommandService;
@@ -33,6 +36,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
@@ -64,7 +68,8 @@ public class AdminController {
     public ApiResponse<DashBoard> getDashboard() {
 
         // 진행 중인 모집 정보, 기간, 경쟁률
-        List<NowRecruit> recruits = recruitQueryService.getNowRecruitOrderByClass()
+        List<NowRecruit> recruits = recruitQueryService.getNowRecruitOrderByClass(
+                        LocalDateTime.now())
                 .getNowRecruits();
 
         // Top3 공지글
@@ -118,7 +123,7 @@ public class AdminController {
     @GetMapping("/recruits/applications/status")
     public ApiResponse<ApplicationStatus> getApplicationsStatus() {
 
-        List<Long> recruitIds = recruitQueryService.getRecruitIngAndScheduled();
+        List<Long> recruitIds = recruitQueryService.getRecruitIngAndScheduled(LocalDateTime.now());
         Long totalCnt = lotteryQueryService.getTotalApplication(recruitIds);
         Long unAcceptCnt = lotteryQueryService.getUnAcceptApplication(
                 recruitIds);
@@ -130,7 +135,7 @@ public class AdminController {
     @GetMapping("/recruits/kindergartens/status")
     public ApiResponse<List<AcceptResult>> getAcceptStatus() {
 
-        List<Long> recruitIds = recruitQueryService.getRecruitIngAndScheduled();
+        List<Long> recruitIds = recruitQueryService.getRecruitIngAndScheduled(LocalDateTime.now());
 
         return ApiResponse.onSuccess(lotteryQueryService.getAcceptResult(recruitIds));
     }
@@ -151,7 +156,7 @@ public class AdminController {
             @Parameter(name = "page", description = "페이지 번호"),
             @Parameter(name = "size", description = "페이지 크기"),
             @Parameter(name = "filter", description = "승인 여부 필터링"),
-            @Parameter(name = "q", description = "신청자 아이디 검색")
+            @Parameter(name = "q", description = "신청자 이름 검색")
     })
     @GetMapping("/recruits/applications")
     public ApiResponse<CustomPage<ApplicationList>> findRecruitsApplications(
@@ -163,7 +168,7 @@ public class AdminController {
         PageRequest pageRequest = PageRequest.of(page, size);
         SearchVO searchVO = SearchVO.of(filter, value);
 
-        List<Recruit> recruits = recruitQueryService.getNowRecruit();
+        List<Recruit> recruits = recruitQueryService.getNowRecruit(LocalDateTime.now());
 
         List<Long> applicationIds = lotteryQueryService.getApplicationsByLotteries(
                 recruits);
@@ -209,11 +214,12 @@ public class AdminController {
     @GetMapping("/lotteries/result/{kindergartenId}")
     public ApiResponse<CustomPage<LotteryResult>> getLotteryResult(
             @PathVariable(name = "kindergartenId") Long kindergartenId,
+            @RequestParam(name = "class", required = true) AgeClass ageClass,
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
             @RequestParam(name = "accountId", required = false) String value) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Page<LotteryResult> lotteryResultPage = lotteryQueryService.getLotteryResult(kindergartenId,
+        Page<LotteryResult> lotteryResultPage = lotteryQueryService.getLotteryResultByLotteryId(ageClass, kindergartenId,
                 pageRequest, value);
 
         return ApiResponse.onSuccess(new CustomPage<>(lotteryResultPage));

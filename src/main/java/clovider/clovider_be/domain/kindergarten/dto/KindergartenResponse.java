@@ -27,6 +27,7 @@ public class KindergartenResponse {
         private String kindergartenNo;
         private String kindergartenTime;
         private String kindergartenInfo;
+        private List<String> kindergartenClass;
         private LocalDateTime createdAt;
 
         public static KindergartenRegisterResponse toKindergartenRegisterResponse(Kindergarten kindergarten, List<Long> kindergartenImageIds) {
@@ -40,6 +41,7 @@ public class KindergartenResponse {
                     .kindergartenNo(kindergarten.getKindergartenNo())
                     .kindergartenTime(kindergarten.getKindergartenTime())
                     .kindergartenInfo(kindergarten.getKindergartenInfo())
+                    .kindergartenClass(kindergarten.getKindergartenClass())
                     .createdAt(LocalDateTime.now())
                     .build();
         }
@@ -80,6 +82,7 @@ public class KindergartenResponse {
         private String kindergartenNo;
         private String kindergartenTime;
         private String kindergartenInfo;
+        private List<String> kindergartenClass;
         private LocalDateTime updatedAt;
 
         public static KindergartenUpdateResponse toKindergartenUpdateResponse(
@@ -94,6 +97,7 @@ public class KindergartenResponse {
                     .kindergartenNo(kindergarten.getKindergartenNo())
                     .kindergartenTime(kindergarten.getKindergartenTime())
                     .kindergartenInfo(kindergarten.getKindergartenInfo())
+                    .kindergartenClass(kindergarten.getKindergartenClass())
                     .kindergartenImageIds(kindergartenImageIds)
                     .updatedAt(LocalDateTime.now())
                     .build();
@@ -116,6 +120,7 @@ public class KindergartenResponse {
         private String kindergartenNo;
         private String kindergartenTime;
         private String kindergartenInfo;
+        private List<String> kindergartenClass;
 
         private List<String> kindergartenImageUrls;
 
@@ -130,6 +135,7 @@ public class KindergartenResponse {
                     .kindergartenNo(kindergarten.getKindergartenNo())
                     .kindergartenTime(kindergarten.getKindergartenTime())
                     .kindergartenInfo(kindergarten.getKindergartenInfo())
+                    .kindergartenClass(kindergarten.getKindergartenClass())
                     .kindergartenImageUrls(kindergartenImageUrls)
                     .build();
         }

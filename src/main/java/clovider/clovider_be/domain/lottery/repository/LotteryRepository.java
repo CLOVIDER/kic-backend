@@ -1,8 +1,11 @@
 package clovider.clovider_be.domain.lottery.repository;
 
 import clovider.clovider_be.domain.application.Application;
+import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.lottery.Lottery;
 import java.util.List;
+
+import clovider.clovider_be.domain.lottery.dto.LotteryIdAndChildNameDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -27,6 +30,17 @@ public interface LotteryRepository extends JpaRepository<Lottery, Long>, Lottery
     Lottery findLotteryByApplicationIdAndRecruitId(Long applicationId, Long recruitId);
 
 
-
     List<Lottery> findByApplicationId(Long applicationId);
+
+
+
+
+
+    @Query("SELECT l.childNm AS childName, GROUP_CONCAT(l.id) AS lotteryIds " +
+            "FROM Lottery l " +
+            "JOIN l.application a " +
+            "WHERE a.employee = :employee " +
+            "GROUP BY l.childNm")
+    List<Object[]> findLotteryGroupedByChildNameByEmployee(Employee employee);
 }
+

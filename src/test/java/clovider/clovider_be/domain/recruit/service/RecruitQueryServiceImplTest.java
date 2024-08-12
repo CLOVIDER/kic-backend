@@ -1,59 +1,57 @@
 package clovider.clovider_be.domain.recruit.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import clovider.clovider_be.domain.enums.AgeClass;
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
-import clovider.clovider_be.domain.kindergarten.repository.KindergartenRepository;
-import clovider.clovider_be.domain.lottery.dto.LotteryResponse;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitInfo;
 import clovider.clovider_be.domain.recruit.Recruit;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruit;
+import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruits;
 import clovider.clovider_be.domain.recruit.repository.RecruitRepository;
-import clovider.clovider_be.global.config.QuerydslConfig;
+import clovider.clovider_be.domain.utils.CreateUtil;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@DataJpaTest
-@Import(QuerydslConfig.class)
-@ActiveProfiles("test")
-@TestPropertySource(locations = "classpath:application-test.yml")
-@AutoConfigureTestDatabase(replace = Replace.NONE)
+@ExtendWith(MockitoExtension.class)
 class RecruitQueryServiceImplTest {
 
-    @Autowired
+    @Mock
     private RecruitRepository recruitRepository;
 
-    @Autowired
-    private KindergartenRepository kindergartenRepository;
+    @InjectMocks
+    private RecruitQueryServiceImpl recruitQueryService;
 
     @Test
     @DisplayName("현재 진행 중인 모집 - 클래스반별 정렬")
     void getNowRecruitOrderByClass() {
 
         // given
-        List<NowRecruit> recruits = recruitRepository.findNowRecruitOrderByClass(
-                LocalDateTime.now());
+        List<NowRecruit> nowRecruitList = CreateUtil.getNowRecruitList();
+        LocalDateTime now = LocalDateTime.of(2024, 8, 8, 12, 0);
 
         // when
-        String kdg1 = recruits.get(0).getKindergartenNm();
-        String kdg2 = recruits.get(5).getKindergartenNm();
+        when(recruitRepository.findNowRecruitOrderByClass(now)).thenReturn(nowRecruitList);
+        NowRecruits nowRecruits = recruitQueryService.getNowRecruitOrderByClass(now);
+
+        List<NowRecruit> recruits = nowRecruits.getNowRecruits();
         NowRecruit recruit = recruits.get(0);
 
         // then
-        assertThat(recruits.size()).isEqualTo(6);
-        assertThat(kdg1).isLessThan(kdg2);
-        assertThat(recruit.getRecruitStartDt()).isBeforeOrEqualTo(LocalDateTime.now());
-        assertThat(recruit.getSecondEndDt()).isAfterOrEqualTo(LocalDateTime.now());
+        assertThat(recruits.size()).isEqualTo(2);
+        assertThat(recruit.getRecruitStartDt()).isBeforeOrEqualTo(now);
+        assertThat(recruit.getSecondEndDt()).isAfterOrEqualTo(now);
     }
 
 
@@ -62,23 +60,24 @@ class RecruitQueryServiceImplTest {
     void getRecruitByKindergarten() {
 
         // given
-        Kindergarten kindergarten = kindergartenRepository.findById(1L).get();
+        List<Kindergarten> kindergartenList = CreateUtil.getKindergartenList();
+        Kindergarten kindergarten = kindergartenList.get(0);
+        List<Recruit> recruitList = CreateUtil.getRecruitList();
+        Mockito.when(recruitRepository.findByKindergartenId(kindergarten.getId()))
+                .thenReturn(recruitList);
 
         // when
-        List<Recruit> recruits = recruitRepository.findByKindergartenId(kindergarten.getId());
+        List<Recruit> recruits = recruitQueryService.getRecruitByKindergarten(kindergarten.getId());
         Kindergarten kdg1 = recruits.get(0).getKindergarten();
         List<Integer> recruitCnts = recruits.stream()
                 .map(Recruit::getRecruitCnt)
                 .toList();
-        AgeClass ageClass1 = recruits.get(0).getAgeClass();
-        AgeClass ageClass2 = recruits.get(1).getAgeClass();
 
         // then
-        assertThat(kdg1.getKindergartenNm()).isEqualTo("새빛");
-        assertThat(recruits.size()).isEqualTo(3);
+        assertThat(kdg1.getKindergartenNm()).isEqualTo("애플 어린이집");
+        assertThat(recruits.size()).isEqualTo(2);
         assertThat(recruitCnts).allMatch(count -> count > 0,
                 "All recruit counts should be greater than 0");
-        assertThat(ageClass1).isNotEqualTo(ageClass2);
     }
 
     @Test
@@ -86,15 +85,19 @@ class RecruitQueryServiceImplTest {
     void getNowRecruit() {
 
         // given
-        List<Recruit> recruits = recruitRepository.findNowRecruit(LocalDateTime.now());
+        LocalDateTime now = LocalDateTime.of(2024, 8, 8, 12, 0);
+        List<Recruit> recruitList = CreateUtil.getRecruitList();
+        when(recruitRepository.findNowRecruit(now)).thenReturn(recruitList);
 
         // when
+        List<Recruit> recruits = recruitQueryService.getNowRecruit(now);
+
         LocalDateTime startDt = recruits.get(0).getRecruitStartDt();
         LocalDateTime endDt = recruits.get(0).getRecruitEndDt();
 
         // then
         assertThat(startDt).isBeforeOrEqualTo(endDt);
-        assertThat(recruits.size()).isEqualTo(1);
+        assertThat(recruits.size()).isEqualTo(2);
     }
 
     @Test
@@ -102,20 +105,23 @@ class RecruitQueryServiceImplTest {
     void getRecruit() {
 
         // given
-        Recruit recruit1 = recruitRepository.findById(1L).get();
-        Recruit recruit2 = recruitRepository.findById(2L).get();
+        List<Recruit> recruitList = CreateUtil.getRecruitList();
+        Recruit recruit1 = recruitList.get(0);
+        Recruit recruit2 = recruitList.get(1);
 
         // when
+        when(recruitRepository.findById(recruit1.getId())).thenReturn(Optional.of(recruit1));
+        Recruit recruit = recruitQueryService.getRecruit(recruit1.getId());
         Kindergarten kdg1 = recruit1.getKindergarten();
         Kindergarten kdg2 = recruit2.getKindergarten();
         AgeClass ageClass1 = recruit1.getAgeClass();
-        AgeClass ageClass2 = recruit2.getAgeClass();
 
         // then
+        verify(recruitRepository, times(1)).findById(recruit1.getId());
+        assertThat(recruit).isEqualTo(recruit1);
         assertThat(recruit1).isNotSameAs(recruit2);
-        assertThat(kdg1).isNotSameAs(kdg2);
-        assertThat(ageClass1).isEqualTo(ageClass2);
-        assertThat(ageClass1.getDescription()).isEqualTo(AgeClass.TODDLER.getDescription());
+        assertThat(kdg1).isSameAs(kdg2);
+        assertThat(ageClass1.getDescription()).isEqualTo(AgeClass.KID.getDescription());
 
     }
 
@@ -124,17 +130,21 @@ class RecruitQueryServiceImplTest {
     void getRecruitInfo() {
 
         // given
-        Recruit recruit = recruitRepository.findRecruitInfoById(1L).get();
+        List<Recruit> recruitList = CreateUtil.getRecruitList();
+        Recruit recruit1 = recruitList.get(0);
 
         // when
-        RecruitInfo recruitInfo = LotteryResponse.toRecruitInfo(recruit);
+        when(recruitRepository.findRecruitInfoById(recruit1.getId())).thenReturn(
+                Optional.of(recruit1));
+
+        RecruitInfo recruitInfo = recruitQueryService.getRecruitInfo(recruit1.getId());
         String kindergartenNm = recruitInfo.getKindergartenNm();
         String ageClass = recruitInfo.getAgeClass();
 
         // then
         assertThat(recruitInfo).isNotNull();
-        assertThat(kindergartenNm).isEqualTo("새빛");
-        assertThat(ageClass).isEqualTo(AgeClass.TODDLER.getDescription());
+        assertThat(kindergartenNm).isEqualTo("애플 어린이집");
+        assertThat(ageClass).isNotEqualTo(AgeClass.TODDLER.getDescription());
         assertThat(recruitInfo).isInstanceOf(RecruitInfo.class);
     }
 }

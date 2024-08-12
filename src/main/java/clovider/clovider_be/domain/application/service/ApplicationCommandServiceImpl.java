@@ -4,14 +4,20 @@ import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.application.dto.ApplicationRequest;
 import clovider.clovider_be.domain.application.repository.ApplicationRepository;
 import clovider.clovider_be.domain.common.CustomResult;
+import clovider.clovider_be.domain.document.Document;
 import clovider.clovider_be.domain.document.service.ApplicationDocumentCommandService;
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.enums.Accept;
+import clovider.clovider_be.domain.enums.DocumentType;
 import clovider.clovider_be.domain.enums.Save;
 import clovider.clovider_be.domain.lottery.service.LotteryCommandService;
+import clovider.clovider_be.global.exception.ApiException;
+import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 
+import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +48,7 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
 
         applicationRepository.save(savedApplication);
 
-        applicationDocumentCommandService.createApplicationDocuments(applicationRequest.getImageUrls(), savedApplication);
+        applicationDocumentCommandService.createApplicationDocuments(applicationRequest.getFileUrls(), savedApplication);
 
         lotteryCommandService.insertLottery(applicationRequest.getChildrenRecruitList(), savedApplication.getId());
 
@@ -53,7 +59,7 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
     public CustomResult applicationUpdate(Long Id, ApplicationRequest applicationRequest) {
         Application savedApplication = applicationRepository.findById(Id).orElseThrow();
         savedApplication.update(applicationRequest);
-        applicationDocumentCommandService.createApplicationDocuments(applicationRequest.getImageUrls(), savedApplication);
+        applicationDocumentCommandService.createApplicationDocuments(applicationRequest.getFileUrls(), savedApplication);
 
         return CustomResult.toCustomResult(savedApplication.getId());
     }
@@ -84,15 +90,34 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
                 .build()
         );
 
-        applicationDocumentCommandService.createApplicationDocuments(applicationRequest.getImageUrls(), savedApplication);
+        applicationDocumentCommandService.createApplicationDocuments(applicationRequest.getFileUrls(), savedApplication);
 
         return CustomResult.toCustomResult(savedApplication.getId());
     }
 
     @Override
-    public CustomResult applicationAccept(Long Id, Accept accept) {
-        Application savedApplication = applicationRepository.findById(Id).orElseThrow();
-        savedApplication.isAccept(accept);
+    public CustomResult applicationAccept(Long Id, Map<DocumentType, Accept> acceptList) {
+        Application savedApplication = applicationRepository.findById(Id).orElseThrow(
+                () -> new ApiException(ErrorStatus._APPLICATION_NOT_FOUND)
+        );
+        ;
+        List<Document> documents = savedApplication.getDocuments();
+
+        for (Document document : documents) {
+
+            DocumentType documentType = document.getDocumentType();
+            Accept accept = acceptList.get(documentType);
+
+            applicationDocumentCommandService.acceptDocument(document.getId(), accept);
+
+        }
+
+        // document가 모두 승인상태일때 신청서 승인처리
+        savedApplication.changeAccept(documents.stream()
+                .allMatch(document -> acceptList.getOrDefault(document.getDocumentType(), Accept.UNACCEPT).equals(Accept.ACCEPT))
+                ? Accept.ACCEPT : Accept.UNACCEPT);
+
+        applicationRepository.save(savedApplication);
 
         return CustomResult.toCustomResult(savedApplication.getId());
     }

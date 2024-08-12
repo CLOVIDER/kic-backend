@@ -5,6 +5,9 @@ import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import clovider.clovider_be.domain.kindergarten.repository.KindergartenRepository;
 import clovider.clovider_be.domain.recruit.Recruit;
 import clovider.clovider_be.domain.recruit.dto.*;
+import clovider.clovider_be.domain.recruit.dto.RecruitCreateRequestDTO;
+import clovider.clovider_be.domain.recruit.dto.RecruitCreateResponseDTO;
+import clovider.clovider_be.domain.recruit.dto.RecruitResponse;
 import clovider.clovider_be.domain.recruit.repository.RecruitRepository;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -92,13 +95,6 @@ public class RecruitCommandServiceImpl implements RecruitCommandService{
         return responseDTO;
     }
 
-
-
-
-
-
-
-
     private AdminResponse.RecruitCreationInfo createRecruitCreationInfo(List<Recruit> recruits) {
         // 어린이집별로 Recruit를 그룹화
         Map<String, List<Recruit>> recruitsByKindergarten = recruits.stream()
@@ -146,7 +142,10 @@ public class RecruitCommandServiceImpl implements RecruitCommandService{
                 .ageClass(recruit.getAgeClass().getDescription())
                 .recruitCnt(recruit.getRecruitCnt())
                 .build();
-    }
+        }
+
+
+
     private RecruitResponse.RecruitDateAndWeightInfo toRecruitDateAndWeightInfo(Recruit recruit) {
         RecruitResponse.RecruitDateInfo recruitDateInfo = RecruitResponse.RecruitDateInfo.builder()
                 .recruitStartDt(recruit.getRecruitStartDt())

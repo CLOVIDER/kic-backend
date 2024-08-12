@@ -3,6 +3,7 @@ package clovider.clovider_be.domain.lottery.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.joda.time.DateTime;
 
 import java.time.LocalDateTime;
 
@@ -10,7 +11,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LotteryResultResponseDTO {
-    private String message;
     private Result result;
 
 
@@ -23,5 +23,9 @@ public class LotteryResultResponseDTO {
         private LocalDateTime createdAt;
         //추첨 결과
         private clovider.clovider_be.domain.enums.Result result;
+        // 해당 어린이집
+        String kindergartenNm;
+        Integer waitingNum;
+        LocalDateTime endDate;
     }
 }
