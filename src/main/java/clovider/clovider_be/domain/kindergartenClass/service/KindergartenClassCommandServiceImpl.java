@@ -23,16 +23,33 @@ public class KindergartenClassCommandServiceImpl implements KindergartenClassCom
     public List<KindergartenClass> saveKindergartenClass(Kindergarten kindergarten,
             List<KindergartenClass> kindergartenClasses) {
 
-        List<KindergartenClass> savedKindergartenClasses = kindergartenClassRepository.saveAll(kindergartenClasses);
+        List<KindergartenClass> newKindergartenClasses = kindergartenClasses.stream()
+                .map(kindergartenClass -> KindergartenClass.builder()
+                        .kindergarten(kindergarten)
+                        .ageClass(kindergartenClass.getAgeClass())
+                        .className(kindergartenClass.getClassName())
+                        .build())
+                .collect(Collectors.toList());
 
-        return savedKindergartenClasses;
+        return kindergartenClassRepository.saveAll(newKindergartenClasses);
     }
 
     @Override
     public List<KindergartenClass> updateKindergartenClass(Kindergarten kindergarten,
             List<KindergartenClass> newKindergartenClass) {
+
         List<KindergartenClass> existingClasses = kindergartenClassQueryService.getKindergartenClass(kindergarten.getId());
-        List<KindergartenClass> savedKindergartenClasses = kindergartenClassRepository.saveAll(existingClasses);
-        return savedKindergartenClasses;
+
+        kindergartenClassRepository.deleteAll(existingClasses);
+
+        List<KindergartenClass> newKindergartenClasses = newKindergartenClass.stream()
+                .map(kindergartenClass -> KindergartenClass.builder()
+                        .kindergarten(kindergarten)
+                        .ageClass(kindergartenClass.getAgeClass())
+                        .className(kindergartenClass.getClassName())
+                        .build())
+                .collect(Collectors.toList());
+
+        return kindergartenClassRepository.saveAll(existingClasses);
     }
 }
