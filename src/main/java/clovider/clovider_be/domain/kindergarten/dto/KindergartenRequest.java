@@ -1,7 +1,7 @@
 package clovider.clovider_be.domain.kindergarten.dto;
 
-import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import clovider.clovider_be.domain.kindergartenClass.KindergartenClass;
+import clovider.clovider_be.domain.kindergartenClass.dto.KindergartenClassDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -53,7 +53,7 @@ public class KindergartenRequest {
                 required = true
         )
         @NotNull(message = "어린이집 분반 정보는 필수 항목입니다.")
-        private List<KindergartenClass> kindergartenClass;
+        private List<KindergartenClassDTO> kindergartenClass;
 
         @Schema(description = "어린이집 이미지 url", example = "[\"path/file1.png\", \"path/file2.png\"]", required = true)
         @NotNull(message = "어린이집 이미지 url은 필수 항목입니다.")
@@ -92,7 +92,7 @@ public class KindergartenRequest {
                 example = "[{\"className\":\"햇님반\", \"ageClass\":\"TODDLER\"}, {\"className\":\"달님만\", \"ageClass\":\"INFANT\"}]",
                 required = true
         )
-        private List<KindergartenClass> kindergartenClass;
+        private List<KindergartenClassDTO> kindergartenClass;
 
         @Schema(description = "어린이집 이미지 url", example = "[\"path/file1.png\", \"path/file2.png\"]", required = true)
         private List<String> kindergartenImages;

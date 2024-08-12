@@ -2,6 +2,7 @@ package clovider.clovider_be.domain.kindergartenClass.service;
 
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import clovider.clovider_be.domain.kindergartenClass.KindergartenClass;
+import clovider.clovider_be.domain.kindergartenClass.dto.KindergartenClassDTO;
 import clovider.clovider_be.domain.kindergartenClass.repository.KindergartenClassRepository;
 import clovider.clovider_be.domain.kindergartenImage.KindergartenImage;
 import clovider.clovider_be.domain.kindergartenImage.repository.KindergartenImageRepository;
@@ -17,11 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class KindergartenClassCommandServiceImpl implements KindergartenClassCommandService {
 
     private final KindergartenClassRepository kindergartenClassRepository;
-    private final KindergartenClassQueryService kindergartenClassQueryService;
 
     @Override
-    public List<KindergartenClass> saveKindergartenClass(Kindergarten kindergarten,
-            List<KindergartenClass> kindergartenClasses) {
+    public List<KindergartenClassDTO> saveKindergartenClass(Kindergarten kindergarten,
+            List<KindergartenClassDTO> kindergartenClasses) {
 
         List<KindergartenClass> newKindergartenClasses = kindergartenClasses.stream()
                 .map(kindergartenClass -> KindergartenClass.builder()
@@ -29,28 +29,39 @@ public class KindergartenClassCommandServiceImpl implements KindergartenClassCom
                         .ageClass(kindergartenClass.getAgeClass())
                         .className(kindergartenClass.getClassName())
                         .build())
-                .collect(Collectors.toList());
+                .toList();
 
-        return kindergartenClassRepository.saveAll(newKindergartenClasses);
+        List<KindergartenClass> savedClasses = kindergartenClassRepository.saveAll(newKindergartenClasses);
+
+        return savedClasses.stream()
+                .map(savedClass -> KindergartenClassDTO.builder()
+                        .className(savedClass.getClassName())
+                        .ageClass(savedClass.getAgeClass())
+                        .build())
+                .toList();
     }
 
     @Override
-    public List<KindergartenClass> updateKindergartenClass(Kindergarten kindergarten,
-            List<KindergartenClass> newKindergartenClasses) {
+    public List<KindergartenClassDTO> updateKindergartenClass(Kindergarten kindergarten,
+            List<KindergartenClassDTO> newKindergartenClasses) {
 
-        List<KindergartenClass> existingClasses = kindergartenClassQueryService.getKindergartenClass(kindergarten.getId());
+        kindergartenClassRepository.deleteAllByKindergartenId(kindergarten.getId());
 
-        existingClasses.clear();
+        List<KindergartenClass> updateKindergartenClasses = newKindergartenClasses.stream()
+                .map(kindergartenClass -> KindergartenClass.builder()
+                        .kindergarten(kindergarten)
+                        .ageClass(kindergartenClass.getAgeClass())
+                        .className(kindergartenClass.getClassName())
+                        .build())
+                .toList();
 
-        for (KindergartenClass newClass : newKindergartenClasses) {
-            KindergartenClass kindergartenClass = KindergartenClass.builder()
-                    .kindergarten(kindergarten)
-                    .ageClass(newClass.getAgeClass())
-                    .className(newClass.getClassName())
-                    .build();
-            existingClasses.add(kindergartenClass);
-        }
+        List<KindergartenClass> savedClasses = kindergartenClassRepository.saveAll(updateKindergartenClasses);
 
-        return kindergartenClassRepository.saveAll(existingClasses);
+        return savedClasses.stream()
+                .map(savedClass -> KindergartenClassDTO.builder()
+                        .className(savedClass.getClassName())
+                        .ageClass(savedClass.getAgeClass())
+                        .build())
+                .toList();
     }
 }

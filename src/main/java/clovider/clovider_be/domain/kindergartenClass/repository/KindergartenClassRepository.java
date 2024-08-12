@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface KindergartenClassRepository extends JpaRepository<KindergartenClass, Long> {
     List<KindergartenClass> findByKindergartenId(Long kindergartenId);
+    void deleteAllByKindergartenId(Long kindergartenId);
 }

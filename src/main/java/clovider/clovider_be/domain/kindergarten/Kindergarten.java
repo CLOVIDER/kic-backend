@@ -76,7 +76,7 @@ public class Kindergarten extends BaseTimeEntity {
 
 
     public void updateKindergarten(String kindergartenNm, String kindergartenAddr, Integer kindergartenScale,
-            Integer kindergartenCapacity, String kindergartenNo, String kindergartenTime, String kindergartenInfo, List<KindergartenClass> kindergartenClass) {
+            Integer kindergartenCapacity, String kindergartenNo, String kindergartenTime, String kindergartenInfo) {
         this.kindergartenNm = kindergartenNm;
         this.kindergartenAddr = kindergartenAddr;
         this.kindergartenScale = kindergartenScale;
@@ -84,7 +84,6 @@ public class Kindergarten extends BaseTimeEntity {
         this.kindergartenNo = kindergartenNo;
         this.kindergartenTime = kindergartenTime;
         this.kindergartenInfo = kindergartenInfo;
-        this.kindergartenClass = kindergartenClass;
     }
 }
 

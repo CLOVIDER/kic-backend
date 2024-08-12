@@ -11,6 +11,7 @@ import clovider.clovider_be.domain.kindergarten.dto.KindergartenRequest.Kinderga
 import clovider.clovider_be.domain.kindergarten.dto.KindergartenResponse.*;
 import clovider.clovider_be.domain.kindergarten.repository.KindergartenRepository;
 import clovider.clovider_be.domain.kindergartenClass.KindergartenClass;
+import clovider.clovider_be.domain.kindergartenClass.dto.KindergartenClassDTO;
 import clovider.clovider_be.domain.kindergartenClass.service.KindergartenClassCommandService;
 import clovider.clovider_be.domain.kindergartenImage.service.KindergartenImageCommandService;
 import clovider.clovider_be.domain.kindergartenImage.service.KindergartenImageQueryService;
@@ -51,7 +52,7 @@ public class KindergartenCommandServiceImpl implements KindergartenCommandServic
 
         kindergarten = kindergartenRepository.save(kindergarten);
 
-        List<KindergartenClass> kindergartenClasses = kindergartenClassCommandService.saveKindergartenClass(kindergarten, kindergartenRegisterRequest.getKindergartenClass());
+        List<KindergartenClassDTO> kindergartenClasses = kindergartenClassCommandService.saveKindergartenClass(kindergarten, kindergartenRegisterRequest.getKindergartenClass());
 
         List<Long> kindergartenImageIds = kindergartenImageCommandService.saveKindergartenImage(kindergarten, kindergartenRegisterRequest.getKindergartenImages());
 
@@ -87,14 +88,13 @@ public class KindergartenCommandServiceImpl implements KindergartenCommandServic
                 request.getKindergartenCapacity(),
                 request.getKindergartenNo(),
                 request.getKindergartenTime(),
-                request.getKindergartenInfo(),
-                request.getKindergartenClass());
+                request.getKindergartenInfo());
 
         Kindergarten savedKindergarten = kindergartenRepository.save(kindergarten);
 
         List<Long> kindergartenImageIds = kindergartenImageCommandService.updateKindergartenImage(kindergarten, request.getKindergartenImages());
 
-        List<KindergartenClass> kindergartenClasses = kindergartenClassCommandService.updateKindergartenClass(kindergarten, request.getKindergartenClass());
+        List<KindergartenClassDTO> kindergartenClasses = kindergartenClassCommandService.updateKindergartenClass(kindergarten, request.getKindergartenClass());
 
         return KindergartenUpdateResponse.toKindergartenUpdateResponse(savedKindergarten, kindergartenClasses, kindergartenImageIds);
     }

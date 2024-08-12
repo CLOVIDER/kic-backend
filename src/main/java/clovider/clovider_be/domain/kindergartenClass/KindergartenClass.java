@@ -41,6 +41,5 @@ public class KindergartenClass {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "kindergarten_id", nullable = false)
-    @JsonBackReference
     private Kindergarten kindergarten;
 }

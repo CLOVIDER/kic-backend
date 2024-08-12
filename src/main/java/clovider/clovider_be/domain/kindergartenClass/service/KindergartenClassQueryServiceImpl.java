@@ -2,6 +2,7 @@ package clovider.clovider_be.domain.kindergartenClass.service;
 
 import clovider.clovider_be.domain.enums.AgeClass;
 import clovider.clovider_be.domain.kindergartenClass.KindergartenClass;
+import clovider.clovider_be.domain.kindergartenClass.dto.KindergartenClassDTO;
 import clovider.clovider_be.domain.kindergartenClass.repository.KindergartenClassRepository;
 import clovider.clovider_be.domain.kindergartenImage.KindergartenImage;
 import clovider.clovider_be.domain.kindergartenImage.repository.KindergartenImageRepository;
@@ -22,18 +23,18 @@ public class KindergartenClassQueryServiceImpl implements KindergartenClassQuery
     private final KindergartenClassRepository kindergartenClassRepository;
 
     @Override
-    public List<KindergartenClass> getKindergartenClass(Long kindergartenId) {
+    public List<KindergartenClassDTO> getKindergartenClass(Long kindergartenId) {
         List<KindergartenClass> kindergartenClasses = kindergartenClassRepository.findByKindergartenId(kindergartenId);
 
         if (kindergartenClasses == null || kindergartenClasses.isEmpty()) {
-            KindergartenClass defaultClass = KindergartenClass.builder()
-                    .className("기본값")
-                    .ageClass(AgeClass.INFANT)
-                    .build();
-
-            return Collections.singletonList(defaultClass);
+            throw new ApiException(ErrorStatus._KDG_ClASS_NOT_FOUND);
         }
 
-        return kindergartenClasses;
+        return kindergartenClasses.stream()
+                .map(kindergartenClass -> KindergartenClassDTO.builder()
+                        .className(kindergartenClass.getClassName())
+                        .ageClass(kindergartenClass.getAgeClass())
+                        .build())
+                .toList();
     }
 }

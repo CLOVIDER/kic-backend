@@ -5,6 +5,7 @@ import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import clovider.clovider_be.domain.kindergarten.dto.KindergartenResponse.KindergartenGetResponse;
 import clovider.clovider_be.domain.kindergarten.repository.KindergartenRepository;
 import clovider.clovider_be.domain.kindergartenClass.KindergartenClass;
+import clovider.clovider_be.domain.kindergartenClass.dto.KindergartenClassDTO;
 import clovider.clovider_be.domain.kindergartenClass.service.KindergartenClassQueryService;
 import clovider.clovider_be.domain.kindergartenImage.service.KindergartenImageQueryService;
 import clovider.clovider_be.domain.recruit.service.RecruitQueryService;
@@ -34,7 +35,7 @@ public class KindergartenQueryServiceImpl implements KindergartenQueryService {
 
         List<String> imageUrls = kindergartenImageQuery.getKindergartenImageUrls(kindergartenId);
 
-        List<KindergartenClass> kindergartenClasses = kindergartenClassQueryService.getKindergartenClass(kindergartenId);
+        List<KindergartenClassDTO> kindergartenClasses = kindergartenClassQueryService.getKindergartenClass(kindergartenId);
 
         return KindergartenGetResponse.toKindergartenGetResponse(kindergarten, kindergartenClasses, imageUrls);
     }
@@ -55,7 +56,7 @@ public class KindergartenQueryServiceImpl implements KindergartenQueryService {
 
         for (Kindergarten kindergarten : kindergartens) {
             List<String> imageUrls = kindergartenImageQuery.getKindergartenImageUrls(kindergarten.getId());
-            List<KindergartenClass> kindergartenClasses = kindergartenClassQueryService.getKindergartenClass(kindergarten.getId());
+            List<KindergartenClassDTO> kindergartenClasses = kindergartenClassQueryService.getKindergartenClass(kindergarten.getId());
             KindergartenGetResponse response = KindergartenGetResponse.toKindergartenGetResponse(kindergarten, kindergartenClasses, imageUrls);
             responses.add(response);
         }
