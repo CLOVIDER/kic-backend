@@ -142,7 +142,7 @@ public class RecruitCommandServiceImpl implements RecruitCommandService{
                 .ageClass(recruit.getAgeClass().getDescription())
                 .recruitCnt(recruit.getRecruitCnt())
                 .build();
-        }
+    }
 
 
 
@@ -171,9 +171,6 @@ public class RecruitCommandServiceImpl implements RecruitCommandService{
                 .recruitWeightInfo(recruitWeightInfo)
                 .build();
     }
-
-
-
 
 
 }
