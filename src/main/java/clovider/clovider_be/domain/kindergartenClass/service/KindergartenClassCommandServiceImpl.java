@@ -50,6 +50,6 @@ public class KindergartenClassCommandServiceImpl implements KindergartenClassCom
                         .build())
                 .collect(Collectors.toList());
 
-        return kindergartenClassRepository.saveAll(existingClasses);
+        return kindergartenClassRepository.saveAll(newKindergartenClasses);
     }
 }
