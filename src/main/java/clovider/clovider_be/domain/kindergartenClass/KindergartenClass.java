@@ -1,6 +1,7 @@
-package clovider.clovider_be.domain.kindergarten;
+package clovider.clovider_be.domain.kindergartenClass;
 
 import clovider.clovider_be.domain.enums.AgeClass;
+import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -1,6 +1,7 @@
 package clovider.clovider_be.domain.kindergarten;
 
 import clovider.clovider_be.domain.common.BaseTimeEntity;
+import clovider.clovider_be.domain.kindergartenClass.KindergartenClass;
 import clovider.clovider_be.domain.kindergartenImage.KindergartenImage;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.CascadeType;
