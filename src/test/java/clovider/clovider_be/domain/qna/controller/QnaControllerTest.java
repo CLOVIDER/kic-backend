@@ -23,7 +23,7 @@ import clovider.clovider_be.domain.qna.dto.QnaRequest.QnaAnswerRequest;
 import clovider.clovider_be.domain.qna.dto.QnaRequest.QnaCreateRequest;
 import clovider.clovider_be.domain.qna.dto.QnaResponse.BaseQnaResponse;
 import clovider.clovider_be.domain.qna.dto.QnaResponse.BaseQnaResponse.DetailedQnaResponse;
-import clovider.clovider_be.domain.qna.dto.QnaResponse.BaseQnaResponse.QnaUpdateResponse;
+import clovider.clovider_be.domain.qna.dto.QnaResponse.QnaUpdateResponse;
 import clovider.clovider_be.domain.qna.service.QnaCommandService;
 import clovider.clovider_be.domain.qna.service.QnaQueryService;
 import clovider.clovider_be.domain.utils.TestUtils;
