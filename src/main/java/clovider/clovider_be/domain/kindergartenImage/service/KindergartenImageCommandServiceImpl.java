@@ -39,18 +39,17 @@ public class KindergartenImageCommandServiceImpl implements KindergartenImageCom
     public List<Long> updateKindergartenImage(Kindergarten kindergarten, List<String> newImageUrls) {
         List<KindergartenImage> existingImages = kindergartenImageQueryService.getKindergartenImage(kindergarten.getId());
 
-        // 기존 이미지 삭제
-        kindergartenImageRepository.deleteAll(existingImages);
+        existingImages.clear();
 
-        // 새로운 이미지 추가
-        List<KindergartenImage> newImages = newImageUrls.stream()
-                .map(url -> KindergartenImage.builder()
-                        .kindergarten(kindergarten)
-                        .image(url)
-                        .build())
-                .collect(Collectors.toList());
+        for (String url : newImageUrls) {
+            KindergartenImage newImage = KindergartenImage.builder()
+                    .kindergarten(kindergarten)
+                    .image(url)
+                    .build();
+            existingImages.add(newImage);
+        }
 
-        List<KindergartenImage> savedImages = kindergartenImageRepository.saveAll(newImages);
+        List<KindergartenImage> savedImages = kindergartenImageRepository.saveAll(existingImages);
 
         return savedImages.stream()
                 .map(KindergartenImage::getId)

@@ -48,7 +48,9 @@ public class KindergartenQueryServiceImpl implements KindergartenQueryService {
 
     @Override
     public List<KindergartenGetResponse> getAllKindergartens() {
+
         List<Kindergarten> kindergartens = kindergartenRepository.findAll();
+
         List<KindergartenGetResponse> responses = new ArrayList<>();
 
         for (Kindergarten kindergarten : kindergartens) {

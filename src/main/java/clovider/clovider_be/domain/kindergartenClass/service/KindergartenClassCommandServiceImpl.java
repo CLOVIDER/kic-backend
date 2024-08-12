@@ -36,20 +36,21 @@ public class KindergartenClassCommandServiceImpl implements KindergartenClassCom
 
     @Override
     public List<KindergartenClass> updateKindergartenClass(Kindergarten kindergarten,
-            List<KindergartenClass> newKindergartenClass) {
+            List<KindergartenClass> newKindergartenClasses) {
 
         List<KindergartenClass> existingClasses = kindergartenClassQueryService.getKindergartenClass(kindergarten.getId());
 
-        kindergartenClassRepository.deleteAll(existingClasses);
+        existingClasses.clear();
 
-        List<KindergartenClass> newKindergartenClasses = newKindergartenClass.stream()
-                .map(kindergartenClass -> KindergartenClass.builder()
-                        .kindergarten(kindergarten)
-                        .ageClass(kindergartenClass.getAgeClass())
-                        .className(kindergartenClass.getClassName())
-                        .build())
-                .collect(Collectors.toList());
+        for (KindergartenClass newClass : newKindergartenClasses) {
+            KindergartenClass kindergartenClass = KindergartenClass.builder()
+                    .kindergarten(kindergarten)
+                    .ageClass(newClass.getAgeClass())
+                    .className(newClass.getClassName())
+                    .build();
+            existingClasses.add(kindergartenClass);
+        }
 
-        return kindergartenClassRepository.saveAll(newKindergartenClasses);
+        return kindergartenClassRepository.saveAll(existingClasses);
     }
 }

@@ -1,5 +1,6 @@
 package clovider.clovider_be.domain.kindergarten.dto;
 
+import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import clovider.clovider_be.domain.kindergartenClass.KindergartenClass;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
