@@ -1,5 +1,6 @@
 package clovider.clovider_be.domain.qna.repository;
 
+import static clovider.clovider_be.domain.employee.QEmployee.employee;
 import static clovider.clovider_be.domain.qna.QQna.qna;
 
 import clovider.clovider_be.domain.enums.SearchType;
@@ -13,7 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
-
 @Repository
 @RequiredArgsConstructor
 public class QnaRepositoryCustomImpl implements QnaRepositoryCustom {
@@ -24,7 +24,9 @@ public class QnaRepositoryCustomImpl implements QnaRepositoryCustom {
     public Page<BaseQnaResponse> searchQnas(Pageable pageable, SearchType type, String keyword) {
 
         // Fetch results with pagination
-        List<BaseQnaResponse> content = queryFactory.selectFrom(qna)
+        List<BaseQnaResponse> content = queryFactory.select(qna)
+                .from(qna)
+                .join(qna.employee,employee).fetchJoin()
                 .where(buildPredicate(type, keyword))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
