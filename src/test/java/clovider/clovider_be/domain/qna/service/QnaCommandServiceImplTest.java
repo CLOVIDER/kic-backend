@@ -14,7 +14,7 @@ import clovider.clovider_be.domain.enums.Role;
 import clovider.clovider_be.domain.qna.Qna;
 import clovider.clovider_be.domain.qna.dto.QnaRequest.QnaAnswerRequest;
 import clovider.clovider_be.domain.qna.dto.QnaRequest.QnaCreateRequest;
-import clovider.clovider_be.domain.qna.dto.QnaResponse.BaseQnaResponse.QnaUpdateResponse;
+import clovider.clovider_be.domain.qna.dto.QnaResponse.QnaUpdateResponse;
 import clovider.clovider_be.domain.qna.repository.QnaRepository;
 import clovider.clovider_be.domain.utils.TestUtils;
 import java.time.LocalDate;

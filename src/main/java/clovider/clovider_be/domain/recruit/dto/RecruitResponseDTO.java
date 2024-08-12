@@ -20,7 +20,6 @@ public class RecruitResponseDTO {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Result {
-        private Long id;
         private LocalDateTime createdAt;
     }
 }

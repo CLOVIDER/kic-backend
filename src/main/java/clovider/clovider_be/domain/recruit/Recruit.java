@@ -5,6 +5,8 @@ import clovider.clovider_be.domain.enums.AgeClass;
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.recruit.dto.RecruitCreateRequestDTO;
+import clovider.clovider_be.domain.recruit.dto.RecruitResponse;
+import clovider.clovider_be.domain.recruit.dto.RecruitUpdateRequestDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -17,6 +19,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @Getter
+@Setter
 @Table(name = "recruit_tb")
 public class Recruit extends BaseTimeEntity {
 
@@ -111,22 +114,23 @@ public class Recruit extends BaseTimeEntity {
                 .isSiblingUsage(requestDTO.getIsSiblingUsage())
                 .build();
     }
-//    //모집 수정
-//    public void updateRecruit(RecruitCreateRequestDTO requestDTO) {
-//        this.recruitStartDt = requestDTO.getRecruitStartDt();
-//        this.recruitEndDt = requestDTO.getRecruitEndDt();
-//        this.recruitCnt = requestDTO.getRecruitCnt();
-//        this.ageClass = requestDTO.getAgeClass();
-//        this.firstStartDt = requestDTO.getFirstStartDt();
-//        this.firstEndDt = requestDTO.getFirstEndDt();
-//        this.secondStartDt = requestDTO.getSecondStartDt();
-//        this.secondEndDt = requestDTO.getSecondEndDt();
-//        this.workYearsUsage = requestDTO.getWorkYearsUsage();
-//        this.isSingleParentUsage = requestDTO.getIsSingleParentUsage();
-//        this.childrenCntUsage = requestDTO.getChildrenCntUsage();
-//        this.isDisabilityUsage = requestDTO.getIsDisabilityUsage();
-//        this.isDualIncomeUsage = requestDTO.getIsDualIncomeUsage();
-//        this.isEmployeeCoupleUsage = requestDTO.getIsEmployeeCoupleUsage();
-//        this.isSiblingUsage = requestDTO.getIsSiblingUsage();
-//    }
+    public void updateRecruitDetails(RecruitUpdateRequestDTO dto) {
+        this.ageClass = dto.getAgeClass();
+        this.recruitStartDt = dto.getRecruitStartDt();
+        this.recruitEndDt = dto.getRecruitEndDt();
+        this.recruitCnt = dto.getRecruitCnt();
+        this.firstStartDt = dto.getFirstStartDt();
+        this.firstEndDt = dto.getFirstEndDt();
+        this.secondStartDt = dto.getSecondStartDt();
+        this.secondEndDt = dto.getSecondEndDt();
+
+        RecruitResponse.RecruitWeightInfo weightInfo = dto.getRecruitWeightInfo();
+        this.workYearsUsage = weightInfo.getWorkYearsUsage();
+        this.isSingleParentUsage = weightInfo.getIsSingleParentUsage();
+        this.childrenCntUsage = weightInfo.getChildrenCntUsage();
+        this.isDisabilityUsage = weightInfo.getIsDisabilityUsage();
+        this.isDualIncomeUsage = weightInfo.getIsDualIncomeUsage();
+        this.isEmployeeCoupleUsage = weightInfo.getIsEmployeeCoupleUsage();
+        this.isSiblingUsage = weightInfo.getIsSiblingUsage();
+    }
 }

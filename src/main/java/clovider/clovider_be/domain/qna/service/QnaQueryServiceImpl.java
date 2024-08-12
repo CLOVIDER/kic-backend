@@ -6,6 +6,7 @@ import clovider.clovider_be.domain.enums.SearchType;
 import clovider.clovider_be.domain.qna.Qna;
 import clovider.clovider_be.domain.qna.dto.QnaResponse.BaseQnaResponse;
 import clovider.clovider_be.domain.qna.dto.QnaResponse.BaseQnaResponse.DetailedQnaResponse;
+import clovider.clovider_be.domain.qna.dto.QnaResponse.QnaAnswerResponse;
 import clovider.clovider_be.domain.qna.repository.QnaRepository;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
@@ -51,5 +52,12 @@ public class QnaQueryServiceImpl implements QnaQueryService {
     @Override
     public Integer getWaitQna() {
         return qnaRepository.countAllByAnswerIsNull();
+    }
+
+    @Override
+    public QnaAnswerResponse getQnaAnswer(Long qnaId) {
+        Qna foundQna = qnaRepository.findById(qnaId)
+                .orElseThrow(() -> new ApiException(ErrorStatus._QNA_NOT_FOUND));
+        return QnaAnswerResponse.fromQna(foundQna);
     }
 }

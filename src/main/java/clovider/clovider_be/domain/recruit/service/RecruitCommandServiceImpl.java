@@ -4,11 +4,13 @@ import clovider.clovider_be.domain.admin.dto.AdminResponse;
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import clovider.clovider_be.domain.kindergarten.repository.KindergartenRepository;
 import clovider.clovider_be.domain.recruit.Recruit;
+import clovider.clovider_be.domain.recruit.dto.*;
 import clovider.clovider_be.domain.recruit.dto.RecruitCreateRequestDTO;
 import clovider.clovider_be.domain.recruit.dto.RecruitCreateResponseDTO;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse;
 import clovider.clovider_be.domain.recruit.repository.RecruitRepository;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -62,19 +64,36 @@ public class RecruitCommandServiceImpl implements RecruitCommandService{
         return createRecruitCreationInfo(allRecruits);
     }
 
-//    @Override
-//    @Transactional
-//    public AdminResponse.RecruitCreationInfo updateRecruit(Long recruitId, RecruitCreateRequestDTO requestDTO) {
-//        Recruit recruit = recruitRepository.findById(recruitId)
-//                .orElseThrow(() -> new ApiException(ErrorStatus._RECRUIT_NOT_FOUND));
-//
-//        // 업데이트 로직
-//        recruit.updateRecruit(requestDTO);
-//
-//        // 저장 및 반환
-//        Recruit savedRecruit = recruitRepository.save(recruit);
-//        return createRecruitCreationInfo(savedRecruit);
-//    }
+
+    @Override
+    public RecruitResponseDTO updateRecruit(RecruitUpdateRequestDTO requestDTO) {
+
+        List<Recruit> recruits = recruitRepository.findAllById(requestDTO.getRecruitIds());
+
+        //모집 정보가 존재하는지 확인
+        if (recruits.size() != requestDTO.getRecruitIds().size()) {
+            throw new ApiException(ErrorStatus._RECRUIT_NOT_FOUND);
+        }
+
+
+        // 각 모집 정보 한 번에 업데이트
+        for (Recruit recruit : recruits) {
+            recruit.updateRecruitDetails(requestDTO);
+        }
+
+        recruitRepository.saveAll(recruits);
+
+        RecruitResponseDTO.Result result = new RecruitResponseDTO.Result();
+        result.setCreatedAt(recruits.get(0).getCreatedAt());
+
+        RecruitResponseDTO responseDTO = new RecruitResponseDTO();
+        responseDTO.setSuccess(true);
+        responseDTO.setCode("SUCCESS");
+        responseDTO.setMessage("모집 정보가 성공적으로 업데이트되었습니다.");
+        responseDTO.setResult(result);
+
+        return responseDTO;
+    }
 
     private AdminResponse.RecruitCreationInfo createRecruitCreationInfo(List<Recruit> recruits) {
         // 어린이집별로 Recruit를 그룹화
@@ -124,6 +143,9 @@ public class RecruitCommandServiceImpl implements RecruitCommandService{
                 .recruitCnt(recruit.getRecruitCnt())
                 .build();
     }
+
+
+
     private RecruitResponse.RecruitDateAndWeightInfo toRecruitDateAndWeightInfo(Recruit recruit) {
         RecruitResponse.RecruitDateInfo recruitDateInfo = RecruitResponse.RecruitDateInfo.builder()
                 .recruitStartDt(recruit.getRecruitStartDt())
@@ -149,9 +171,6 @@ public class RecruitCommandServiceImpl implements RecruitCommandService{
                 .recruitWeightInfo(recruitWeightInfo)
                 .build();
     }
-
-
-
 
 
 }
