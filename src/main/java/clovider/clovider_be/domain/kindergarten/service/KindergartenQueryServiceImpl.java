@@ -5,13 +5,10 @@ import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import clovider.clovider_be.domain.kindergarten.dto.KindergartenResponse.KindergartenGetResponse;
 import clovider.clovider_be.domain.kindergarten.repository.KindergartenRepository;
 import clovider.clovider_be.domain.kindergartenImage.service.KindergartenImageQueryService;
-import clovider.clovider_be.domain.recruit.service.RecruitQueryService;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +35,6 @@ public class KindergartenQueryServiceImpl implements KindergartenQueryService {
                 .orElseThrow(() -> new ApiException(ErrorStatus._KDG_NOT_FOUND));
     }
 
-
     @Override
     public List<KindergartenGetResponse> getAllKindergartens() {
         List<Kindergarten> kindergartens = kindergartenRepository.findAll();
@@ -51,6 +47,11 @@ public class KindergartenQueryServiceImpl implements KindergartenQueryService {
         }
 
         return responses;
+    }
+
+    @Override
+    public Kindergarten getKindergartenByName(String kindergartenName){
+        return kindergartenRepository.findByKindergartenNm(kindergartenName);
     }
 
 }

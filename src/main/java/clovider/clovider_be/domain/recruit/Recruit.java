@@ -1,18 +1,36 @@
 package clovider.clovider_be.domain.recruit;
 
+import clovider.clovider_be.domain.admin.dto.AdminResponse.RecruitClassInfo;
 import clovider.clovider_be.domain.common.BaseTimeEntity;
 import clovider.clovider_be.domain.enums.AgeClass;
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.recruit.dto.RecruitCreateRequestDTO;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse;
+import clovider.clovider_be.domain.recruit.dto.RecruitResponse.RecruitDateAndWeightInfo;
 import clovider.clovider_be.domain.recruit.dto.RecruitUpdateRequestDTO;
-import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @AllArgsConstructor
@@ -92,7 +110,6 @@ public class Recruit extends BaseTimeEntity {
         this.kindergarten = kindergarten;
     }
 
-
     // 생성 메서드
     public static Recruit createRecruit(RecruitCreateRequestDTO.RecruitClassCreateRequestDTO requestDTO, Kindergarten kindergarten) {
         return Recruit.builder()
@@ -114,6 +131,7 @@ public class Recruit extends BaseTimeEntity {
                 .isSiblingUsage(requestDTO.getIsSiblingUsage())
                 .build();
     }
+
     public void updateRecruitDetails(RecruitUpdateRequestDTO dto) {
         this.ageClass = dto.getAgeClass();
         this.recruitStartDt = dto.getRecruitStartDt();
@@ -132,5 +150,32 @@ public class Recruit extends BaseTimeEntity {
         this.isDualIncomeUsage = weightInfo.getIsDualIncomeUsage();
         this.isEmployeeCoupleUsage = weightInfo.getIsEmployeeCoupleUsage();
         this.isSiblingUsage = weightInfo.getIsSiblingUsage();
+    }
+
+    // 모집 생성 메서드
+    public static Recruit createRecruit( RecruitClassInfo classInfo,
+            RecruitDateAndWeightInfo recruitDateAndWeightInfo, Kindergarten kindergarten, AgeClass ageClass) {
+        return Recruit.builder()
+                .recruitStartDt(recruitDateAndWeightInfo.getRecruitDateInfo().getRecruitStartDt())
+                .recruitEndDt(recruitDateAndWeightInfo.getRecruitDateInfo().getRecruitEndDt())
+                .recruitCnt(classInfo.getRecruitCnt())
+                .ageClass(ageClass)
+                .firstStartDt(recruitDateAndWeightInfo.getRecruitDateInfo().getFirstStartDt())
+                .firstEndDt(recruitDateAndWeightInfo.getRecruitDateInfo().getFirstEndDt())
+                .secondStartDt(recruitDateAndWeightInfo.getRecruitDateInfo().getSecondStartDt())
+                .secondEndDt(recruitDateAndWeightInfo.getRecruitDateInfo().getSecondEndDt())
+                .kindergarten(kindergarten)
+                .workYearsUsage(recruitDateAndWeightInfo.getRecruitWeightInfo().getWorkYearsUsage())
+                .isSingleParentUsage(recruitDateAndWeightInfo.getRecruitWeightInfo()
+                        .getIsSingleParentUsage())
+                .childrenCntUsage(recruitDateAndWeightInfo.getRecruitWeightInfo()
+                        .getChildrenCntUsage())
+                .isDisabilityUsage(recruitDateAndWeightInfo.getRecruitWeightInfo()
+                        .getIsDisabilityUsage())
+                .isDualIncomeUsage(recruitDateAndWeightInfo.getRecruitWeightInfo()
+                        .getIsDualIncomeUsage())
+                .isEmployeeCoupleUsage(recruitDateAndWeightInfo.getRecruitWeightInfo().getIsEmployeeCoupleUsage())
+                .isSiblingUsage(recruitDateAndWeightInfo.getRecruitWeightInfo().getIsSiblingUsage())
+                .build();
     }
 }
