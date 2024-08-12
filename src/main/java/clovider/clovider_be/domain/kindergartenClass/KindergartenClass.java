@@ -29,7 +29,7 @@ public class KindergartenClass {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "kindergarten_class_id")
     private Long id;
 
     @Column(nullable = false)
