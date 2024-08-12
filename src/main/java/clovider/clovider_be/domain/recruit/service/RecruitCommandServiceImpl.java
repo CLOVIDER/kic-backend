@@ -61,58 +61,37 @@ public class RecruitCommandServiceImpl implements RecruitCommandService{
         return createRecruitCreationInfo(allRecruits);
     }
 
+
     @Override
     public RecruitResponseDTO updateRecruit(RecruitUpdateRequestDTO requestDTO) {
-        // 다수의 모집 정보 조회
+
         List<Recruit> recruits = recruitRepository.findAllById(requestDTO.getRecruitIds());
 
+        //모집 정보가 존재하는지 확인
         if (recruits.size() != requestDTO.getRecruitIds().size()) {
             throw new ApiException(ErrorStatus._RECRUIT_NOT_FOUND);
         }
 
-        // 어린이집 정보 조회 (가정: 모든 recruit가 동일한 kindergarten에 속함)
-        // 만약 여러 kindergarten을 처리해야 한다면 이 부분을 조정해야 합니다.
-        Long kindergartenId = recruits.get(0).getKindergarten().getId();
-        Kindergarten kindergarten = kindergartenRepository.findById(kindergartenId)
-                .orElseThrow(() -> new ApiException(ErrorStatus._KDG_NOT_FOUND));
 
-        // 업데이트 로직
+        // 각 모집 정보 한 번에 업데이트
         for (Recruit recruit : recruits) {
-            recruit.setAgeClass(requestDTO.getAgeClass());
-            recruit.setRecruitStartDt(requestDTO.getRecruitStartDt());
-            recruit.setRecruitEndDt(requestDTO.getRecruitEndDt());
-            recruit.setRecruitCnt(requestDTO.getRecruitCnt());
-            recruit.setFirstStartDt(requestDTO.getFirstStartDt());
-            recruit.setFirstEndDt(requestDTO.getFirstEndDt());
-            recruit.setSecondStartDt(requestDTO.getSecondStartDt());
-            recruit.setSecondEndDt(requestDTO.getSecondEndDt());
-
-            // 가중치 정보 업데이트
-            recruit.setWorkYearsUsage(requestDTO.getRecruitWeightInfo().getWorkYearsUsage());
-            recruit.setIsSingleParentUsage(requestDTO.getRecruitWeightInfo().getIsSingleParentUsage());
-            recruit.setChildrenCntUsage(requestDTO.getRecruitWeightInfo().getChildrenCntUsage());
-            recruit.setIsDisabilityUsage(requestDTO.getRecruitWeightInfo().getIsDisabilityUsage());
-            recruit.setIsDualIncomeUsage(requestDTO.getRecruitWeightInfo().getIsDualIncomeUsage());
-            recruit.setIsEmployeeCoupleUsage(requestDTO.getRecruitWeightInfo().getIsEmployeeCoupleUsage());
-            recruit.setIsSiblingUsage(requestDTO.getRecruitWeightInfo().getIsSiblingUsage());
+            recruit.updateRecruitDetails(requestDTO);
         }
 
         recruitRepository.saveAll(recruits);
 
-        // 반환할 DTO 생성
         RecruitResponseDTO.Result result = new RecruitResponseDTO.Result();
-        result.setId(recruits.get(0).getId()); // 첫 번째 모집의 ID를 설정
-        result.setCreatedAt(recruits.get(0).getCreatedAt()); // 첫 번째 모집의 생성일시를 설정
+        result.setCreatedAt(recruits.get(0).getCreatedAt());
 
         RecruitResponseDTO responseDTO = new RecruitResponseDTO();
         responseDTO.setSuccess(true);
-        responseDTO.setCode("SUCCESS"); // 성공 코드 설정 (필요에 따라 수정)
+        responseDTO.setCode("SUCCESS");
         responseDTO.setMessage("모집 정보가 성공적으로 업데이트되었습니다.");
         responseDTO.setResult(result);
 
         return responseDTO;
-
     }
+
 
 
 

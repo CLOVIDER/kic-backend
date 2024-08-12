@@ -5,6 +5,8 @@ import clovider.clovider_be.domain.enums.AgeClass;
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.recruit.dto.RecruitCreateRequestDTO;
+import clovider.clovider_be.domain.recruit.dto.RecruitResponse;
+import clovider.clovider_be.domain.recruit.dto.RecruitUpdateRequestDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -112,7 +114,7 @@ public class Recruit extends BaseTimeEntity {
                 .isSiblingUsage(requestDTO.getIsSiblingUsage())
                 .build();
     }
-    public void updateFromDTO(RecruitCreateRequestDTO.RecruitClassCreateRequestDTO dto) {
+    public void updateRecruitDetails(RecruitUpdateRequestDTO dto) {
         this.ageClass = dto.getAgeClass();
         this.recruitStartDt = dto.getRecruitStartDt();
         this.recruitEndDt = dto.getRecruitEndDt();
@@ -121,12 +123,14 @@ public class Recruit extends BaseTimeEntity {
         this.firstEndDt = dto.getFirstEndDt();
         this.secondStartDt = dto.getSecondStartDt();
         this.secondEndDt = dto.getSecondEndDt();
-        this.workYearsUsage = dto.getWorkYearsUsage();
-        this.isSingleParentUsage = dto.getIsSingleParentUsage();
-        this.childrenCntUsage = dto.getChildrenCntUsage();
-        this.isDisabilityUsage = dto.getIsDisabilityUsage();
-        this.isDualIncomeUsage = dto.getIsDualIncomeUsage();
-        this.isEmployeeCoupleUsage = dto.getIsEmployeeCoupleUsage();
-        this.isSiblingUsage = dto.getIsSiblingUsage();
+
+        RecruitResponse.RecruitWeightInfo weightInfo = dto.getRecruitWeightInfo();
+        this.workYearsUsage = weightInfo.getWorkYearsUsage();
+        this.isSingleParentUsage = weightInfo.getIsSingleParentUsage();
+        this.childrenCntUsage = weightInfo.getChildrenCntUsage();
+        this.isDisabilityUsage = weightInfo.getIsDisabilityUsage();
+        this.isDualIncomeUsage = weightInfo.getIsDualIncomeUsage();
+        this.isEmployeeCoupleUsage = weightInfo.getIsEmployeeCoupleUsage();
+        this.isSiblingUsage = weightInfo.getIsSiblingUsage();
     }
 }
