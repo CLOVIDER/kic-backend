@@ -43,6 +43,7 @@ public class KindergartenCommandServiceImpl implements KindergartenCommandServic
                 .kindergartenNo(kindergartenRegisterRequest.getKindergartenNo())
                 .kindergartenTime(kindergartenRegisterRequest.getKindergartenTime())
                 .kindergartenInfo(kindergartenRegisterRequest.getKindergartenInfo())
+                .kindergartenClass(kindergartenRegisterRequest.getKindergartenClass())
                 .build();
 
         kindergarten = kindergartenRepository.save(kindergarten);
@@ -79,7 +80,8 @@ public class KindergartenCommandServiceImpl implements KindergartenCommandServic
                 request.getKindergartenCapacity(),
                 request.getKindergartenNo(),
                 request.getKindergartenTime(),
-                request.getKindergartenInfo());
+                request.getKindergartenInfo(),
+                request.getKindergartenClass());
 
         Kindergarten savedKindergarten = kindergartenRepository.save(kindergarten);
 
