@@ -32,12 +32,11 @@ public class KindergartenClass {
     @Column(name = "kindergarten_class_id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String className;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private AgeClass ageClass;
+    private int ageClass;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "kindergarten_id", nullable = false)
