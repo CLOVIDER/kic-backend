@@ -53,6 +53,7 @@ public class LotteryController {
         return ApiResponse.onSuccess(lotteryQueryService.getLotteryResultByLotteryId(lotteryId));
     }
 
+    @Operation(summary = "추첨 당첨 확률 조회", description = "추첨ID에 따라서 추첨 당첨 확률을 조회한다.")
     @GetMapping("/recruits/{lotteryId}/percents")
     public ApiResponse<Double> getPercentage(@PathVariable Long lotteryId) {
         return ApiResponse.onSuccess(lotteryService.getPercent(lotteryId));
