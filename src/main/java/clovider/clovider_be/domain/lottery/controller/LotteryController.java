@@ -10,8 +10,7 @@ import clovider.clovider_be.global.annotation.AuthEmployee;
 import clovider.clovider_be.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -82,9 +81,9 @@ public class LotteryController {
 
     @Operation(summary = "추첨 결과조회 ", description = "유저가 본인의 추첨에 대한 결과를 조회합니다.")
     @Parameter(name = "employeeId", description = "직원 ID")
-    @GetMapping("/lottery/results/{employeeId}")
+    @GetMapping("/lottery/results/employee")
     public List<LotteryResultsGroupedByChildDTO> getLotteryResultsByEmployeeId(@AuthEmployee Employee employee) {
-        List<LotteryResultsGroupedByChildDTO> results = lotteryQueryService.getLotteryResultsByEmployeeId(employee);
+        List<LotteryResultsGroupedByChildDTO> results = lotteryQueryService.getLotteryResultsByEmployee(employee);
 
         return ApiResponse.onSuccess(results).getResult();
     }
