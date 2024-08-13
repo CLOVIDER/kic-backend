@@ -20,6 +20,7 @@ import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -54,10 +55,13 @@ public class KindergartenCommandServiceImpl implements KindergartenCommandServic
 
         List<KindergartenClassDTO> kindergartenClasses = kindergartenClassCommandService.saveKindergartenClass(kindergarten, kindergartenRegisterRequest.getKindergartenClass());
 
+        List<KindergartenClassDTO> newKindergartenClasses = kindergartenClasses.stream()
+                .map(KindergartenClassDTO::toKindergartenClassResponse)
+                .collect(Collectors.toList());
+
         List<Long> kindergartenImageIds = kindergartenImageCommandService.saveKindergartenImage(kindergarten, kindergartenRegisterRequest.getKindergartenImages());
 
-
-        return toKindergartenRegisterResponse(kindergarten, kindergartenClasses, kindergartenImageIds);
+        return toKindergartenRegisterResponse(kindergarten, newKindergartenClasses, kindergartenImageIds);
     }
 
     @Override
@@ -96,6 +100,10 @@ public class KindergartenCommandServiceImpl implements KindergartenCommandServic
 
         List<KindergartenClassDTO> kindergartenClasses = kindergartenClassCommandService.updateKindergartenClass(kindergarten, request.getKindergartenClass());
 
-        return KindergartenUpdateResponse.toKindergartenUpdateResponse(savedKindergarten, kindergartenClasses, kindergartenImageIds);
+        List<KindergartenClassDTO> newKindergartenClasses = kindergartenClasses.stream()
+                .map(KindergartenClassDTO::toKindergartenClassResponse)
+                .collect(Collectors.toList());
+
+        return KindergartenUpdateResponse.toKindergartenUpdateResponse(savedKindergarten, newKindergartenClasses, kindergartenImageIds);
     }
 }

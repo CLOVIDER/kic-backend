@@ -37,7 +37,11 @@ public class KindergartenQueryServiceImpl implements KindergartenQueryService {
 
         List<KindergartenClassDTO> kindergartenClasses = kindergartenClassQueryService.getKindergartenClass(kindergartenId);
 
-        return KindergartenGetResponse.toKindergartenGetResponse(kindergarten, kindergartenClasses, imageUrls);
+        List<KindergartenClassDTO> newKindergartenClasses = kindergartenClasses.stream()
+                .map(KindergartenClassDTO::toKindergartenClassResponse)
+                .collect(Collectors.toList());
+
+        return KindergartenGetResponse.toKindergartenGetResponse(kindergarten, newKindergartenClasses, imageUrls);
     }
 
     @Override
@@ -56,8 +60,15 @@ public class KindergartenQueryServiceImpl implements KindergartenQueryService {
 
         for (Kindergarten kindergarten : kindergartens) {
             List<String> imageUrls = kindergartenImageQuery.getKindergartenImageUrls(kindergarten.getId());
+
             List<KindergartenClassDTO> kindergartenClasses = kindergartenClassQueryService.getKindergartenClass(kindergarten.getId());
-            KindergartenGetResponse response = KindergartenGetResponse.toKindergartenGetResponse(kindergarten, kindergartenClasses, imageUrls);
+
+            List<KindergartenClassDTO> newKindergartenClasses = kindergartenClasses.stream()
+                    .map(KindergartenClassDTO::toKindergartenClassResponse)
+                    .collect(Collectors.toList());
+
+            KindergartenGetResponse response = KindergartenGetResponse.toKindergartenGetResponse(kindergarten, newKindergartenClasses, imageUrls);
+
             responses.add(response);
         }
 
