@@ -1,7 +1,5 @@
 package clovider.clovider_be.domain.lottery.dto;
 
-import clovider.clovider_be.domain.enums.AgeClass;
-import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import lombok.Builder;
 import lombok.Data;
 
@@ -15,7 +13,6 @@ public class LotteryResultByEmployeeDTO {
     private String result;
     private Integer waitingNumber;
     private String kindergartenName;
-    private AgeClass ageClass;
-
+    private Integer ageClass;
 
 }

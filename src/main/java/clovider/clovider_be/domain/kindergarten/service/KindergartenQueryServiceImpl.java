@@ -4,6 +4,9 @@ package clovider.clovider_be.domain.kindergarten.service;
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import clovider.clovider_be.domain.kindergarten.dto.KindergartenResponse.KindergartenGetResponse;
 import clovider.clovider_be.domain.kindergarten.repository.KindergartenRepository;
+import clovider.clovider_be.domain.kindergartenClass.KindergartenClass;
+import clovider.clovider_be.domain.kindergartenClass.dto.KindergartenClassDTO;
+import clovider.clovider_be.domain.kindergartenClass.service.KindergartenClassQueryService;
 import clovider.clovider_be.domain.kindergartenImage.service.KindergartenImageQueryService;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
@@ -20,13 +23,22 @@ public class KindergartenQueryServiceImpl implements KindergartenQueryService {
 
     private final KindergartenRepository kindergartenRepository;
     private final KindergartenImageQueryService kindergartenImageQuery;
+    private final KindergartenClassQueryService kindergartenClassQueryService;
     
     @Override
     public KindergartenGetResponse getKindergarten(Long kindergartenId) {
+
         Kindergarten kindergarten = getKindergartenOnly(kindergartenId);
+
         List<String> imageUrls = kindergartenImageQuery.getKindergartenImageUrls(kindergartenId);
 
-        return KindergartenGetResponse.toKindergartenGetResponse(kindergarten, imageUrls);
+        List<KindergartenClassDTO> kindergartenClasses = kindergartenClassQueryService.getKindergartenClass(kindergartenId);
+
+        List<KindergartenClassDTO> newKindergartenClasses = kindergartenClasses.stream()
+                .map(KindergartenClassDTO::toKindergartenClassResponse)
+                .collect(Collectors.toList());
+
+        return KindergartenGetResponse.toKindergartenGetResponse(kindergarten, newKindergartenClasses, imageUrls);
     }
 
     @Override
@@ -37,12 +49,22 @@ public class KindergartenQueryServiceImpl implements KindergartenQueryService {
 
     @Override
     public List<KindergartenGetResponse> getAllKindergartens() {
+
         List<Kindergarten> kindergartens = kindergartenRepository.findAll();
+
         List<KindergartenGetResponse> responses = new ArrayList<>();
 
         for (Kindergarten kindergarten : kindergartens) {
             List<String> imageUrls = kindergartenImageQuery.getKindergartenImageUrls(kindergarten.getId());
-            KindergartenGetResponse response = KindergartenGetResponse.toKindergartenGetResponse(kindergarten, imageUrls);
+
+            List<KindergartenClassDTO> kindergartenClasses = kindergartenClassQueryService.getKindergartenClass(kindergarten.getId());
+
+            List<KindergartenClassDTO> newKindergartenClasses = kindergartenClasses.stream()
+                    .map(KindergartenClassDTO::toKindergartenClassResponse)
+                    .collect(Collectors.toList());
+
+            KindergartenGetResponse response = KindergartenGetResponse.toKindergartenGetResponse(kindergarten, newKindergartenClasses, imageUrls);
+
             responses.add(response);
         }
 

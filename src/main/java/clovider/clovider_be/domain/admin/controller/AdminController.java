@@ -13,8 +13,6 @@ import clovider.clovider_be.domain.admin.dto.AdminResponse.RecruitCreationInfo;
 import clovider.clovider_be.domain.admin.dto.SearchVO;
 import clovider.clovider_be.domain.application.service.ApplicationQueryService;
 import clovider.clovider_be.domain.common.CustomPage;
-import clovider.clovider_be.domain.enums.AgeClass;
-import clovider.clovider_be.domain.kindergarten.service.KindergartenQueryService;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitInfo;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitResult;
@@ -24,11 +22,12 @@ import clovider.clovider_be.domain.notice.dto.NoticeTop3;
 import clovider.clovider_be.domain.notice.service.NoticeQueryService;
 import clovider.clovider_be.domain.qna.service.QnaQueryService;
 import clovider.clovider_be.domain.recruit.Recruit;
-import clovider.clovider_be.domain.recruit.dto.*;
 import clovider.clovider_be.domain.recruit.dto.RecruitCreateRequestDTO;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruit;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruitInfo;
+import clovider.clovider_be.domain.recruit.dto.RecruitResponseDTO;
+import clovider.clovider_be.domain.recruit.dto.RecruitUpdateRequestDTO;
 import clovider.clovider_be.domain.recruit.service.RecruitCommandService;
 import clovider.clovider_be.domain.recruit.service.RecruitQueryService;
 import clovider.clovider_be.global.response.ApiResponse;
@@ -46,7 +45,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "관리자 기능 관련 API 명세서")
 @RestController
@@ -60,7 +66,6 @@ public class AdminController {
     private final LotteryQueryService lotteryQueryService;
     private final ApplicationQueryService applicationQueryService;
     private final RecruitCommandService recruitCommandService;
-    private final KindergartenQueryService kindergartenQueryService;
     private final PdfUtil pdfUtil;
     private final MailService mailService;
 
@@ -199,6 +204,7 @@ public class AdminController {
         return new ResponseEntity<>(resource, headers, HttpStatus.OK);
     }
 
+
     @Operation(summary = "종료된 모집에 대한 추첨 결과 리스트 조회 - 관리자 추첨 결과 탭 ", description = "종료된 모집의 추첨 결과를 리스트 형식으로 조회합니다")
     @Parameters({
             @Parameter(name = "page", description = "페이지 번호"),
@@ -208,12 +214,13 @@ public class AdminController {
     @GetMapping("/lotteries/result/{kindergartenId}")
     public ApiResponse<CustomPage<LotteryResult>> getLotteryResult(
             @PathVariable(name = "kindergartenId") Long kindergartenId,
-            @RequestParam(name = "class", required = true) AgeClass ageClass,
+            @RequestParam(name = "class", required = true) Integer ageClass,
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
             @RequestParam(name = "accountId", required = false) String value) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Page<LotteryResult> lotteryResultPage = lotteryQueryService.getLotteryResultByLotteryId(ageClass, kindergartenId,
+        Page<LotteryResult> lotteryResultPage = lotteryQueryService.getLotteryResultByLotteryId(
+                ageClass, kindergartenId,
                 pageRequest, value);
 
         return ApiResponse.onSuccess(new CustomPage<>(lotteryResultPage));

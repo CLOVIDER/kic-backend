@@ -2,7 +2,6 @@ package clovider.clovider_be.domain.recruit;
 
 import clovider.clovider_be.domain.admin.dto.AdminResponse.RecruitClassInfo;
 import clovider.clovider_be.domain.common.BaseTimeEntity;
-import clovider.clovider_be.domain.enums.AgeClass;
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.recruit.dto.RecruitCreateRequestDTO;
@@ -55,9 +54,8 @@ public class Recruit extends BaseTimeEntity {
     @Column(nullable = false)
     private Integer recruitCnt;
 
-    @Enumerated(EnumType.STRING)
-    @Column(length = 20, nullable = false)
-    private AgeClass ageClass;
+    @Column(nullable = false)
+    private Integer ageClass;
 
     @Column(nullable = false)
     private LocalDateTime firstStartDt;
@@ -106,12 +104,14 @@ public class Recruit extends BaseTimeEntity {
     @ColumnDefault("'0'")
     private Character isSiblingUsage;
 
-    public void changeKindergarten(Kindergarten kindergarten){
+    public void changeKindergarten(Kindergarten kindergarten) {
         this.kindergarten = kindergarten;
     }
 
     // 생성 메서드
-    public static Recruit createRecruit(RecruitCreateRequestDTO.RecruitClassCreateRequestDTO requestDTO, Kindergarten kindergarten) {
+    public static Recruit createRecruit(
+            RecruitCreateRequestDTO.RecruitClassCreateRequestDTO requestDTO,
+            Kindergarten kindergarten) {
         return Recruit.builder()
                 .recruitStartDt(requestDTO.getRecruitStartDt())
                 .recruitEndDt(requestDTO.getRecruitEndDt())

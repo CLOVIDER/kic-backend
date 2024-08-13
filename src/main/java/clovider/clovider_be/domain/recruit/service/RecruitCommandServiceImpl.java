@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,7 +31,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class RecruitCommandServiceImpl implements RecruitCommandService{
+public class RecruitCommandServiceImpl implements RecruitCommandService {
+
     private final RecruitQueryService recruitQueryService;
     private final RecruitRepository recruitRepository;
     private final KindergartenRepository kindergartenRepository;
@@ -41,17 +41,20 @@ public class RecruitCommandServiceImpl implements RecruitCommandService{
     @Override
     public List<Long> resetKindergarten(Long kindergartenId) {
         List<Recruit> recruits = recruitQueryService.getRecruitByKindergarten(kindergartenId);
+
+        // 5가 디폴트 킨더가든 값임
+        Kindergarten kindergarten = kindergartenQueryService.getKindergartenOnly(5L);
+
         List<Long> recruitIds = new ArrayList<>();
 
         for (Recruit recruit : recruits) {
-            recruit.changeKindergarten(null);
+            recruit.changeKindergarten(kindergarten);
             recruitRepository.save(recruit);
             recruitIds.add(recruit.getId());
         }
 
         return recruitIds;
     }
-
 
 
     @Override
@@ -119,7 +122,7 @@ public class RecruitCommandServiceImpl implements RecruitCommandService{
         }
 
         return "모집을 정상적으로 생성하였습니다.";
-    }
 
+    }
 
 }

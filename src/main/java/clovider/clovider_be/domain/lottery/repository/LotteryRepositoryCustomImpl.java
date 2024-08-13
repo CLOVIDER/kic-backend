@@ -100,7 +100,7 @@ public class LotteryRepositoryCustomImpl implements LotteryRepositoryCustom {
     }
 
     @Override
-    public Page<LotteryResult> getLotteryResults(AgeClass ageClass, Long kindergartenId, Pageable pageable,
+    public Page<LotteryResult> getLotteryResults(Integer ageClass, Long kindergartenId, Pageable pageable,
             String value) {
 
         List<LotteryResult> content = jpaQueryFactory

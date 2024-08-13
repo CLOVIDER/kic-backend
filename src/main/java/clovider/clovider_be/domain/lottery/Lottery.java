@@ -36,6 +36,7 @@ public class Lottery extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(length = 15, nullable = false)
+    @ColumnDefault("'WAIT'")
     private Result result;
 
     @Column(nullable = false, length = 1)
@@ -43,7 +44,6 @@ public class Lottery extends BaseTimeEntity {
     private Character isRegistry;
 
     @Column(nullable = false)
-    @ColumnDefault("'0'")
     private String childNm;
 
 

@@ -26,6 +26,7 @@ public enum ErrorStatus implements BaseErrorCode {
     // 어린이집 관련
     _KDG_NOT_FOUND(HttpStatus.NOT_FOUND, "KDG400", "해당 어린이집을 찾을 수 없습니다."),
     _KDG_IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "KDG400", "해당 어린이집의 이미지를 찾을 수 없습니다."),
+    _KDG_ClASS_NOT_FOUND(HttpStatus.NOT_FOUND, "KDG400", "해당 어린이집의 반 정보를 찾을 수 없습니다."),
 
     // 신청서 관련
     _APPLICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "APPLICATION001", "해당 신청서를 찾을 수 없습니다."),
