@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class RecruitUpdateRequestDTO {
     private List<Long> recruitIds; // 여러 recruit ID를 포함
-    private AgeClass ageClass;
+    private Integer ageClass;
     private LocalDateTime recruitStartDt;
     private LocalDateTime recruitEndDt;
     private Integer recruitCnt;

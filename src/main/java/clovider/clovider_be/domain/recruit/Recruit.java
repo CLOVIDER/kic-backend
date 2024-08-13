@@ -1,18 +1,31 @@
 package clovider.clovider_be.domain.recruit;
 
 import clovider.clovider_be.domain.common.BaseTimeEntity;
-import clovider.clovider_be.domain.enums.AgeClass;
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.recruit.dto.RecruitCreateRequestDTO;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse;
 import clovider.clovider_be.domain.recruit.dto.RecruitUpdateRequestDTO;
-import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @AllArgsConstructor
@@ -37,9 +50,8 @@ public class Recruit extends BaseTimeEntity {
     @Column(nullable = false)
     private Integer recruitCnt;
 
-    @Enumerated(EnumType.STRING)
-    @Column(length = 20, nullable = false)
-    private AgeClass ageClass;
+    @Column(nullable = false)
+    private Integer ageClass;
 
     @Column(nullable = false)
     private LocalDateTime firstStartDt;
@@ -88,13 +100,15 @@ public class Recruit extends BaseTimeEntity {
     @ColumnDefault("'0'")
     private Character isSiblingUsage;
 
-    public void changeKindergarten(Kindergarten kindergarten){
+    public void changeKindergarten(Kindergarten kindergarten) {
         this.kindergarten = kindergarten;
     }
 
 
     // 생성 메서드
-    public static Recruit createRecruit(RecruitCreateRequestDTO.RecruitClassCreateRequestDTO requestDTO, Kindergarten kindergarten) {
+    public static Recruit createRecruit(
+            RecruitCreateRequestDTO.RecruitClassCreateRequestDTO requestDTO,
+            Kindergarten kindergarten) {
         return Recruit.builder()
                 .recruitStartDt(requestDTO.getRecruitStartDt())
                 .recruitEndDt(requestDTO.getRecruitEndDt())
@@ -114,6 +128,7 @@ public class Recruit extends BaseTimeEntity {
                 .isSiblingUsage(requestDTO.getIsSiblingUsage())
                 .build();
     }
+
     public void updateRecruitDetails(RecruitUpdateRequestDTO dto) {
         this.ageClass = dto.getAgeClass();
         this.recruitStartDt = dto.getRecruitStartDt();
