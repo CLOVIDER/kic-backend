@@ -46,8 +46,6 @@ public class RecruitCommandServiceImpl implements RecruitCommandService{
             recruitIds.add(recruit.getId());
         }
 
-//        recruitRepository.deleteAll(recruits);
-
         return recruitIds;
     }
 
