@@ -48,7 +48,7 @@ public class KindergartenRequest {
 
         @Schema(
                 description = "어린이집 분반 정보",
-                example = "[{\"className\":\"햇님반\", \"ageClass\":\"TODDLER\"}, {\"className\":\"달님반\", \"ageClass\":\"INFANT\"}]",
+                example = "[{\"className\":\"햇님반\", \"ageClass\":\"0\"}, {\"className\":\"달님반\", \"ageClass\":\"1\"}]",
                 required = true
         )
         @NotNull(message = "어린이집 분반 정보는 필수 항목입니다.")
