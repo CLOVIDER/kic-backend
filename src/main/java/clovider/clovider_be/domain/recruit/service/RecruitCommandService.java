@@ -10,7 +10,6 @@ import java.util.List;
 public interface RecruitCommandService {
 
     List<Long> resetKindergarten(Long kindergartenId);
-    AdminResponse.RecruitCreationInfo createRecruit(RecruitCreateRequestDTO requestDTO);
     RecruitResponseDTO updateRecruit(RecruitUpdateRequestDTO requestDTO);
     String createRecruit(RecruitCreationRequest request);
 }

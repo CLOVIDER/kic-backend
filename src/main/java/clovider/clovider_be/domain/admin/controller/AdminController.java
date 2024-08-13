@@ -199,16 +199,10 @@ public class AdminController {
         return new ResponseEntity<>(resource, headers, HttpStatus.OK);
     }
 
+
     @Operation(summary = "모집 생성", description = "관리자가 모집을 생성합니다.")
     @PostMapping("/recruit")
-    public ApiResponse<RecruitCreationInfo> createRecruit(@RequestBody RecruitCreateRequestDTO requestDTO) {
-        RecruitCreationInfo responseDTO = recruitCommandService.createRecruit(requestDTO);
-        return ApiResponse.onSuccess(responseDTO);
-    }
-
-    @Operation(summary = "모집 생성 - 준희", description = "관리자가 모집을 생성합니다. - 준희")
-    @PostMapping("/recruit/temp")
-    public ApiResponse<String> createRecruitTemp(@RequestBody RecruitCreationRequest request){
+    public ApiResponse<String> createRecruit(@RequestBody RecruitCreationRequest request){
         return ApiResponse.onSuccess(recruitCommandService.createRecruit(request));
     }
 
