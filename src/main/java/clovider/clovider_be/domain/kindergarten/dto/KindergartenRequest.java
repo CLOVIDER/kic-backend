@@ -1,5 +1,7 @@
 package clovider.clovider_be.domain.kindergarten.dto;
 
+import clovider.clovider_be.domain.kindergartenClass.KindergartenClass;
+import clovider.clovider_be.domain.kindergartenClass.dto.KindergartenClassDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -8,7 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 public class KindergartenRequest {
 
@@ -46,9 +47,13 @@ public class KindergartenRequest {
         @NotNull(message = "어린이집 기타 정보는 필수 항목입니다.")
         private String kindergartenInfo;
 
-        @Schema(description = "어린이집 분반 정보", example = "[\"햇님반\", \"달님반\"]", required = true)
+        @Schema(
+                description = "어린이집 분반 정보",
+                example = "[{\"className\":\"햇님반\", \"ageClass\":\"TODDLER\"}, {\"className\":\"달님만\", \"ageClass\":\"INFANT\"}]",
+                required = true
+        )
         @NotNull(message = "어린이집 분반 정보는 필수 항목입니다.")
-        private List<String> kindergartenClass;
+        private List<KindergartenClassDTO> kindergartenClass;
 
         @Schema(description = "어린이집 이미지 url", example = "[\"path/file1.png\", \"path/file2.png\"]", required = true)
         @NotNull(message = "어린이집 이미지 url은 필수 항목입니다.")
@@ -82,8 +87,12 @@ public class KindergartenRequest {
         @Schema(description = "어린이집 기타 정보", example = "- 저희 어린이집은 어쩌구이고\n- 어쩌구입니다.", required = true)
         private String kindergartenInfo;
 
-        @Schema(description = "어린이집 분반 정보", example = "[\"햇님반\", \"달님반\"]", required = true)
-        private List<String> kindergartenClass;
+        @Schema(
+                description = "어린이집 분반 정보",
+                example = "[{\"className\":\"햇님반\", \"ageClass\":\"TODDLER\"}, {\"className\":\"달님만\", \"ageClass\":\"INFANT\"}]",
+                required = true
+        )
+        private List<KindergartenClassDTO> kindergartenClass;
 
         @Schema(description = "어린이집 이미지 url", example = "[\"path/file1.png\", \"path/file2.png\"]", required = true)
         private List<String> kindergartenImages;

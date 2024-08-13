@@ -40,12 +40,11 @@
 
 ## 시스템 아키텍처
 
-<img width="700" alt="image" src="https://github.com/user-attachments/assets/c0ba9f9e-0d09-4ac2-ba14-b1e7e7415f07">
-
+<img width="700" alt="image" src="https://github.com/user-attachments/assets/15fbc63e-48f6-4978-8d5d-95dc66611328">
 
 ## ERD 설계서
 
-<img width="800" alt="image" src="https://github.com/user-attachments/assets/268211e9-b2ef-4a63-acd4-67330673bbf5">
+<img width="800" alt="image" src="https://github.com/user-attachments/assets/75a9bdec-b589-4fce-ab31-f1b821152aca">
 
 ## 기술 스택
 

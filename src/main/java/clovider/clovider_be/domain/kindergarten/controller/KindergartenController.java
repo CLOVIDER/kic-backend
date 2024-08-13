@@ -43,6 +43,7 @@ public class KindergartenController {
             + "\n kindergartenNo: 어린이집 전화번호 // "
             + "\n kindergartenTime: 어린이집 영업시간 // "
             + "\n kindergartenInfo: 어린이집 정보 // "
+            + "\n kindergartenClass: 어린이집 반 정보 //"
             + "\n kindergartenImages: 어린이집 이미지(List<String(url)>)")
     @PostMapping("/admin/kindergartens")
     public ApiResponse<KindergartenRegisterResponse> registerKindergarten(
@@ -70,6 +71,7 @@ public class KindergartenController {
             + "\n kindergartenNo: 어린이집 전화번호 // "
             + "\n kindergartenTime: 어린이집 영업시간 // "
             + "\n kindergartenInfo: 어린이집 정보 // "
+            + "\n kindergartenClass: 어린이집 반 정보 //"
             + "\n kindergartenImages: 어린이집 이미지(List<String(url)>)")
     @Parameter(name = "kindergartenId", description = "어린이집 ID", required = true, example = "1")
     @PatchMapping("/admin/kindergartens/{kindergartenId}")

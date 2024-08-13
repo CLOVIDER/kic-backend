@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class KindergartenImageCommandServiceImpl implements KindergartenImageCommandService {
 
     private final KindergartenImageRepository kindergartenImageRepository;
-    private final KindergartenImageQueryService kindergartenImageQueryService;
 
     @Override
     public List<Long> saveKindergartenImage(Kindergarten kindergarten, List<String> kindergardenUrls) {
@@ -37,12 +36,8 @@ public class KindergartenImageCommandServiceImpl implements KindergartenImageCom
     }
 
     public List<Long> updateKindergartenImage(Kindergarten kindergarten, List<String> newImageUrls) {
-        List<KindergartenImage> existingImages = kindergartenImageQueryService.getKindergartenImage(kindergarten.getId());
+        kindergartenImageRepository.deleteAllByKindergartenId(kindergarten.getId());
 
-        // 기존 이미지 삭제
-        kindergartenImageRepository.deleteAll(existingImages);
-
-        // 새로운 이미지 추가
         List<KindergartenImage> newImages = newImageUrls.stream()
                 .map(url -> KindergartenImage.builder()
                         .kindergarten(kindergarten)

@@ -1,6 +1,8 @@
 package clovider.clovider_be.domain.kindergarten.dto;
 
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
+import clovider.clovider_be.domain.kindergartenClass.KindergartenClass;
+import clovider.clovider_be.domain.kindergartenClass.dto.KindergartenClassDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,10 +29,10 @@ public class KindergartenResponse {
         private String kindergartenNo;
         private String kindergartenTime;
         private String kindergartenInfo;
-        private List<String> kindergartenClass;
+        private List<KindergartenClassDTO> kindergartenClass;
         private LocalDateTime createdAt;
 
-        public static KindergartenRegisterResponse toKindergartenRegisterResponse(Kindergarten kindergarten, List<Long> kindergartenImageIds) {
+        public static KindergartenRegisterResponse toKindergartenRegisterResponse(Kindergarten kindergarten,List<KindergartenClassDTO> kindergartenClasses, List<Long> kindergartenImageIds) {
             return KindergartenRegisterResponse.builder()
                     .kindergartenId(kindergarten.getId())
                     .kindergartenImageIds(kindergartenImageIds)
@@ -41,7 +43,7 @@ public class KindergartenResponse {
                     .kindergartenNo(kindergarten.getKindergartenNo())
                     .kindergartenTime(kindergarten.getKindergartenTime())
                     .kindergartenInfo(kindergarten.getKindergartenInfo())
-                    .kindergartenClass(kindergarten.getKindergartenClass())
+                    .kindergartenClass(kindergartenClasses)
                     .createdAt(LocalDateTime.now())
                     .build();
         }
@@ -82,11 +84,12 @@ public class KindergartenResponse {
         private String kindergartenNo;
         private String kindergartenTime;
         private String kindergartenInfo;
-        private List<String> kindergartenClass;
+        private List<KindergartenClassDTO> kindergartenClass;
         private LocalDateTime updatedAt;
 
         public static KindergartenUpdateResponse toKindergartenUpdateResponse(
                 Kindergarten kindergarten,
+                List<KindergartenClassDTO> kindergartenClasses,
                 List<Long> kindergartenImageIds) {
             return KindergartenUpdateResponse.builder()
                     .kindergartenId(kindergarten.getId())
@@ -97,7 +100,7 @@ public class KindergartenResponse {
                     .kindergartenNo(kindergarten.getKindergartenNo())
                     .kindergartenTime(kindergarten.getKindergartenTime())
                     .kindergartenInfo(kindergarten.getKindergartenInfo())
-                    .kindergartenClass(kindergarten.getKindergartenClass())
+                    .kindergartenClass(kindergartenClasses)
                     .kindergartenImageIds(kindergartenImageIds)
                     .updatedAt(LocalDateTime.now())
                     .build();
@@ -120,11 +123,13 @@ public class KindergartenResponse {
         private String kindergartenNo;
         private String kindergartenTime;
         private String kindergartenInfo;
-        private List<String> kindergartenClass;
+        private List<KindergartenClassDTO> kindergartenClass;
 
         private List<String> kindergartenImageUrls;
 
-        public static KindergartenGetResponse toKindergartenGetResponse(Kindergarten kindergarten,
+        public static KindergartenGetResponse toKindergartenGetResponse(
+                Kindergarten kindergarten,
+                List<KindergartenClassDTO> kindergartenClasses,
                 List<String> kindergartenImageUrls) {
             return KindergartenGetResponse.builder()
                     .kindergartenId(kindergarten.getId())
@@ -135,7 +140,7 @@ public class KindergartenResponse {
                     .kindergartenNo(kindergarten.getKindergartenNo())
                     .kindergartenTime(kindergarten.getKindergartenTime())
                     .kindergartenInfo(kindergarten.getKindergartenInfo())
-                    .kindergartenClass(kindergarten.getKindergartenClass())
+                    .kindergartenClass(kindergartenClasses)
                     .kindergartenImageUrls(kindergartenImageUrls)
                     .build();
         }
