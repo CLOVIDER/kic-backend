@@ -132,25 +132,27 @@ public class Recruit extends BaseTimeEntity {
                 .build();
     }
 
-    public void updateRecruitDetails(RecruitUpdateRequestDTO dto) {
-        this.ageClass = dto.getAgeClass();
-        this.recruitStartDt = dto.getRecruitStartDt();
-        this.recruitEndDt = dto.getRecruitEndDt();
-        this.recruitCnt = dto.getRecruitCnt();
-        this.firstStartDt = dto.getFirstStartDt();
-        this.firstEndDt = dto.getFirstEndDt();
-        this.secondStartDt = dto.getSecondStartDt();
-        this.secondEndDt = dto.getSecondEndDt();
+    public void updateRecruitDetails(RecruitClassInfo classInfo, RecruitDateAndWeightInfo recruitDateAndWeightInfo) {
+        this.recruitCnt = classInfo.getRecruitCnt();
 
-        RecruitResponse.RecruitWeightInfo weightInfo = dto.getRecruitWeightInfo();
-        this.workYearsUsage = weightInfo.getWorkYearsUsage();
-        this.isSingleParentUsage = weightInfo.getIsSingleParentUsage();
-        this.childrenCntUsage = weightInfo.getChildrenCntUsage();
-        this.isDisabilityUsage = weightInfo.getIsDisabilityUsage();
-        this.isDualIncomeUsage = weightInfo.getIsDualIncomeUsage();
-        this.isEmployeeCoupleUsage = weightInfo.getIsEmployeeCoupleUsage();
-        this.isSiblingUsage = weightInfo.getIsSiblingUsage();
+        // 모집 기간 정보 업데이트
+        this.recruitStartDt = recruitDateAndWeightInfo.getRecruitDateInfo().getRecruitStartDt();
+        this.recruitEndDt = recruitDateAndWeightInfo.getRecruitDateInfo().getRecruitEndDt();
+        this.firstStartDt = recruitDateAndWeightInfo.getRecruitDateInfo().getFirstStartDt();
+        this.firstEndDt = recruitDateAndWeightInfo.getRecruitDateInfo().getFirstEndDt();
+        this.secondStartDt = recruitDateAndWeightInfo.getRecruitDateInfo().getSecondStartDt();
+        this.secondEndDt = recruitDateAndWeightInfo.getRecruitDateInfo().getSecondEndDt();
+
+        // 가중치 정보 업데이트
+        this.workYearsUsage = recruitDateAndWeightInfo.getRecruitWeightInfo().getWorkYearsUsage();
+        this.isSingleParentUsage = recruitDateAndWeightInfo.getRecruitWeightInfo().getIsSingleParentUsage();
+        this.childrenCntUsage = recruitDateAndWeightInfo.getRecruitWeightInfo().getChildrenCntUsage();
+        this.isDisabilityUsage = recruitDateAndWeightInfo.getRecruitWeightInfo().getIsDisabilityUsage();
+        this.isDualIncomeUsage = recruitDateAndWeightInfo.getRecruitWeightInfo().getIsDualIncomeUsage();
+        this.isEmployeeCoupleUsage = recruitDateAndWeightInfo.getRecruitWeightInfo().getIsEmployeeCoupleUsage();
+        this.isSiblingUsage = recruitDateAndWeightInfo.getRecruitWeightInfo().getIsSiblingUsage();
     }
+
 
     // 모집 생성 메서드
     public static Recruit createRecruit( RecruitClassInfo classInfo,

@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,34 +55,41 @@ public class RecruitCommandServiceImpl implements RecruitCommandService{
 
 
     @Override
-    public RecruitResponseDTO updateRecruit(RecruitUpdateRequestDTO requestDTO) {
+    public String updateRecruit(RecruitCreationRequest request) {
+        List<KindergartenClassInfo> kindergartenClassInfoList = request.getKindergartenClassInfoList();
+        RecruitDateAndWeightInfo recruitDateAndWeightInfo = request.getRecruitDateAndWeightInfo();
 
-        List<Recruit> recruits = recruitRepository.findAllById(requestDTO.getRecruitIds());
+        // 요청한 어린이집 개수만큼 반복
+        for (KindergartenClassInfo kindergartenClassInfo : kindergartenClassInfoList) {
+            String kindergartenName = kindergartenClassInfo.getKindergartenName();
+            List<RecruitClassInfo> classInfoList = kindergartenClassInfo.getClassInfoList();
 
-        //모집 정보가 존재하는지 확인
-        if (recruits.size() != requestDTO.getRecruitIds().size()) {
-            throw new ApiException(ErrorStatus._RECRUIT_NOT_FOUND);
+            // 어린이집 이름으로 kindergarten 조회
+            Kindergarten kindergartenByName = kindergartenQueryService.getKindergartenByName(kindergartenName);
+
+            // 요청한 분반 개수만큼 반복
+            for (RecruitClassInfo classInfo : classInfoList) {
+
+                // AgeClass의 Description으로 온 값을 변환
+                String ageClassDescription = classInfo.getAgeClass();
+                AgeClass ageClass = fromDescription(ageClassDescription);
+
+                // 기존 Recruit 조회
+                Recruit existingRecruit = recruitRepository.findByKindergartenAndAgeClass(kindergartenByName, ageClass)
+                        .orElseThrow(() -> new EntityNotFoundException("해당하는 모집 정보를 찾을 수 없습니다."));
+
+                // 기존 모집 정보 업데이트
+                existingRecruit.updateRecruitDetails(classInfo, recruitDateAndWeightInfo);
+
+                // 변경된 모집 정보 저장
+                recruitRepository.save(existingRecruit);
+            }
         }
 
-
-        // 각 모집 정보 한 번에 업데이트
-        for (Recruit recruit : recruits) {
-            recruit.updateRecruitDetails(requestDTO);
-        }
-
-        recruitRepository.saveAll(recruits);
-
-        RecruitResponseDTO.Result result = new RecruitResponseDTO.Result();
-        result.setCreatedAt(recruits.get(0).getCreatedAt());
-
-        RecruitResponseDTO responseDTO = new RecruitResponseDTO();
-        responseDTO.setSuccess(true);
-        responseDTO.setCode("SUCCESS");
-        responseDTO.setMessage("모집 정보가 성공적으로 업데이트되었습니다.");
-        responseDTO.setResult(result);
-
-        return responseDTO;
+        return "모집을 정상적으로 수정하였습니다.";
     }
+
+
 
     @Override
     public String createRecruit(RecruitCreationRequest request) {

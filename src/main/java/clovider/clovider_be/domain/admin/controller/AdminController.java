@@ -199,13 +199,6 @@ public class AdminController {
         return new ResponseEntity<>(resource, headers, HttpStatus.OK);
     }
 
-
-    @Operation(summary = "모집 생성", description = "관리자가 모집을 생성합니다.")
-    @PostMapping("/recruit")
-    public ApiResponse<String> createRecruit(@RequestBody RecruitCreationRequest request){
-        return ApiResponse.onSuccess(recruitCommandService.createRecruit(request));
-    }
-
     @Operation(summary = "종료된 모집에 대한 추첨 결과 리스트 조회 - 관리자 추첨 결과 탭 ", description = "종료된 모집의 추첨 결과를 리스트 형식으로 조회합니다")
     @Parameters({
             @Parameter(name = "page", description = "페이지 번호"),
@@ -235,12 +228,16 @@ public class AdminController {
     @Operation(summary = "관리자가 모집을 수정한다.", description = "관리자가 이미 생성된 모집을 수정한다.")
     @Parameter(name = "recruitId", description = "모집 ID")
     @PatchMapping("/recruit")
-    public ApiResponse<RecruitResponseDTO> updateRecruit(
-            @RequestBody
-            RecruitUpdateRequestDTO requestDTO) {
+    public ApiResponse<String> updateRecruit(
+            @RequestBody RecruitCreationRequest request) {
 
-        RecruitResponseDTO responseDTO = recruitCommandService.updateRecruit(requestDTO);
-        return ApiResponse.onSuccess(responseDTO);
+        return ApiResponse.onSuccess(recruitCommandService.updateRecruit(request));
+    }
+
+    @Operation(summary = "모집 생성", description = "관리자가 모집을 생성합니다.")
+    @PostMapping("/recruit")
+    public ApiResponse<String> createRecruit(@RequestBody RecruitCreationRequest request){
+        return ApiResponse.onSuccess(recruitCommandService.createRecruit(request));
     }
 
 
