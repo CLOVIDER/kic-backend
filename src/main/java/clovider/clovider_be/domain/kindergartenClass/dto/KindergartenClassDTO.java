@@ -18,8 +18,8 @@ public class KindergartenClassDTO {
     @NotNull(message = "어린이집 분반 이름은 필수 항목입니다.")
     private String className;
 
-    @Schema(description = "분반 나이대", example = "INFANT", required = true)
+    @Schema(description = "분반 나이대", example = "0", required = true)
     @NotNull(message = "분반 나이대는 필수 항목입니다.")
-    private AgeClass ageClass;
+    private int ageClass;
 
 }

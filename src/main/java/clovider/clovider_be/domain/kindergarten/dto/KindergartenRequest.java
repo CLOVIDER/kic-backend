@@ -1,6 +1,5 @@
 package clovider.clovider_be.domain.kindergarten.dto;
 
-import clovider.clovider_be.domain.kindergartenClass.KindergartenClass;
 import clovider.clovider_be.domain.kindergartenClass.dto.KindergartenClassDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -49,7 +48,7 @@ public class KindergartenRequest {
 
         @Schema(
                 description = "어린이집 분반 정보",
-                example = "[{\"className\":\"햇님반\", \"ageClass\":\"TODDLER\"}, {\"className\":\"달님만\", \"ageClass\":\"INFANT\"}]",
+                example = "[{\"className\":\"햇님반\", \"ageClass\":\"TODDLER\"}, {\"className\":\"달님반\", \"ageClass\":\"INFANT\"}]",
                 required = true
         )
         @NotNull(message = "어린이집 분반 정보는 필수 항목입니다.")
@@ -89,7 +88,7 @@ public class KindergartenRequest {
 
         @Schema(
                 description = "어린이집 분반 정보",
-                example = "[{\"className\":\"햇님반\", \"ageClass\":\"TODDLER\"}, {\"className\":\"달님만\", \"ageClass\":\"INFANT\"}]",
+                example = "[{\"className\":\"햇님반\", \"ageClass\":\"0\"}, {\"className\":\"달님반\", \"ageClass\":\"1\"}]",
                 required = true
         )
         private List<KindergartenClassDTO> kindergartenClass;
