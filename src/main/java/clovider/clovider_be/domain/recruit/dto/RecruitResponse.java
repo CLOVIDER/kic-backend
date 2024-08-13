@@ -72,7 +72,7 @@ public class RecruitResponse {
         String period = getPeriod(recruits.get(0), LocalDateTime.now());
 
         List<String> kindergartenClasses = recruits.stream()
-                .map(r -> r.getKindergartenNm() + ":" + r.getAgeClass())
+                .map(r -> r.getKindergartenNm() + ":" + r.getAgeClass() + "세")
                 .toList();
 
         List<Double> rates = competitionRates.stream()
@@ -146,7 +146,7 @@ public class RecruitResponse {
         @JsonDeserialize(using = LocalDateTimeDeserializer.class)
         private LocalDateTime secondEndDt;
         private String kindergartenNm;
-        private String ageClass;
+        private Integer ageClass;
     }
 
     @Getter
@@ -172,7 +172,7 @@ public class RecruitResponse {
                 .secondStartDt(recruit.getSecondStartDt())
                 .secondEndDt(recruit.getSecondEndDt())
                 .kindergartenNm(recruit.getKindergarten().getKindergartenNm())
-                .ageClass(recruit.getAgeClass().getDescription())
+                .ageClass(recruit.getAgeClass())
                 .build();
     }
 
@@ -187,8 +187,8 @@ public class RecruitResponse {
         private String kindergartenNm;
         @Schema(description = "모집 ID 리스트", example = "[1, 2, 3]")
         private List<Long> recruitIds;
-        @Schema(description = "사내 어린이집 클래스반 리스트", example = "[\"0~3세반\", \"4~5세반\"]")
-        private List<String> aggClasses;
+        @Schema(description = "사내 어린이집 클래스반 리스트", example = "[\"0세\", \"1세\"]")
+        private List<String> ageClasses;
     }
 
     public static List<RecruitKdgInfo> toRecruitKdgInfos(List<Recruit> recruits) {
@@ -206,14 +206,14 @@ public class RecruitResponse {
                             .map(Recruit::getId)
                             .toList();
 
-                    List<String> aggClasses = recruitList.stream()
-                            .map(r -> r.getAgeClass().getDescription())
+                    List<String> ageClasses = recruitList.stream()
+                            .map(r -> r.getAgeClass() + "세")
                             .toList();
 
                     return RecruitKdgInfo.builder()
                             .kindergartenNm(kindergartenNm)
                             .recruitIds(recruitIds)
-                            .aggClasses(aggClasses)
+                            .ageClasses(ageClasses)
                             .build();
                 })
                 .toList();
@@ -249,7 +249,6 @@ public class RecruitResponse {
                 .isSiblingUsage(recruit.getIsSiblingUsage())
                 .build();
     }
-
 
 
     @Schema(description = "모집 기간 상세 정보 DTO")
@@ -355,13 +354,13 @@ public class RecruitResponse {
     }
 
 
-
     @Schema(description = "모집 기간 및 가중치 관리 DTO")
     @Builder
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
     public static class RecruitDateAndWeightInfo {
+
         @Schema(description = "모집의 기간 정보")
         private RecruitDateInfo recruitDateInfo;
 

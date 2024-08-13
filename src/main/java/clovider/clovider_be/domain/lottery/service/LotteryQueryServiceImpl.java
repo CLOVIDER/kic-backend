@@ -1,13 +1,12 @@
 package clovider.clovider_be.domain.lottery.service;
 
+import static clovider.clovider_be.domain.lottery.service.ConvertStringToList.convertStringToList;
+
 import clovider.clovider_be.domain.admin.dto.AdminResponse.AcceptResult;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.LotteryResult;
-import clovider.clovider_be.domain.employee.Employee;
-
 import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.application.repository.ApplicationRepository;
 import clovider.clovider_be.domain.employee.Employee;
-import clovider.clovider_be.domain.enums.AgeClass;
 import clovider.clovider_be.domain.enums.Result;
 import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.lottery.dto.LotteryIdAndChildNameDTO;
@@ -33,13 +32,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.joda.time.DateTime;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static clovider.clovider_be.domain.lottery.service.ConvertStringToList.convertStringToList;
 
 
 @Service
@@ -58,10 +54,7 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
         Lottery lottery = lotteryRepository.findById(lotteryId)
                 .orElseThrow(() -> new ApiException(ErrorStatus._LOTTERY_NOT_FOUND));
 
-
         String KindergartenNm = applicationRepository.findKindergartenNameByLotteryId(lotteryId);
-
-
 
         LocalDateTime endDate = lottery.getRecruit().getFirstEndDt();
 
@@ -134,8 +127,9 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
     }
 
     @Override
-    public Page<LotteryResult> getLotteryResultByLotteryId(AgeClass ageClass, Long kindergartenId, Pageable pageable, String value) {
-        return lotteryRepository.getLotteryResults(ageClass, kindergartenId,pageable,value);
+    public Page<LotteryResult> getLotteryResultByLotteryId(Integer ageClass, Long kindergartenId,
+            Pageable pageable, String value) {
+        return lotteryRepository.getLotteryResults(ageClass, kindergartenId, pageable, value);
     }
 
     @Override
@@ -151,15 +145,18 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
         }
 
         Map<String, List<LotteryResultByEmployeeDTO>> groupedResults = applications.stream()
-                .flatMap(application -> lotteryRepository.findByApplicationId(application.getId()).stream())
+                .flatMap(application -> lotteryRepository.findByApplicationId(application.getId())
+                        .stream())
                 .map(lottery -> LotteryResultByEmployeeDTO.builder()
                         .applicationId(lottery.getApplication().getId())
                         .recruitId(lottery.getRecruit().getId())
                         .childName(lottery.getChildNm())
-                        .kindergartenName(lottery.getRecruit().getKindergarten().getKindergartenNm())
+                        .kindergartenName(
+                                lottery.getRecruit().getKindergarten().getKindergartenNm())
                         .ageClass(lottery.getRecruit().getAgeClass())
                         .result(lottery.getResult().name())
-                        .waitingNumber(lottery.getResult() == Result.LOSE ? lottery.getRankNo() : null)
+                        .waitingNumber(
+                                lottery.getResult() == Result.LOSE ? lottery.getRankNo() : null)
                         .build())
                 .collect(Collectors.groupingBy(LotteryResultByEmployeeDTO::getChildName));
 
@@ -172,14 +169,15 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
     }
 
 
-
     @Override
-    public List<LotteryIdAndChildNameDTO> getLotteryGroupedByChildNameByEmployeeId(Employee employee) {
+    public List<LotteryIdAndChildNameDTO> getLotteryGroupedByChildNameByEmployeeId(
+            Employee employee) {
         if (employee == null) {
             throw new ApiException(ErrorStatus._EMPLOYEE_NOT_FOUND);
         }
 
-        List<Object[]> results = lotteryRepository.findLotteryGroupedByChildNameByEmployee(employee);
+        List<Object[]> results = lotteryRepository.findLotteryGroupedByChildNameByEmployee(
+                employee);
 
         List<LotteryIdAndChildNameDTO> dtoList = new ArrayList<>();
         for (Object[] result : results) {

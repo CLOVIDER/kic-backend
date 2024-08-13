@@ -28,7 +28,7 @@ public class RecruitRepositoryCustomImpl implements RecruitRepositoryCustom {
                 .selectFrom(recruit)
                 .join(recruit.kindergarten, kindergarten).fetchJoin()
                 .where(recruiting(now).or(scheduledRecruit(now)))
-                .orderBy(recruit.kindergarten.id.asc(), ageOrder().asc())
+                .orderBy(recruit.kindergarten.id.asc(), recruit.ageClass.asc())
                 .fetch()
                 .stream().map(RecruitResponse::toNowRecruit).toList();
     }
@@ -53,11 +53,4 @@ public class RecruitRepositoryCustomImpl implements RecruitRepositoryCustom {
         return recruit.recruitStartDt.gt(now);
     }
 
-    private NumberExpression<Integer> ageOrder() {
-        return new CaseBuilder()
-                .when(recruit.ageClass.eq(AgeClass.INFANT)).then(1)
-                .when(recruit.ageClass.eq(AgeClass.TODDLER)).then(2)
-                .when(recruit.ageClass.eq(AgeClass.KID)).then(3)
-                .otherwise(4);
-    }
 }
