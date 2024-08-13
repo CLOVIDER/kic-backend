@@ -46,14 +46,14 @@ public class LotteryResponse {
     @NoArgsConstructor
     public static class RecruitInfo {
         private String kindergartenNm;
-        private String ageClass;
+        private Integer ageClass;
     }
 
     public static RecruitInfo toRecruitInfo(Recruit recruit) {
 
         return RecruitInfo.builder()
                 .kindergartenNm(recruit.getKindergarten().getKindergartenNm())
-                .ageClass(recruit.getAgeClass().getDescription())
+                .ageClass(recruit.getAgeClass())
                 .build();
     }
 

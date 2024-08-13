@@ -26,7 +26,7 @@ public class RecruitCreateRequestDTO {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class RecruitClassCreateRequestDTO {
-        private AgeClass ageClass;
+        private Integer ageClass;
         private LocalDateTime recruitStartDt;
         private LocalDateTime recruitEndDt;
         private Integer recruitCnt;
