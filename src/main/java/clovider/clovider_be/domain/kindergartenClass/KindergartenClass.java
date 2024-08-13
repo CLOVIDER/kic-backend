@@ -1,10 +1,12 @@
-package clovider.clovider_be.domain.kindergartenImage;
+package clovider.clovider_be.domain.kindergartenClass;
 
-import clovider.clovider_be.domain.common.BaseTimeEntity;
+import clovider.clovider_be.domain.enums.AgeClass;
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,19 +24,22 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "kindergarten_image_tb")
-public class KindergartenImage extends BaseTimeEntity {
+@Table(name = "kindergarten_class_tb")
+public class KindergartenClass {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "kindergarten_image_id")
+    @Column(name = "kindergarten_class_id")
     private Long id;
 
     @Column(nullable = false)
-    private String image;
+    private String className;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AgeClass ageClass;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "kindergarten_id", nullable = false)
-    @JsonBackReference
     private Kindergarten kindergarten;
 }

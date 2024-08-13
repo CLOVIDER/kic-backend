@@ -1,18 +1,16 @@
 package clovider.clovider_be.domain.kindergarten;
 
 import clovider.clovider_be.domain.common.BaseTimeEntity;
+import clovider.clovider_be.domain.kindergartenClass.KindergartenClass;
 import clovider.clovider_be.domain.kindergartenImage.KindergartenImage;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.criteria.CriteriaBuilder.In;
 import java.util.ArrayList;
 import java.util.List;
 import jakarta.persistence.Table;
@@ -20,8 +18,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 
 @Getter
 @NoArgsConstructor
@@ -57,9 +53,8 @@ public class Kindergarten extends BaseTimeEntity {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String kindergartenInfo;
 
-    @ElementCollection
-    @Column(nullable = false)
-    private List<String> kindergartenClass = new ArrayList<>();
+    @OneToMany(mappedBy = "kindergarten", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<KindergartenClass> kindergartenClass = new ArrayList<>();
 
     @OneToMany(mappedBy = "kindergarten", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonBackReference
@@ -81,7 +76,7 @@ public class Kindergarten extends BaseTimeEntity {
 
 
     public void updateKindergarten(String kindergartenNm, String kindergartenAddr, Integer kindergartenScale,
-            Integer kindergartenCapacity, String kindergartenNo, String kindergartenTime, String kindergartenInfo, List<String> kindergartenClass) {
+            Integer kindergartenCapacity, String kindergartenNo, String kindergartenTime, String kindergartenInfo) {
         this.kindergartenNm = kindergartenNm;
         this.kindergartenAddr = kindergartenAddr;
         this.kindergartenScale = kindergartenScale;
@@ -89,7 +84,6 @@ public class Kindergarten extends BaseTimeEntity {
         this.kindergartenNo = kindergartenNo;
         this.kindergartenTime = kindergartenTime;
         this.kindergartenInfo = kindergartenInfo;
-        this.kindergartenClass = kindergartenClass;
     }
 }
 

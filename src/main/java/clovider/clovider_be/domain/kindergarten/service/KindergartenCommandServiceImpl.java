@@ -10,6 +10,9 @@ import clovider.clovider_be.domain.kindergarten.dto.KindergartenRequest.Kinderga
 import clovider.clovider_be.domain.kindergarten.dto.KindergartenRequest.KindergartenUpdateRequest;
 import clovider.clovider_be.domain.kindergarten.dto.KindergartenResponse.*;
 import clovider.clovider_be.domain.kindergarten.repository.KindergartenRepository;
+import clovider.clovider_be.domain.kindergartenClass.KindergartenClass;
+import clovider.clovider_be.domain.kindergartenClass.dto.KindergartenClassDTO;
+import clovider.clovider_be.domain.kindergartenClass.service.KindergartenClassCommandService;
 import clovider.clovider_be.domain.kindergartenImage.service.KindergartenImageCommandService;
 import clovider.clovider_be.domain.kindergartenImage.service.KindergartenImageQueryService;
 import clovider.clovider_be.domain.recruit.service.RecruitCommandService;
@@ -29,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class KindergartenCommandServiceImpl implements KindergartenCommandService {
     private final KindergartenRepository kindergartenRepository;
     private final KindergartenImageCommandService kindergartenImageCommandService;
+    private final KindergartenClassCommandService kindergartenClassCommandService;
     private final RecruitCommandService recruitCommandService;
 
     @Override
@@ -43,18 +47,22 @@ public class KindergartenCommandServiceImpl implements KindergartenCommandServic
                 .kindergartenNo(kindergartenRegisterRequest.getKindergartenNo())
                 .kindergartenTime(kindergartenRegisterRequest.getKindergartenTime())
                 .kindergartenInfo(kindergartenRegisterRequest.getKindergartenInfo())
-                .kindergartenClass(kindergartenRegisterRequest.getKindergartenClass())
                 .build();
+
 
         kindergarten = kindergartenRepository.save(kindergarten);
 
+        List<KindergartenClassDTO> kindergartenClasses = kindergartenClassCommandService.saveKindergartenClass(kindergarten, kindergartenRegisterRequest.getKindergartenClass());
+
         List<Long> kindergartenImageIds = kindergartenImageCommandService.saveKindergartenImage(kindergarten, kindergartenRegisterRequest.getKindergartenImages());
 
-        return toKindergartenRegisterResponse(kindergarten, kindergartenImageIds);
+
+        return toKindergartenRegisterResponse(kindergarten, kindergartenClasses, kindergartenImageIds);
     }
 
     @Override
     public KindergartenDeleteResponse deleteKindergarten(Long kindergartenId) {
+
         List<Long> recruitIds = new ArrayList<>();
 
         kindergartenRepository.findById(kindergartenId)
@@ -80,13 +88,14 @@ public class KindergartenCommandServiceImpl implements KindergartenCommandServic
                 request.getKindergartenCapacity(),
                 request.getKindergartenNo(),
                 request.getKindergartenTime(),
-                request.getKindergartenInfo(),
-                request.getKindergartenClass());
+                request.getKindergartenInfo());
 
         Kindergarten savedKindergarten = kindergartenRepository.save(kindergarten);
 
         List<Long> kindergartenImageIds = kindergartenImageCommandService.updateKindergartenImage(kindergarten, request.getKindergartenImages());
 
-        return KindergartenUpdateResponse.toKindergartenUpdateResponse(savedKindergarten, kindergartenImageIds);
+        List<KindergartenClassDTO> kindergartenClasses = kindergartenClassCommandService.updateKindergartenClass(kindergarten, request.getKindergartenClass());
+
+        return KindergartenUpdateResponse.toKindergartenUpdateResponse(savedKindergarten, kindergartenClasses, kindergartenImageIds);
     }
 }

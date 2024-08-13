@@ -22,7 +22,7 @@ public class KindergartenImageQueryServiceImpl implements KindergartenImageQuery
     public List<String> getKindergartenImageUrls(Long kindergartenId) {
         List<KindergartenImage> kindergartenImages = kindergartenImageRepository.findByKindergartenId(kindergartenId);
 
-        if (kindergartenImages.isEmpty()) {
+        if (kindergartenImages == null || kindergartenImages.isEmpty()) {
             throw new ApiException(ErrorStatus._KDG_IMAGE_NOT_FOUND);
         }
 
@@ -34,20 +34,20 @@ public class KindergartenImageQueryServiceImpl implements KindergartenImageQuery
 
     @Override
     public List<KindergartenImage> getKindergartenImage(Long kindergartenId) {
-        List<KindergartenImage> kindergartenImage = kindergartenImageRepository.findByKindergartenId(kindergartenId);
+        List<KindergartenImage> kindergartenImages = kindergartenImageRepository.findByKindergartenId(kindergartenId);
 
-        if(kindergartenImage.isEmpty()){
+        if (kindergartenImages == null || kindergartenImages.isEmpty()) {
             throw new ApiException(ErrorStatus._KDG_IMAGE_NOT_FOUND);
         }
 
-        return kindergartenImage;
+        return kindergartenImages;
     }
 
     @Override
     public List<Long> getKindergartenImageId(Long kindergartenId) {
         List<KindergartenImage> kindergartenImages = kindergartenImageRepository.findByKindergartenId(kindergartenId);
 
-        if(kindergartenImages.isEmpty()){
+        if (kindergartenImages == null || kindergartenImages.isEmpty()) {
             throw new ApiException(ErrorStatus._KDG_IMAGE_NOT_FOUND);
         }
 
