@@ -3,6 +3,7 @@ package clovider.clovider_be.domain.recruit.service;
 import clovider.clovider_be.domain.admin.dto.AdminResponse;
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import clovider.clovider_be.domain.kindergarten.repository.KindergartenRepository;
+import clovider.clovider_be.domain.kindergarten.service.KindergartenQueryService;
 import clovider.clovider_be.domain.recruit.Recruit;
 import clovider.clovider_be.domain.recruit.dto.RecruitCreateRequestDTO;
 import clovider.clovider_be.domain.recruit.dto.RecruitCreateResponseDTO;
@@ -28,15 +29,24 @@ public class RecruitCommandServiceImpl implements RecruitCommandService{
     private final RecruitQueryService recruitQueryService;
     private final RecruitRepository recruitRepository;
     private final KindergartenRepository kindergartenRepository;
+    private final KindergartenQueryService kindergartenQueryService;
 
     @Override
     public List<Long> resetKindergarten(Long kindergartenId) {
         List<Recruit> recruits = recruitQueryService.getRecruitByKindergarten(kindergartenId);
-        List<Long> recruitIds = recruits.stream()
-                .map(Recruit::getId)
-                .collect(Collectors.toList());
 
-        recruitRepository.deleteAll(recruits);
+        // 5가 디폴트 킨더가든 값임
+        Kindergarten kindergarten = kindergartenQueryService.getKindergartenOnly(5L);
+
+        List<Long> recruitIds = new ArrayList<>();
+
+        for (Recruit recruit : recruits) {
+            recruit.changeKindergarten(kindergarten);
+            recruitRepository.save(recruit);
+            recruitIds.add(recruit.getId());
+        }
+
+//        recruitRepository.deleteAll(recruits);
 
         return recruitIds;
     }
