@@ -23,17 +23,17 @@ public interface LotteryRepository extends JpaRepository<Lottery, Long>, Lottery
 
     List<Lottery> findAllByApplication(Application application);
 
-    @Query("select l.id from Lottery l where l.application.id = :applicationId")
-    Long findLotteryIdByApplication(@Param("applicationId") Long applicationId);
+    @Query("select l.id from Lottery l where l.application.id = :applicationId and l.recruit.id = :recruitId")
+    Long findLotteryIdByApplication(@Param("applicationId") Long applicationId, @Param("recruitId") Long recruitId);
 
+
+    @Query("select l.recruit.id from Lottery l where l.id = :lotteryId")
+    Long findRecruitId(Long lotteryId);
 
     Lottery findLotteryByApplicationIdAndRecruitId(Long applicationId, Long recruitId);
 
 
     List<Lottery> findByApplicationId(Long applicationId);
-
-
-
 
 
     @Query("SELECT l.childNm AS childName, GROUP_CONCAT(l.id) AS lotteryIds " +

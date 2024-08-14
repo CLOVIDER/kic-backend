@@ -8,6 +8,7 @@ import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.application.repository.ApplicationRepository;
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.enums.Result;
+import clovider.clovider_be.domain.kindergartenClass.repository.KindergartenClassRepository;
 import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.lottery.dto.LotteryIdAndChildNameDTO;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse;
@@ -46,7 +47,7 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
 
     private final LotteryRepository lotteryRepository;
     private final ApplicationRepository applicationRepository;
-
+    private final KindergartenClassRepository kindergartenClassRepository;
     private final RecruitRepository recruitRepository;
 
     @Override
@@ -186,10 +187,18 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
             String lotteryIdsStr = (String) result[1];
             List<Long> lotteryIds = convertStringToList(lotteryIdsStr);
 
-            dtoList.add(LotteryIdAndChildNameDTO.builder()
+            for (Long lotteryId : lotteryIds) {
+                Long recruitId = lotteryRepository.findRecruitId(lotteryId);
+                Long kindergartenId = recruitRepository.findKindergartenIdByRecruitId(recruitId);
+                int ageClass = recruitRepository.finAgeClassById(recruitId);
+                String className = kindergartenClassRepository.findClassNameById(kindergartenId, ageClass);
+
+                dtoList.add(LotteryIdAndChildNameDTO.builder()
                     .childName(childName)
-                    .lotteryIds(lotteryIds)
+                    .lotteryId(lotteryId)
+                    .className(className)
                     .build());
+            }
         }
 
         if (dtoList.isEmpty()) {

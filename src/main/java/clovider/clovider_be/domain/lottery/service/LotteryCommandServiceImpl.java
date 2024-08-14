@@ -253,14 +253,15 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
 
     public List<Map<String, Object>> createApplicantsList(Recruit recruit) {
 
-        List<Application> applications = lotteryRepository.findAllApplicationByRecruitId(recruit.getId());
+        Long recruitId = recruit.getId();
+        List<Application> applications = lotteryRepository.findAllApplicationByRecruitId(recruitId);
 
         List<Map<String, Object>> applicants = new ArrayList<>();
         for (Application app : applications) {
             Map<String, Object> applicantData = new HashMap<>();
 
             Long applicationId = app.getId();
-            Long RestLotteryId = lotteryRepository.findLotteryIdByApplication(applicationId);
+            Long RestLotteryId = lotteryRepository.findLotteryIdByApplication(applicationId, recruitId);
             applicantData.put("id", RestLotteryId);
 
             WeightCalculationDTO weightDTO = new WeightCalculationDTO(
@@ -281,7 +282,6 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
 
         return applicants;
     }
-
     public Map<String, Object> createRequestBody(List<Map<String, Object>> applicants, Long lotteryId, int recruitCnt) {
 
         Map<String, Object> requestBody = new HashMap<>();
