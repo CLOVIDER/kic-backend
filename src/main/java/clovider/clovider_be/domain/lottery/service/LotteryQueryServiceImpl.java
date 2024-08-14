@@ -147,7 +147,7 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
                         .stream())
                 .map(lottery -> LotteryResultByEmployeeDTO.builder()
                         .applicationId(lottery.getApplication().getId())
-                        .recruitId(lottery.getRecruit().getId())
+                        .lotteryId(lottery.getId())
                         .childName(lottery.getChildNm())
                         .kindergartenName(
                                 lottery.getRecruit().getKindergarten().getKindergartenNm())
@@ -220,6 +220,12 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
 
             for (Lottery lottery : lotteries) {
                 Recruit recruit = lottery.getRecruit();
+              
+                Long recruitId = recruit.getId();
+                int applicants = lotteryRepository.findAllApplicationByRecruitId(recruitId).size();
+                double competition = (double) applicants / recruit.getRecruitCnt();  // 경쟁률 계산
+                String competitionRate = String.format("%.1f : 1", competition);
+
                 LocalDateTime lotteryCreatedAt = lottery.getCreatedAt();
                 LocalDateTime recruitEndDt = recruit.getRecruitEndDt();
 
@@ -231,6 +237,7 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
                             .ageClass(recruit.getAgeClass())
                             .result(lottery.getResult().name())
                             .applicationDate(lotteryCreatedAt)
+                            .competition(competitionRate)
                             .build();
 
                     lotteryHistories.add(history);

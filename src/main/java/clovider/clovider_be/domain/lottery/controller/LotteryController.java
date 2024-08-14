@@ -101,7 +101,6 @@ public class LotteryController {
             @AuthEmployee Employee employee) {
         List<LotteryResponse.LotteryHistory> result = lotteryQueryService.getLotteryHistoryByEmployee(
                 employee);
-
         return ApiResponse.onSuccess(result);
     }
 
