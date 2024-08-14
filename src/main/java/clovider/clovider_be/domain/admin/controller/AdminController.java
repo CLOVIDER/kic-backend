@@ -13,6 +13,7 @@ import clovider.clovider_be.domain.admin.dto.AdminResponse.RecruitCreationInfo;
 import clovider.clovider_be.domain.admin.dto.SearchVO;
 import clovider.clovider_be.domain.application.service.ApplicationQueryService;
 import clovider.clovider_be.domain.common.CustomPage;
+import clovider.clovider_be.domain.kindergarten.service.KindergartenQueryService;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitInfo;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitResult;
@@ -63,6 +64,7 @@ public class AdminController {
     private final LotteryQueryService lotteryQueryService;
     private final ApplicationQueryService applicationQueryService;
     private final RecruitCommandService recruitCommandService;
+    private final KindergartenQueryService kindergartenQueryService;
     private final PdfUtil pdfUtil;
     private final MailService mailService;
 
@@ -232,6 +234,7 @@ public class AdminController {
     @Operation(summary = "관리자가 모집을 수정한다.", description = "관리자가 이미 생성된 모집을 수정한다.")
     @PatchMapping("/recruits")
     public ApiResponse<String> updateRecruit(
+
             @RequestBody RecruitCreationRequest request){
 
         return ApiResponse.onSuccess(recruitCommandService.updateRecruit(request));
@@ -242,6 +245,5 @@ public class AdminController {
     public ApiResponse<String> createRecruit(@RequestBody RecruitCreationRequest request) {
         return ApiResponse.onSuccess(recruitCommandService.createRecruit(request));
     }
-
 
 }

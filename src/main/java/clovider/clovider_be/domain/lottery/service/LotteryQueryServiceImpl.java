@@ -171,9 +171,6 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
     @Override
     public List<LotteryIdAndChildNameDTO> getLotteryGroupedByChildNameByEmployeeId(
             Employee employee) {
-        if (employee == null) {
-            throw new ApiException(ErrorStatus._EMPLOYEE_NOT_FOUND);
-        }
 
         List<Object[]> results = lotteryRepository.findLotteryGroupedByChildNameByEmployee(
                 employee);
@@ -223,11 +220,11 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
 
             for (Lottery lottery : lotteries) {
                 Recruit recruit = lottery.getRecruit();
+              
                 Long recruitId = recruit.getId();
                 int applicants = lotteryRepository.findAllApplicationByRecruitId(recruitId).size();
                 double competition = (double) applicants / recruit.getRecruitCnt();  // 경쟁률 계산
                 String competitionRate = String.format("%.1f : 1", competition);
-
 
                 LocalDateTime lotteryCreatedAt = lottery.getCreatedAt();
                 LocalDateTime recruitEndDt = recruit.getRecruitEndDt();
