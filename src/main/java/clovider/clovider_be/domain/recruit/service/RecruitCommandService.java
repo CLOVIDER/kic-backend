@@ -7,7 +7,7 @@ public interface RecruitCommandService {
 
     List<Long> resetKindergarten(Long kindergartenId);
 
-    String updateRecruit(RecruitCreationRequest request, Long recruitId);
+    String updateRecruit(RecruitCreationRequest request);
 
     String createRecruit(RecruitCreationRequest request);
 }

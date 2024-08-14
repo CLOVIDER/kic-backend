@@ -44,7 +44,7 @@ public class RecruitCommandServiceImpl implements RecruitCommandService {
 
 
     @Override
-    public String updateRecruit(RecruitCreationRequest request, Long recruitId) {
+    public String updateRecruit(RecruitCreationRequest request) {
 
         List<AdminRequest.KindergartenClassInfo> kindergartenClassInfoList = request.getKindergartenClassInfoList();
         RecruitDateAndWeightInfo recruitDateAndWeightInfo = request.getRecruitDateAndWeightInfo();
