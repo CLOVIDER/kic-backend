@@ -7,6 +7,7 @@ import clovider.clovider_be.domain.recruit.Recruit;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruits;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface RecruitQueryService {
 
@@ -26,5 +27,5 @@ public interface RecruitQueryService {
 
     RecruitCreationInfo getRecruitCreationInfo();
 
-    Recruit getRecruitByKindergarten(Kindergarten kindergarten, Integer ageClass);
+    Optional<Recruit> getRecruitByKindergarten(Kindergarten kindergarten, Integer ageClass);
 }

@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -142,9 +143,7 @@ public class RecruitQueryServiceImpl implements RecruitQueryService {
     }
 
     @Override
-    public Recruit getRecruitByKindergarten(Kindergarten kindergarten, Integer ageClass) {
-        return recruitRepository.findByKindergartenAndAgeClass(kindergarten, ageClass).orElseThrow(
-                () -> new ApiException(ErrorStatus._RECRUIT_NOT_FOUND)
-        );
+    public Optional<Recruit> getRecruitByKindergarten(Kindergarten kindergarten, Integer ageClass) {
+        return recruitRepository.findByKindergartenAndAgeClass(kindergarten, ageClass);
     }
 }
