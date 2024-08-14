@@ -30,6 +30,8 @@ public interface LotteryQueryService {
 
     List<RecruitResult> getRecruitResult(Long recruitId);
 
+    List<RecruitResult> getRecruitIdsResult(List<Long> recruitIds);
+
     List<Long> getApplicationsByLotteries(List<Recruit> recruits);
 
     List<ChildInfo> getChildInfos(Long applicationId);

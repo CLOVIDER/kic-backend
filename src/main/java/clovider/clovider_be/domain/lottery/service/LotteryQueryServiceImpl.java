@@ -100,6 +100,12 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
     }
 
     @Override
+    public List<RecruitResult> getRecruitIdsResult(List<Long> recruitIds) {
+
+        return LotteryResponse.toRecruitResults(lotteryRepository.findAllByRecruitIds(recruitIds));
+    }
+
+    @Override
     public List<Long> getApplicationsByLotteries(List<Recruit> recruits) {
 
         return lotteryRepository.findApplicationsAllByRecruits(recruits);
@@ -185,13 +191,14 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
                 Long recruitId = lotteryRepository.findRecruitId(lotteryId);
                 Long kindergartenId = recruitRepository.findKindergartenIdByRecruitId(recruitId);
                 int ageClass = recruitRepository.finAgeClassById(recruitId);
-                String className = kindergartenClassRepository.findClassNameById(kindergartenId, ageClass);
+                String className = kindergartenClassRepository.findClassNameById(kindergartenId,
+                        ageClass);
 
                 dtoList.add(LotteryIdAndChildNameDTO.builder()
-                    .childName(childName)
-                    .lotteryId(lotteryId)
-                    .className(className)
-                    .build());
+                        .childName(childName)
+                        .lotteryId(lotteryId)
+                        .className(className)
+                        .build());
             }
         }
 
@@ -220,7 +227,7 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
 
             for (Lottery lottery : lotteries) {
                 Recruit recruit = lottery.getRecruit();
-              
+
                 Long recruitId = recruit.getId();
                 int applicants = lotteryRepository.findAllApplicationByRecruitId(recruitId).size();
                 double competition = (double) applicants / recruit.getRecruitCnt();  // 경쟁률 계산
