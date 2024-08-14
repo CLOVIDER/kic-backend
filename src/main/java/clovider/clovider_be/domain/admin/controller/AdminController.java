@@ -234,7 +234,6 @@ public class AdminController {
     @PatchMapping("/recruits")
     public ApiResponse<String> updateRecruit(
             @RequestBody RecruitCreationRequest request) {
-
         return ApiResponse.onSuccess(recruitCommandService.updateRecruit(request));
     }
 
