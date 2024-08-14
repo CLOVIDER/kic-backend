@@ -7,15 +7,10 @@ import clovider.clovider_be.domain.application.dto.ApplicationResponse;
 import clovider.clovider_be.domain.application.repository.ApplicationRepository;
 import clovider.clovider_be.domain.common.CustomPage;
 import clovider.clovider_be.domain.employee.Employee;
-import clovider.clovider_be.domain.enums.Save;
-import clovider.clovider_be.domain.lottery.service.LotteryQueryService;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Hibernate;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,11 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class ApplicationQueryServiceImpl implements ApplicationQueryService {
 
     private final ApplicationRepository applicationRepository;
-    private final LotteryQueryService lotteryQueryService;
 
     @Override
     public ApplicationResponse applicationRead(Employee employee) {
-        Application savedApplication = applicationRepository.findFirstByEmployeeOrderByCreatedAtDesc(employee);
+        Application savedApplication = applicationRepository.findFirstByEmployeeOrderByCreatedAtDesc(
+                employee);
 
         if (savedApplication == null) {
             return ApplicationResponse.emptyEntity();
@@ -70,7 +65,7 @@ public class ApplicationQueryServiceImpl implements ApplicationQueryService {
     }
 
     @Override
-    public Application getApplication(Long Id){
+    public Application getApplication(Long Id) {
         return applicationRepository.findById(Id).orElseThrow(
                 () -> new ApiException(ErrorStatus._APPLICATION_NOT_FOUND)
         );
@@ -82,9 +77,15 @@ public class ApplicationQueryServiceImpl implements ApplicationQueryService {
     }
 
     @Override
-    public Long getApplicationId(Employee employee)
-    {
+    public Long getApplicationId(Employee employee) {
         return applicationRead(employee).getId();
     }
 
+    @Override
+    public List<Application> getApplicationsByEmployee(Employee employee) {
+        return applicationRepository.findAllByEmployee(employee).orElseThrow(
+                () -> new ApiException(ErrorStatus._APPLICATION_NOT_FOUND)
+        );
+
+    }
 }
