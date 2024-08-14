@@ -8,7 +8,7 @@ import lombok.Data;
 public class LotteryResultByEmployeeDTO {
 
     private Long applicationId;
-    private Long recruitId;
+    private Long lotteryId;
     private String childName;
     private String result;
     private Integer waitingNumber;
