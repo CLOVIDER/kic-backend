@@ -147,7 +147,7 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
                         .stream())
                 .map(lottery -> LotteryResultByEmployeeDTO.builder()
                         .applicationId(lottery.getApplication().getId())
-                        .recruitId(lottery.getRecruit().getId())
+                        .lotteryId(lottery.getId())
                         .childName(lottery.getChildNm())
                         .kindergartenName(
                                 lottery.getRecruit().getKindergarten().getKindergartenNm())
