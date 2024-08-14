@@ -6,6 +6,7 @@ import clovider.clovider_be.domain.admin.dto.AdminResponse;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.KindergartenClassInfo;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.RecruitClassInfo;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.RecruitCreationInfo;
+import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitInfo;
 import clovider.clovider_be.domain.recruit.Recruit;
@@ -95,23 +96,29 @@ public class RecruitQueryServiceImpl implements RecruitQueryService {
         // 빈 응답 생성 메소드를 DTO 클래스로 분리
         RecruitDateAndWeightInfo recruitDateAndWeightInfo = RecruitDateAndWeightInfo.createEmpty();
         KindergartenClassInfo emptyKindergartenClassInfo = KindergartenClassInfo.createEmpty();
-        List<KindergartenClassInfo> kindergartenClassInfoList = Collections.singletonList(emptyKindergartenClassInfo);
+        List<KindergartenClassInfo> kindergartenClassInfoList = Collections.singletonList(
+                emptyKindergartenClassInfo);
 
-        return AdminResponse.toRecruitCreationInfo(kindergartenClassInfoList, recruitDateAndWeightInfo, false);
+        return AdminResponse.toRecruitCreationInfo(kindergartenClassInfoList,
+                recruitDateAndWeightInfo, false);
     }
 
     private RecruitCreationInfo createRecruitCreationInfoForNonEmpty(List<Recruit> nowRecruit) {
         // 기존 응답 생성 로직
         Map<String, List<Recruit>> groupByKindergarten = nowRecruit.stream()
-                .collect(Collectors.groupingBy(recruit -> recruit.getKindergarten().getKindergartenNm()));
+                .collect(Collectors.groupingBy(
+                        recruit -> recruit.getKindergarten().getKindergartenNm()));
 
-        RecruitDateAndWeightInfo recruitDateAndWeightInfo = getRecruitDateAndWeightInfo(nowRecruit.get(0).getId());
+        RecruitDateAndWeightInfo recruitDateAndWeightInfo = getRecruitDateAndWeightInfo(
+                nowRecruit.get(0).getId());
 
-        List<KindergartenClassInfo> kindergartenClassInfoList = groupByKindergarten.entrySet().stream()
+        List<KindergartenClassInfo> kindergartenClassInfoList = groupByKindergarten.entrySet()
+                .stream()
                 .map(entry -> createKindergartenClassInfo(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
 
-        return AdminResponse.toRecruitCreationInfo(kindergartenClassInfoList, recruitDateAndWeightInfo, true);
+        return AdminResponse.toRecruitCreationInfo(kindergartenClassInfoList,
+                recruitDateAndWeightInfo, true);
 
     }
 
@@ -121,7 +128,8 @@ public class RecruitQueryServiceImpl implements RecruitQueryService {
         return toRecruitDateAndWeightInfo(recruit);
     }
 
-    private KindergartenClassInfo createKindergartenClassInfo(String kindergartenName, List<Recruit> recruits) {
+    private KindergartenClassInfo createKindergartenClassInfo(String kindergartenName,
+            List<Recruit> recruits) {
         // 모집 별 분반 정보 변환
         List<RecruitClassInfo> classInfos = recruits.stream()
                 .map(AdminResponse::toRecruitClassInfo)
@@ -133,5 +141,10 @@ public class RecruitQueryServiceImpl implements RecruitQueryService {
                 .build();
     }
 
-
+    @Override
+    public Recruit getRecruitByKindergarten(Kindergarten kindergarten, Integer ageClass) {
+        return recruitRepository.findByKindergartenAndAgeClass(kindergarten, ageClass).orElseThrow(
+                () -> new ApiException(ErrorStatus._RECRUIT_NOT_FOUND)
+        );
+    }
 }
