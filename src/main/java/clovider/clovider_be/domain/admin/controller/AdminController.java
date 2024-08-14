@@ -13,7 +13,6 @@ import clovider.clovider_be.domain.admin.dto.AdminResponse.RecruitCreationInfo;
 import clovider.clovider_be.domain.admin.dto.SearchVO;
 import clovider.clovider_be.domain.application.service.ApplicationQueryService;
 import clovider.clovider_be.domain.common.CustomPage;
-import clovider.clovider_be.domain.kindergarten.service.KindergartenQueryService;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitInfo;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitResult;
@@ -64,7 +63,6 @@ public class AdminController {
     private final LotteryQueryService lotteryQueryService;
     private final ApplicationQueryService applicationQueryService;
     private final RecruitCommandService recruitCommandService;
-    private final KindergartenQueryService kindergartenQueryService;
     private final PdfUtil pdfUtil;
     private final MailService mailService;
 
@@ -146,11 +144,12 @@ public class AdminController {
     }
 
     @Operation(summary = "어린이집 모집 결과 이메일 전송 API", description = "해당 모집의 추첨결과를 이메일로 전송합니다.")
-    @PostMapping("/emails/recruits/{recruitId}")
-    @Parameter(name = "recruitId", description = "모집 ID", required = true)
-    public ApiResponse<String> sendRecruitResult(@PathVariable(name = "recruitId") Long recruitId) {
+    @PostMapping("/emails/recruits")
+    public ApiResponse<String> sendRecruitResult() {
 
-        List<RecruitResult> recruitResult = lotteryQueryService.getRecruitResult(recruitId);
+        // 현재 진행중인 모집의 ID
+        List<Long> recruitIds = recruitQueryService.getRecruitIngAndScheduled(LocalDateTime.now());
+        List<RecruitResult> recruitResult = lotteryQueryService.getRecruitIdsResult(recruitIds);
         mailService.sendRecruitResult(recruitResult);
 
         return ApiResponse.onSuccess("성공적으로 추첨결과가 전송되었습니다.");
@@ -235,6 +234,7 @@ public class AdminController {
     @PatchMapping("/recruits")
     public ApiResponse<String> updateRecruit(
             @RequestBody RecruitCreationRequest request) {
+
         return ApiResponse.onSuccess(recruitCommandService.updateRecruit(request));
     }
 
