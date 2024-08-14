@@ -6,6 +6,7 @@ import clovider.clovider_be.domain.admin.dto.AdminResponse.AcceptResult;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.LotteryResult;
 import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.application.repository.ApplicationRepository;
+import clovider.clovider_be.domain.application.service.ApplicationQueryService;
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.enums.Result;
 import clovider.clovider_be.domain.lottery.Lottery;
@@ -21,7 +22,6 @@ import clovider.clovider_be.domain.lottery.dto.LotteryResultsGroupedByChildDTO;
 import clovider.clovider_be.domain.lottery.repository.LotteryRepository;
 import clovider.clovider_be.domain.recruit.Recruit;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruit;
-import clovider.clovider_be.domain.recruit.repository.RecruitRepository;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import java.time.LocalDateTime;
@@ -46,8 +46,7 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
 
     private final LotteryRepository lotteryRepository;
     private final ApplicationRepository applicationRepository;
-
-    private final RecruitRepository recruitRepository;
+    private final ApplicationQueryService applicationQueryService;
 
     @Override
     public LotteryResultResponseDTO getLotteryResultByLotteryId(Long lotteryId) {
@@ -134,15 +133,9 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
 
     @Override
     public List<LotteryResultsGroupedByChildDTO> getLotteryResultsByEmployeeId(Employee employee) {
-        if (employee == null) {
-            throw new ApiException(ErrorStatus._EMPLOYEE_NOT_FOUND);
-        }
 
-        List<Application> applications = applicationRepository.findAllByEmployee(employee);
-
-        if (applications.isEmpty()) {
-            throw new ApiException(ErrorStatus._APPLICATION_NOT_FOUND);
-        }
+        List<Application> applications = applicationQueryService.getApplicationsByEmployee(
+                employee);
 
         Map<String, List<LotteryResultByEmployeeDTO>> groupedResults = applications.stream()
                 .flatMap(application -> lotteryRepository.findByApplicationId(application.getId())
@@ -200,11 +193,9 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
 
     @Override
     public List<LotteryResponse.LotteryHistory> getLotteryHistoryByEmployee(Employee employee) {
-        if (employee == null) {
-            throw new ApiException(ErrorStatus._EMPLOYEE_NOT_FOUND);
-        }
 
-        List<Application> applications = applicationRepository.findAllByEmployee(employee);
+        List<Application> applications = applicationQueryService.getApplicationsByEmployee(
+                employee);
 
         if (applications.isEmpty()) {
             throw new ApiException(ErrorStatus._APPLICATION_NOT_FOUND);
@@ -215,7 +206,6 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
 
         for (Application application : applications) {
             List<Lottery> lotteries = lotteryRepository.findByApplicationId(application.getId());
-
 
             for (Lottery lottery : lotteries) {
                 Recruit recruit = lottery.getRecruit();
@@ -239,10 +229,5 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
 
         return lotteryHistories;
     }
-
-
-
-
-
 
 }
