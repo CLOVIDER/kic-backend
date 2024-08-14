@@ -133,7 +133,7 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
     }
 
     @Override
-    public List<LotteryResultsGroupedByChildDTO> getLotteryResultsByEmployeeId(Employee employee) {
+    public List<LotteryResultsGroupedByChildDTO> getLotteryResultsByEmployee(Employee employee) {
         if (employee == null) {
             throw new ApiException(ErrorStatus._EMPLOYEE_NOT_FOUND);
         }
@@ -155,6 +155,7 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
                                 lottery.getRecruit().getKindergarten().getKindergartenNm())
                         .ageClass(lottery.getRecruit().getAgeClass())
                         .result(lottery.getResult().name())
+                        .isregistry(lottery.getIsRegistry())
                         .waitingNumber(
                                 lottery.getResult() == Result.LOSE ? lottery.getRankNo() : null)
                         .build())
