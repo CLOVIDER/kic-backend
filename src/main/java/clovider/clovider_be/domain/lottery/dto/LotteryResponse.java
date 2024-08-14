@@ -79,6 +79,7 @@ public class LotteryResponse {
         private Integer ageClass;
         private String result;
         private LocalDateTime applicationDate;
+        private String competition;
     }
 
 
