@@ -13,18 +13,16 @@
 
 1. [프로젝트 소개](#프로젝트-소개)
 2. [팀원](#팀원)
-3. [시스템 아키텍처](#시스템-아키텍처)
-4. [ERD 설계서](#ERD-설계서)
-5. [기술 스택](#기술-스택)
-6. [프로젝트 구조](#프로젝트-구조)
-7. [도전한 사항](#도전한-사항)
-8. [최적화한 사항](#최적화한-사항)
+3. [기술 스택](#기술-스택)
+4. [ERD](#ERD)
+5. [서비스 아키텍처](#서비스-아키텍처)
+6. [도전한 사항](#도전한-사항)
+7. [최적화한 사항](#최적화한-사항)
 
-> 작성자: 김현겸 (kylo-dev)
+## 💡 프로젝트 소개
+>디케이테크인 내부의 공정하고 투명한 사내 어린이집 인원 배정을 위해 어린이집 모집과 추첨을 자동화한 서비스입니다.
 
-## 프로젝트 소개
-
-## 팀원
+## 🫶 팀원
 
 |No|이름|역할|깃허브|
 |------|---|---|---|
@@ -38,24 +36,23 @@
 |8|이주애|BE, Infra|[leejuae](https://github.com/leejuae)|
 |9|김관일|BE|[KIM-KWAN-IL](https://github.com/KIM-KWAN-IL)|
 
-## 시스템 아키텍처
+## 🛠️ 기술 스택
 
-<img width="700" alt="image" src="https://github.com/user-attachments/assets/15fbc63e-48f6-4978-8d5d-95dc66611328">
+<img width="657" alt="image" src="https://github.com/user-attachments/assets/8347d607-772e-4bfc-8043-61526a2af3a1">
+<img width="627" alt="image" src="https://github.com/user-attachments/assets/20b819f7-fa7d-48b7-a608-8682428f78ea">
 
-## ERD 설계서
+## 📝 ERD
 
-<img width="800" alt="image" src="https://github.com/user-attachments/assets/75a9bdec-b589-4fce-ab31-f1b821152aca">
+![키즈인컴퍼니 ERD](https://github.com/user-attachments/assets/56cefb42-935d-4ce6-b79b-7cd8f2e05a73)
 
-## 기술 스택
+## 🌱 서비스 아키텍처
 
-<img width="400" alt="image" src="https://github.com/user-attachments/assets/13b4f414-b220-462e-942b-d499c0b4dae0">
-
-### 스프링 버전
-
-## 프로젝트 구조
+<img width="1097" alt="image" src="https://github.com/user-attachments/assets/fc729e9e-baf9-4d7d-9a8b-235083346fef">
 
 ## 도전한 사항
 
 ## 최적화한 사항
-
 * JIB을 통한 도커 이미지 Create, Push
+
+
+> 작성자: 김현겸 (kylo-dev), 정준희(sungsil0624)
