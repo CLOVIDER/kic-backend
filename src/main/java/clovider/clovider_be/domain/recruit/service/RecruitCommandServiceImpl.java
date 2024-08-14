@@ -11,6 +11,7 @@ import clovider.clovider_be.domain.recruit.dto.RecruitResponse.RecruitDateAndWei
 import clovider.clovider_be.domain.recruit.repository.RecruitRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,11 +61,15 @@ public class RecruitCommandServiceImpl implements RecruitCommandService {
             // 요청한 분반 개수만큼 반복
             for (RecruitClassInfo classInfo : classInfoList) {
 
-                Recruit existingRecruit = recruitQueryService.getRecruitByKindergarten(
+                Optional<Recruit> optionalRecruit = recruitQueryService.getRecruitByKindergarten(
                         kindergarten, classInfo.getAgeClass());
 
-                // 기존 모집 정보 업데이트
-                existingRecruit.updateRecruitDetails(classInfo, recruitDateAndWeightInfo);
+                if (optionalRecruit.isEmpty()) {
+                    recruitRepository.save(Recruit.createRecruit(classInfo, recruitDateAndWeightInfo,
+                            kindergarten));
+                } else {
+                    optionalRecruit.get().updateRecruitDetails(classInfo, recruitDateAndWeightInfo);
+                }
             }
         }
 
