@@ -10,6 +10,7 @@ import clovider.clovider_be.global.annotation.AuthEmployee;
 import clovider.clovider_be.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -93,6 +94,13 @@ public class LotteryController {
     @GetMapping("/lotteries/employee")
     public ApiResponse<List<LotteryIdAndChildNameDTO>> getLotteryIdAndChildNameByEmployeeId(@AuthEmployee Employee employee) {
         List<LotteryIdAndChildNameDTO> result = lotteryQueryService.getLotteryGroupedByChildNameByEmployeeId(employee);
+        return ApiResponse.onSuccess(result);
+    }
+
+    @Operation(summary = "지난 추첨 내역 히스토리 조회 ")
+    @GetMapping("lotteries/history/employee")
+    public ApiResponse<List<LotteryResponse.LotteryHistory>> getLotteryHistoryByEmployee(@AuthEmployee Employee employee) {
+        List<LotteryResponse.LotteryHistory> result = lotteryQueryService.getLotteryHistoryByEmployee(employee);
         return ApiResponse.onSuccess(result);
     }
 

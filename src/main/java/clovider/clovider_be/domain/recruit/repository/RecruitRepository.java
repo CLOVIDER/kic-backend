@@ -23,8 +23,6 @@ public interface RecruitRepository extends JpaRepository<Recruit, Long>, Recruit
     @Query("select r from Recruit r join fetch r.kindergarten k where r.id = :recruitId")
     Optional<Recruit> findRecruitInfoById(@Param("recruitId") Long recruitId);
 
-    Optional<Recruit> findByKindergartenAndAgeClass(Kindergarten kindergarten, AgeClass ageClass);
-    List<Recruit> findAllByKindergarten(Kindergarten kindergarten);
 
 }
 

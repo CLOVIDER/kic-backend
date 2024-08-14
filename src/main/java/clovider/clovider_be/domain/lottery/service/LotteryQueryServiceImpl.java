@@ -198,5 +198,51 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
         return dtoList;
     }
 
+    @Override
+    public List<LotteryResponse.LotteryHistory> getLotteryHistoryByEmployee(Employee employee) {
+        if (employee == null) {
+            throw new ApiException(ErrorStatus._EMPLOYEE_NOT_FOUND);
+        }
+
+        List<Application> applications = applicationRepository.findAllByEmployee(employee);
+
+        if (applications.isEmpty()) {
+            throw new ApiException(ErrorStatus._APPLICATION_NOT_FOUND);
+        }
+
+        List<LotteryResponse.LotteryHistory> lotteryHistories = new ArrayList<>();
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        for (Application application : applications) {
+            List<Lottery> lotteries = lotteryRepository.findByApplicationId(application.getId());
+
+
+            for (Lottery lottery : lotteries) {
+                Recruit recruit = lottery.getRecruit();
+                LocalDateTime lotteryCreatedAt = lottery.getCreatedAt();
+                LocalDateTime recruitEndDt = recruit.getRecruitEndDt();
+
+                if (currentTime.isAfter(recruitEndDt)) {  // 현재 시간이 모집 마감 시간 이후인지 확인
+                    LotteryResponse.LotteryHistory history = LotteryResponse.LotteryHistory.builder()
+                            .lotteryId(lottery.getId())
+                            .childName(lottery.getChildNm())
+                            .kindergartenName(recruit.getKindergarten().getKindergartenNm())
+                            .ageClass(recruit.getAgeClass())
+                            .result(lottery.getResult().name())
+                            .applicationDate(lotteryCreatedAt)
+                            .build();
+
+                    lotteryHistories.add(history);
+                }
+            }
+        }
+
+        return lotteryHistories;
+    }
+
+
+
+
+
 
 }
