@@ -146,6 +146,7 @@ public class AdminResponse {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class LotteryResult {
+
         private String employeeNo;
         private String nameKo;
         private String childNm;
@@ -179,8 +180,9 @@ public class AdminResponse {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class RecruitClassInfo {
+
         @Schema(description = "분반 이름", example = "0세")
-        private String ageClass;
+        private Integer ageClass;
 
         @Schema(description = "모집인원", example = "20")
         private Integer recruitCnt;
@@ -188,7 +190,7 @@ public class AdminResponse {
 
     public static RecruitClassInfo toRecruitClassInfo(Recruit recruit) {
         return RecruitClassInfo.builder()
-                .ageClass(recruit.getAgeClass() + "세")
+                .ageClass(recruit.getAgeClass())
                 .recruitCnt(recruit.getRecruitCnt())
                 .build();
     }
@@ -232,7 +234,8 @@ public class AdminResponse {
         private Boolean isCreated;
     }
 
-    public static RecruitCreationInfo toRecruitCreationInfo(List<KindergartenClassInfo> kindergartenClassInfos,
+    public static RecruitCreationInfo toRecruitCreationInfo(
+            List<KindergartenClassInfo> kindergartenClassInfos,
             RecruitDateAndWeightInfo recruitDetails, Boolean isCreated) {
         return RecruitCreationInfo.builder()
                 .kindergartenClassInfoList(kindergartenClassInfos)  // 어린이집 및 분반 정보 리스트
@@ -241,13 +244,13 @@ public class AdminResponse {
                 .build();
     }
 
-    public static RecruitCreationInfo toRecruitCreationInfo(List<KindergartenClassInfo> kindergartenClassInfos,
+    public static RecruitCreationInfo toRecruitCreationInfo(
+            List<KindergartenClassInfo> kindergartenClassInfos,
             RecruitDateAndWeightInfo recruitDetails) {
         return RecruitCreationInfo.builder()
                 .kindergartenClassInfoList(kindergartenClassInfos)  // 어린이집 및 분반 정보 리스트
                 .recruitDateAndWeightInfo(recruitDetails)  // 모집 기간 상세 및 가중치 설정 정보
                 .build();
     }
-
 
 }

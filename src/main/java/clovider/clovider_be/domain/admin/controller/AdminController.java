@@ -4,6 +4,7 @@ import static clovider.clovider_be.domain.admin.dto.AdminResponse.ApplicationSta
 import static clovider.clovider_be.domain.admin.dto.AdminResponse.toDashBoard;
 import static clovider.clovider_be.domain.admin.dto.AdminResponse.toNotDashBoard;
 
+import clovider.clovider_be.domain.admin.dto.AdminRequest.RecruitCreationRequest;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.AcceptResult;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.ApplicationList;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.DashBoard;
@@ -12,6 +13,7 @@ import clovider.clovider_be.domain.admin.dto.AdminResponse.RecruitCreationInfo;
 import clovider.clovider_be.domain.admin.dto.SearchVO;
 import clovider.clovider_be.domain.application.service.ApplicationQueryService;
 import clovider.clovider_be.domain.common.CustomPage;
+import clovider.clovider_be.domain.kindergarten.service.KindergartenQueryService;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitInfo;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitResult;
@@ -21,12 +23,9 @@ import clovider.clovider_be.domain.notice.dto.NoticeTop3;
 import clovider.clovider_be.domain.notice.service.NoticeQueryService;
 import clovider.clovider_be.domain.qna.service.QnaQueryService;
 import clovider.clovider_be.domain.recruit.Recruit;
-import clovider.clovider_be.domain.recruit.dto.RecruitCreateRequestDTO;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruit;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruitInfo;
-import clovider.clovider_be.domain.recruit.dto.RecruitResponseDTO;
-import clovider.clovider_be.domain.recruit.dto.RecruitUpdateRequestDTO;
 import clovider.clovider_be.domain.recruit.service.RecruitCommandService;
 import clovider.clovider_be.domain.recruit.service.RecruitQueryService;
 import clovider.clovider_be.global.response.ApiResponse;
@@ -65,6 +64,7 @@ public class AdminController {
     private final LotteryQueryService lotteryQueryService;
     private final ApplicationQueryService applicationQueryService;
     private final RecruitCommandService recruitCommandService;
+    private final KindergartenQueryService kindergartenQueryService;
     private final PdfUtil pdfUtil;
     private final MailService mailService;
 
@@ -203,13 +203,6 @@ public class AdminController {
         return new ResponseEntity<>(resource, headers, HttpStatus.OK);
     }
 
-    @Operation(summary = "모집 생성", description = "관리자가 모집을 생성합니다.")
-    @PostMapping("/recruit")
-    public ApiResponse<RecruitCreationInfo> createRecruit(
-            @RequestBody RecruitCreateRequestDTO requestDTO) {
-        RecruitCreationInfo responseDTO = recruitCommandService.createRecruit(requestDTO);
-        return ApiResponse.onSuccess(responseDTO);
-    }
 
     @Operation(summary = "종료된 모집에 대한 추첨 결과 리스트 조회 - 관리자 추첨 결과 탭 ", description = "종료된 모집의 추첨 결과를 리스트 형식으로 조회합니다")
     @Parameters({
@@ -239,15 +232,17 @@ public class AdminController {
     }
 
     @Operation(summary = "관리자가 모집을 수정한다.", description = "관리자가 이미 생성된 모집을 수정한다.")
-    @Parameter(name = "recruitId", description = "모집 ID")
-    @PatchMapping("/recruit")
-    public ApiResponse<RecruitResponseDTO> updateRecruit(
-            @RequestBody
-            RecruitUpdateRequestDTO requestDTO) {
+    @PatchMapping("/recruits")
+    public ApiResponse<String> updateRecruit(
+            @RequestBody RecruitCreationRequest request) {
 
-        RecruitResponseDTO responseDTO = recruitCommandService.updateRecruit(requestDTO);
-        return ApiResponse.onSuccess(responseDTO);
+        return ApiResponse.onSuccess(recruitCommandService.updateRecruit(request));
     }
 
+    @Operation(summary = "모집 생성", description = "관리자가 모집을 생성합니다.")
+    @PostMapping("/recruits")
+    public ApiResponse<String> createRecruit(@RequestBody RecruitCreationRequest request) {
+        return ApiResponse.onSuccess(recruitCommandService.createRecruit(request));
+    }
 
 }

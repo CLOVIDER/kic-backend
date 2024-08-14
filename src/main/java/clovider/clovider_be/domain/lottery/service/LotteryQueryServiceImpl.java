@@ -6,8 +6,10 @@ import clovider.clovider_be.domain.admin.dto.AdminResponse.AcceptResult;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.LotteryResult;
 import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.application.repository.ApplicationRepository;
+import clovider.clovider_be.domain.application.service.ApplicationQueryService;
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.enums.Result;
+import clovider.clovider_be.domain.kindergartenClass.repository.KindergartenClassRepository;
 import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.lottery.dto.LotteryIdAndChildNameDTO;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse;
@@ -46,7 +48,9 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
 
     private final LotteryRepository lotteryRepository;
     private final ApplicationRepository applicationRepository;
+    private final ApplicationQueryService applicationQueryService;
 
+    private final KindergartenClassRepository kindergartenClassRepository;
     private final RecruitRepository recruitRepository;
 
     @Override
@@ -133,16 +137,10 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
     }
 
     @Override
-    public List<LotteryResultsGroupedByChildDTO> getLotteryResultsByEmployeeId(Employee employee) {
-        if (employee == null) {
-            throw new ApiException(ErrorStatus._EMPLOYEE_NOT_FOUND);
-        }
+    public List<LotteryResultsGroupedByChildDTO> getLotteryResultsByEmployee(Employee employee) {
 
-        List<Application> applications = applicationRepository.findAllByEmployee(employee);
-
-        if (applications.isEmpty()) {
-            throw new ApiException(ErrorStatus._APPLICATION_NOT_FOUND);
-        }
+        List<Application> applications = applicationQueryService.getApplicationsByEmployee(
+                employee);
 
         Map<String, List<LotteryResultByEmployeeDTO>> groupedResults = applications.stream()
                 .flatMap(application -> lotteryRepository.findByApplicationId(application.getId())
@@ -155,6 +153,7 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
                                 lottery.getRecruit().getKindergarten().getKindergartenNm())
                         .ageClass(lottery.getRecruit().getAgeClass())
                         .result(lottery.getResult().name())
+                        .isregistry(lottery.getIsRegistry())
                         .waitingNumber(
                                 lottery.getResult() == Result.LOSE ? lottery.getRankNo() : null)
                         .build())
@@ -172,9 +171,6 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
     @Override
     public List<LotteryIdAndChildNameDTO> getLotteryGroupedByChildNameByEmployeeId(
             Employee employee) {
-        if (employee == null) {
-            throw new ApiException(ErrorStatus._EMPLOYEE_NOT_FOUND);
-        }
 
         List<Object[]> results = lotteryRepository.findLotteryGroupedByChildNameByEmployee(
                 employee);
@@ -185,10 +181,18 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
             String lotteryIdsStr = (String) result[1];
             List<Long> lotteryIds = convertStringToList(lotteryIdsStr);
 
-            dtoList.add(LotteryIdAndChildNameDTO.builder()
+            for (Long lotteryId : lotteryIds) {
+                Long recruitId = lotteryRepository.findRecruitId(lotteryId);
+                Long kindergartenId = recruitRepository.findKindergartenIdByRecruitId(recruitId);
+                int ageClass = recruitRepository.finAgeClassById(recruitId);
+                String className = kindergartenClassRepository.findClassNameById(kindergartenId, ageClass);
+
+                dtoList.add(LotteryIdAndChildNameDTO.builder()
                     .childName(childName)
-                    .lotteryIds(lotteryIds)
+                    .lotteryId(lotteryId)
+                    .className(className)
                     .build());
+            }
         }
 
         if (dtoList.isEmpty()) {
@@ -198,5 +202,43 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
         return dtoList;
     }
 
+    @Override
+    public List<LotteryResponse.LotteryHistory> getLotteryHistoryByEmployee(Employee employee) {
+
+        List<Application> applications = applicationQueryService.getApplicationsByEmployee(
+                employee);
+
+        if (applications.isEmpty()) {
+            throw new ApiException(ErrorStatus._APPLICATION_NOT_FOUND);
+        }
+
+        List<LotteryResponse.LotteryHistory> lotteryHistories = new ArrayList<>();
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        for (Application application : applications) {
+            List<Lottery> lotteries = lotteryRepository.findByApplicationId(application.getId());
+
+            for (Lottery lottery : lotteries) {
+                Recruit recruit = lottery.getRecruit();
+                LocalDateTime lotteryCreatedAt = lottery.getCreatedAt();
+                LocalDateTime recruitEndDt = recruit.getRecruitEndDt();
+
+                if (currentTime.isAfter(recruitEndDt)) {  // 현재 시간이 모집 마감 시간 이후인지 확인
+                    LotteryResponse.LotteryHistory history = LotteryResponse.LotteryHistory.builder()
+                            .lotteryId(lottery.getId())
+                            .childName(lottery.getChildNm())
+                            .kindergartenName(recruit.getKindergarten().getKindergartenNm())
+                            .ageClass(recruit.getAgeClass())
+                            .result(lottery.getResult().name())
+                            .applicationDate(lotteryCreatedAt)
+                            .build();
+
+                    lotteryHistories.add(history);
+                }
+            }
+        }
+
+        return lotteryHistories;
+    }
 
 }

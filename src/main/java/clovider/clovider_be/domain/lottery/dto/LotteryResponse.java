@@ -2,6 +2,8 @@ package clovider.clovider_be.domain.lottery.dto;
 
 import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.recruit.Recruit;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -65,5 +67,19 @@ public class LotteryResponse {
         private String childName;
         private List<RecruitInfo> recruitInfos;
     }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class LotteryHistory {
+        private Long lotteryId;
+        private String childName;
+        private String kindergartenName;
+        private Integer ageClass;
+        private String result;
+        private LocalDateTime applicationDate;
+    }
+
 
 }

@@ -1,6 +1,7 @@
 package clovider.clovider_be.domain.recruit.service;
 
 import clovider.clovider_be.domain.admin.dto.AdminResponse.RecruitCreationInfo;
+import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitInfo;
 import clovider.clovider_be.domain.recruit.Recruit;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruits;
@@ -24,4 +25,6 @@ public interface RecruitQueryService {
     List<Recruit> getRecruitAndKindergarten();
 
     RecruitCreationInfo getRecruitCreationInfo();
+
+    Recruit getRecruitByKindergarten(Kindergarten kindergarten, Integer ageClass);
 }
