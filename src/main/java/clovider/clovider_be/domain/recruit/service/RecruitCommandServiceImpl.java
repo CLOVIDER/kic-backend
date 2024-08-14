@@ -45,17 +45,23 @@ public class RecruitCommandServiceImpl implements RecruitCommandService {
 
     @Override
     public String updateRecruit(RecruitCreationRequest request, Long recruitId) {
+
         List<AdminRequest.KindergartenClassInfo> kindergartenClassInfoList = request.getKindergartenClassInfoList();
         RecruitDateAndWeightInfo recruitDateAndWeightInfo = request.getRecruitDateAndWeightInfo();
 
         // 요청한 어린이집 개수만큼 반복
         for (KindergartenClassInfo kindergartenClassInfo : kindergartenClassInfoList) {
+            String kindergartenName = kindergartenClassInfo.getKindergartenName();
             List<AdminRequest.RecruitClassInfo> classInfoList = kindergartenClassInfo.getClassInfoList();
+
+            Kindergarten kindergarten = kindergartenQueryService.getKindergartenByName(
+                    kindergartenName);
 
             // 요청한 분반 개수만큼 반복
             for (RecruitClassInfo classInfo : classInfoList) {
 
-                Recruit existingRecruit = recruitQueryService.getRecruit(recruitId);
+                Recruit existingRecruit = recruitQueryService.getRecruitByKindergarten(
+                        kindergarten, classInfo.getAgeClass());
 
                 // 기존 모집 정보 업데이트
                 existingRecruit.updateRecruitDetails(classInfo, recruitDateAndWeightInfo);
@@ -64,7 +70,6 @@ public class RecruitCommandServiceImpl implements RecruitCommandService {
 
         return "모집을 정상적으로 수정하였습니다.";
     }
-
 
     @Override
     public String createRecruit(RecruitCreationRequest request) {

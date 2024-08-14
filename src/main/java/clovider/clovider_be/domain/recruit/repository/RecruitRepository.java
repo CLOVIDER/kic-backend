@@ -31,7 +31,5 @@ public interface RecruitRepository extends JpaRepository<Recruit, Long>, Recruit
 
     Optional<Recruit> findByKindergartenAndAgeClass(Kindergarten kindergarten, Integer ageClass);
 
-    List<Recruit> findAllByKindergarten(Kindergarten kindergarten);
-
 }
 
