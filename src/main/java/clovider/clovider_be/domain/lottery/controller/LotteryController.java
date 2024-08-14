@@ -90,7 +90,7 @@ public class LotteryController {
     @GetMapping("/lotteries/results")
     public List<LotteryResultsGroupedByChildDTO> getLotteryResultsByEmployeeId(
             @AuthEmployee Employee employee) {
-        List<LotteryResultsGroupedByChildDTO> results = lotteryQueryService.getLotteryResultsByEmployeeId(
+        List<LotteryResultsGroupedByChildDTO> results = lotteryQueryService.getLotteryResultsByEmployee(
                 employee);
 
         return ApiResponse.onSuccess(results).getResult();
@@ -107,7 +107,7 @@ public class LotteryController {
     }
 
     @Operation(summary = "직원에 따른 아이이름과 그에 맞는 추첨ID, 분반명 반환")
-    @GetMapping("/lotteries/employee")
+    @GetMapping("/lotteries")
     public ApiResponse<List<LotteryIdAndChildNameDTO>> getLotteryIdAndChildNameByEmployeeId(@AuthEmployee Employee employee) {
         List<LotteryIdAndChildNameDTO> result = lotteryQueryService.getLotteryGroupedByChildNameByEmployeeId(employee);
 
