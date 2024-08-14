@@ -101,16 +101,15 @@ public class LotteryController {
             @AuthEmployee Employee employee) {
         List<LotteryResponse.LotteryHistory> result = lotteryQueryService.getLotteryHistoryByEmployee(
                 employee);
-
+      
         return ApiResponse.onSuccess(result);
     }
 
     @Operation(summary = "직원에 따른 아이이름과 그에 맞는 추첨ID, 분반명 반환")
     @GetMapping("/lotteries")
-    public ApiResponse<List<LotteryIdAndChildNameDTO>> getLotteryIdAndChildNameByEmployeeId(
-            @AuthEmployee Employee employee) {
-        List<LotteryIdAndChildNameDTO> result = lotteryQueryService.getLotteryGroupedByChildNameByEmployeeId(
-                employee);
+    public ApiResponse<List<LotteryIdAndChildNameDTO>> getLotteryIdAndChildNameByEmployeeId(@AuthEmployee Employee employee) {
+        List<LotteryIdAndChildNameDTO> result = lotteryQueryService.getLotteryGroupedByChildNameByEmployeeId(employee);
+
         return ApiResponse.onSuccess(result);
     }
 
