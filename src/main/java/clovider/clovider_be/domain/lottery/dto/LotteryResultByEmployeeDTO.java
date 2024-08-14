@@ -14,5 +14,6 @@ public class LotteryResultByEmployeeDTO {
     private Integer waitingNumber;
     private String kindergartenName;
     private Integer ageClass;
+    private Character isregistry;
 
 }

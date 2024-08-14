@@ -15,6 +15,7 @@ import clovider.clovider_be.global.annotation.AuthEmployee;
 import clovider.clovider_be.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -56,6 +57,7 @@ public class LotteryController {
         return ApiResponse.onSuccess(lotteryQueryService.getLotteryResultByLotteryId(lotteryId));
     }
 
+    @Operation(summary = "추첨 당첨 확률 조회", description = "추첨ID에 따라서 추첨 당첨 확률을 조회한다.")
     @GetMapping("/recruits/{lotteryId}/percents")
     public ApiResponse<Double> getPercentage(@PathVariable Long lotteryId) {
         return ApiResponse.onSuccess(lotteryService.getPercent(lotteryId));
@@ -94,21 +96,21 @@ public class LotteryController {
         return ApiResponse.onSuccess(results).getResult();
     }
 
-    @Operation(summary = "직원에 따른 아이이름과 그에 맞는 추첨ID 반환")
-    @GetMapping("/lotteries")
-    public ApiResponse<List<LotteryIdAndChildNameDTO>> getLotteryIdAndChildNameByEmployeeId(
-            @AuthEmployee Employee employee) {
-        List<LotteryIdAndChildNameDTO> result = lotteryQueryService.getLotteryGroupedByChildNameByEmployeeId(
-                employee);
-        return ApiResponse.onSuccess(result);
-    }
-
     @Operation(summary = "지난 추첨 내역 히스토리 조회 ")
     @GetMapping("lotteries/history")
     public ApiResponse<List<LotteryResponse.LotteryHistory>> getLotteryHistoryByEmployee(
             @AuthEmployee Employee employee) {
         List<LotteryResponse.LotteryHistory> result = lotteryQueryService.getLotteryHistoryByEmployee(
                 employee);
+      
+        return ApiResponse.onSuccess(result);
+    }
+
+    @Operation(summary = "직원에 따른 아이이름과 그에 맞는 추첨ID, 분반명 반환")
+    @GetMapping("/lotteries/employee")
+    public ApiResponse<List<LotteryIdAndChildNameDTO>> getLotteryIdAndChildNameByEmployeeId(@AuthEmployee Employee employee) {
+        List<LotteryIdAndChildNameDTO> result = lotteryQueryService.getLotteryGroupedByChildNameByEmployeeId(employee);
+
         return ApiResponse.onSuccess(result);
     }
 

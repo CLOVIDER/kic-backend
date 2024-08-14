@@ -37,7 +37,7 @@ public interface LotteryQueryService {
     Page<LotteryResult> getLotteryResultByLotteryId(Integer ageClass, Long kindergartenId,
             Pageable pageable, String value);
 
-    List<LotteryResultsGroupedByChildDTO> getLotteryResultsByEmployeeId(Employee employee);
+    List<LotteryResultsGroupedByChildDTO> getLotteryResultsByEmployee(Employee employee);
 
 
     List<LotteryIdAndChildNameDTO> getLotteryGroupedByChildNameByEmployeeId(Employee employee);

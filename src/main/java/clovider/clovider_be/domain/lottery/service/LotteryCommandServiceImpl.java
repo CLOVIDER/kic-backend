@@ -89,13 +89,6 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
 
         // 순서대로 업데이트
         int rank = 1;
-//        Map<Long, Integer> applicantRankMap = new HashMap<>();
-
-//        // 당첨된 신청서에 대한 순번 부여
-//        for (Map<String, Object> applicant : selectedApplicants) {
-//            Long applicantId = (Long) applicant.get("id");
-//            applicantRankMap.put(applicantId, rank++);
-//        }
 
         // 전체 신청서에 대한 순번 부여
         for (Map<String, Object> applicant : applicants) {
@@ -253,14 +246,15 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
 
     public List<Map<String, Object>> createApplicantsList(Recruit recruit) {
 
-        List<Application> applications = lotteryRepository.findAllApplicationByRecruitId(recruit.getId());
+        Long recruitId = recruit.getId();
+        List<Application> applications = lotteryRepository.findAllApplicationByRecruitId(recruitId);
 
         List<Map<String, Object>> applicants = new ArrayList<>();
         for (Application app : applications) {
             Map<String, Object> applicantData = new HashMap<>();
 
             Long applicationId = app.getId();
-            Long RestLotteryId = lotteryRepository.findLotteryIdByApplication(applicationId);
+            Long RestLotteryId = lotteryRepository.findLotteryIdByApplication(applicationId, recruitId);
             applicantData.put("id", RestLotteryId);
 
             WeightCalculationDTO weightDTO = new WeightCalculationDTO(
@@ -281,7 +275,6 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
 
         return applicants;
     }
-
     public Map<String, Object> createRequestBody(List<Map<String, Object>> applicants, Long lotteryId, int recruitCnt) {
 
         Map<String, Object> requestBody = new HashMap<>();
