@@ -49,6 +49,7 @@ public class KindergartenQueryServiceImpl implements KindergartenQueryService {
                 .orElseThrow(() -> new ApiException(ErrorStatus._KDG_NOT_FOUND));
     }
 
+
     @Override
     public List<KindergartenGetResponse> getAllKindergartens() {
 

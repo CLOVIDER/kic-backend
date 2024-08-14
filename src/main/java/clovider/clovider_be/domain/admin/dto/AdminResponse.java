@@ -182,7 +182,7 @@ public class AdminResponse {
     public static class RecruitClassInfo {
 
         @Schema(description = "분반 이름", example = "0세")
-        private String ageClass;
+        private Integer ageClass;
 
         @Schema(description = "모집인원", example = "20")
         private Integer recruitCnt;
@@ -190,7 +190,7 @@ public class AdminResponse {
 
     public static RecruitClassInfo toRecruitClassInfo(Recruit recruit) {
         return RecruitClassInfo.builder()
-                .ageClass(recruit.getAgeClass() + "세")
+                .ageClass(recruit.getAgeClass())
                 .recruitCnt(recruit.getRecruitCnt())
                 .build();
     }

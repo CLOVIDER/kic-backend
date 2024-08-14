@@ -40,7 +40,7 @@ public class LotteryController {
 
     @Operation(summary = "어린이집 등록", description = "추첨에 당첨된 사용자가 어린이집을 등록할 것인지 한번더 확인하는 API")
     @Parameter(name = "lotteryId", description = "추첨ID")
-    @PatchMapping("/update/registry/{lotteryId}")
+    @PatchMapping("/lotteries/{lotteryId}/registry")
     public ApiResponse<LotteryResisterResponseDTO> updateRegistry(@PathVariable Long lotteryId) {
         return  ApiResponse.onSuccess(lotteryService.updateRegistry(lotteryId));
     }
@@ -60,7 +60,7 @@ public class LotteryController {
 
     @Operation(summary = "추첨 취소 ", description = "추첨 신청을 취소한다.")
     @Parameter(name = "lotteryId", description = "추첨ID")
-    @DeleteMapping("/{lotteryId}")
+    @DeleteMapping("/lotteries/{lotteryId}")
     public ApiResponse<String> deleteLottery(@PathVariable Long lotteryId) {
         lotteryService.deleteLotteryBylotteryId(lotteryId);
         return ApiResponse.onSuccess("추첨이 삭제되었습니다.");
@@ -82,7 +82,7 @@ public class LotteryController {
 
     @Operation(summary = "추첨 결과조회 ", description = "유저가 본인의 추첨에 대한 결과를 조회합니다.")
     @Parameter(name = "employeeId", description = "직원 ID")
-    @GetMapping("/lottery/results/employee")
+    @GetMapping("/lotteries/results")
     public List<LotteryResultsGroupedByChildDTO> getLotteryResultsByEmployeeId(@AuthEmployee Employee employee) {
         List<LotteryResultsGroupedByChildDTO> results = lotteryQueryService.getLotteryResultsByEmployee(employee);
 
@@ -90,7 +90,7 @@ public class LotteryController {
     }
 
     @Operation(summary = "직원에 따른 아이이름과 그에 맞는 추첨ID, 분반명 반환")
-    @GetMapping("/lotteries/employee")
+    @GetMapping("/lotteries")
     public ApiResponse<List<LotteryIdAndChildNameDTO>> getLotteryIdAndChildNameByEmployeeId(@AuthEmployee Employee employee) {
         List<LotteryIdAndChildNameDTO> result = lotteryQueryService.getLotteryGroupedByChildNameByEmployeeId(employee);
         return ApiResponse.onSuccess(result);

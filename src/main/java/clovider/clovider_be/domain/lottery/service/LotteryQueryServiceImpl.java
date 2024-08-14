@@ -174,9 +174,6 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
     @Override
     public List<LotteryIdAndChildNameDTO> getLotteryGroupedByChildNameByEmployeeId(
             Employee employee) {
-        if (employee == null) {
-            throw new ApiException(ErrorStatus._EMPLOYEE_NOT_FOUND);
-        }
 
         List<Object[]> results = lotteryRepository.findLotteryGroupedByChildNameByEmployee(
                 employee);
@@ -191,13 +188,14 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
                 Long recruitId = lotteryRepository.findRecruitId(lotteryId);
                 Long kindergartenId = recruitRepository.findKindergartenIdByRecruitId(recruitId);
                 int ageClass = recruitRepository.finAgeClassById(recruitId);
-                String className = kindergartenClassRepository.findClassNameById(kindergartenId, ageClass);
+                String className = kindergartenClassRepository.findClassNameById(kindergartenId,
+                        ageClass);
 
                 dtoList.add(LotteryIdAndChildNameDTO.builder()
-                    .childName(childName)
-                    .lotteryId(lotteryId)
-                    .className(className)
-                    .build());
+                        .childName(childName)
+                        .lotteryId(lotteryId)
+                        .className(className)
+                        .build());
             }
         }
 
@@ -207,6 +205,5 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
 
         return dtoList;
     }
-
 
 }
