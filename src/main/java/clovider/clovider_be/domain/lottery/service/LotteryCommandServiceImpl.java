@@ -89,13 +89,6 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
 
         // 순서대로 업데이트
         int rank = 1;
-//        Map<Long, Integer> applicantRankMap = new HashMap<>();
-
-//        // 당첨된 신청서에 대한 순번 부여
-//        for (Map<String, Object> applicant : selectedApplicants) {
-//            Long applicantId = (Long) applicant.get("id");
-//            applicantRankMap.put(applicantId, rank++);
-//        }
 
         // 전체 신청서에 대한 순번 부여
         for (Map<String, Object> applicant : applicants) {

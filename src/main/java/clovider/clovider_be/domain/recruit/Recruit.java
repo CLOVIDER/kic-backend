@@ -1,18 +1,15 @@
 package clovider.clovider_be.domain.recruit;
 
-import clovider.clovider_be.domain.admin.dto.AdminResponse.RecruitClassInfo;
+import clovider.clovider_be.domain.admin.dto.AdminRequest;
+import clovider.clovider_be.domain.admin.dto.AdminRequest.RecruitClassInfo;
 import clovider.clovider_be.domain.common.BaseTimeEntity;
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.recruit.dto.RecruitCreateRequestDTO;
-import clovider.clovider_be.domain.recruit.dto.RecruitResponse;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.RecruitDateAndWeightInfo;
-import clovider.clovider_be.domain.recruit.dto.RecruitUpdateRequestDTO;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -132,7 +129,9 @@ public class Recruit extends BaseTimeEntity {
                 .build();
     }
 
-    public void updateRecruitDetails(RecruitClassInfo classInfo, RecruitDateAndWeightInfo recruitDateAndWeightInfo) {
+    public void updateRecruitDetails(RecruitClassInfo classInfo,
+            RecruitDateAndWeightInfo recruitDateAndWeightInfo) {
+        this.ageClass = classInfo.getAgeClass();
         this.recruitCnt = classInfo.getRecruitCnt();
 
         // 모집 기간 정보 업데이트
@@ -145,23 +144,28 @@ public class Recruit extends BaseTimeEntity {
 
         // 가중치 정보 업데이트
         this.workYearsUsage = recruitDateAndWeightInfo.getRecruitWeightInfo().getWorkYearsUsage();
-        this.isSingleParentUsage = recruitDateAndWeightInfo.getRecruitWeightInfo().getIsSingleParentUsage();
-        this.childrenCntUsage = recruitDateAndWeightInfo.getRecruitWeightInfo().getChildrenCntUsage();
-        this.isDisabilityUsage = recruitDateAndWeightInfo.getRecruitWeightInfo().getIsDisabilityUsage();
-        this.isDualIncomeUsage = recruitDateAndWeightInfo.getRecruitWeightInfo().getIsDualIncomeUsage();
-        this.isEmployeeCoupleUsage = recruitDateAndWeightInfo.getRecruitWeightInfo().getIsEmployeeCoupleUsage();
+        this.isSingleParentUsage = recruitDateAndWeightInfo.getRecruitWeightInfo()
+                .getIsSingleParentUsage();
+        this.childrenCntUsage = recruitDateAndWeightInfo.getRecruitWeightInfo()
+                .getChildrenCntUsage();
+        this.isDisabilityUsage = recruitDateAndWeightInfo.getRecruitWeightInfo()
+                .getIsDisabilityUsage();
+        this.isDualIncomeUsage = recruitDateAndWeightInfo.getRecruitWeightInfo()
+                .getIsDualIncomeUsage();
+        this.isEmployeeCoupleUsage = recruitDateAndWeightInfo.getRecruitWeightInfo()
+                .getIsEmployeeCoupleUsage();
         this.isSiblingUsage = recruitDateAndWeightInfo.getRecruitWeightInfo().getIsSiblingUsage();
     }
 
 
     // 모집 생성 메서드
-    public static Recruit createRecruit( RecruitClassInfo classInfo,
-            RecruitDateAndWeightInfo recruitDateAndWeightInfo, Kindergarten kindergarten, AgeClass ageClass) {
+    public static Recruit createRecruit(AdminRequest.RecruitClassInfo classInfo,
+            RecruitDateAndWeightInfo recruitDateAndWeightInfo, Kindergarten kindergarten) {
         return Recruit.builder()
                 .recruitStartDt(recruitDateAndWeightInfo.getRecruitDateInfo().getRecruitStartDt())
                 .recruitEndDt(recruitDateAndWeightInfo.getRecruitDateInfo().getRecruitEndDt())
                 .recruitCnt(classInfo.getRecruitCnt())
-                .ageClass(ageClass)
+                .ageClass(classInfo.getAgeClass())
                 .firstStartDt(recruitDateAndWeightInfo.getRecruitDateInfo().getFirstStartDt())
                 .firstEndDt(recruitDateAndWeightInfo.getRecruitDateInfo().getFirstEndDt())
                 .secondStartDt(recruitDateAndWeightInfo.getRecruitDateInfo().getSecondStartDt())
@@ -176,7 +180,8 @@ public class Recruit extends BaseTimeEntity {
                         .getIsDisabilityUsage())
                 .isDualIncomeUsage(recruitDateAndWeightInfo.getRecruitWeightInfo()
                         .getIsDualIncomeUsage())
-                .isEmployeeCoupleUsage(recruitDateAndWeightInfo.getRecruitWeightInfo().getIsEmployeeCoupleUsage())
+                .isEmployeeCoupleUsage(
+                        recruitDateAndWeightInfo.getRecruitWeightInfo().getIsEmployeeCoupleUsage())
                 .isSiblingUsage(recruitDateAndWeightInfo.getRecruitWeightInfo().getIsSiblingUsage())
                 .build();
     }

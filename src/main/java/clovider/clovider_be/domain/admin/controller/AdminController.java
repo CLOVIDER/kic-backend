@@ -22,12 +22,9 @@ import clovider.clovider_be.domain.notice.dto.NoticeTop3;
 import clovider.clovider_be.domain.notice.service.NoticeQueryService;
 import clovider.clovider_be.domain.qna.service.QnaQueryService;
 import clovider.clovider_be.domain.recruit.Recruit;
-import clovider.clovider_be.domain.recruit.dto.RecruitCreateRequestDTO;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruit;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.NowRecruitInfo;
-import clovider.clovider_be.domain.recruit.dto.RecruitResponseDTO;
-import clovider.clovider_be.domain.recruit.dto.RecruitUpdateRequestDTO;
 import clovider.clovider_be.domain.recruit.service.RecruitCommandService;
 import clovider.clovider_be.domain.recruit.service.RecruitQueryService;
 import clovider.clovider_be.global.response.ApiResponse;
@@ -234,16 +231,16 @@ public class AdminController {
 
     @Operation(summary = "관리자가 모집을 수정한다.", description = "관리자가 이미 생성된 모집을 수정한다.")
     @Parameter(name = "recruitId", description = "모집 ID")
-    @PatchMapping("/recruit")
+    @PatchMapping("/recruits/{recruitId}")
     public ApiResponse<String> updateRecruit(
-            @RequestBody RecruitCreationRequest request) {
+            @RequestBody RecruitCreationRequest request, @PathVariable Long recruitId) {
 
-        return ApiResponse.onSuccess(recruitCommandService.updateRecruit(request));
+        return ApiResponse.onSuccess(recruitCommandService.updateRecruit(request, recruitId));
     }
 
     @Operation(summary = "모집 생성", description = "관리자가 모집을 생성합니다.")
-    @PostMapping("/recruit")
-    public ApiResponse<String> createRecruit(@RequestBody RecruitCreationRequest request){
+    @PostMapping("/recruits")
+    public ApiResponse<String> createRecruit(@RequestBody RecruitCreationRequest request) {
         return ApiResponse.onSuccess(recruitCommandService.createRecruit(request));
     }
 
