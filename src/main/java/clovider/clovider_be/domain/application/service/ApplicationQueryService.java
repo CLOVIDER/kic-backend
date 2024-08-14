@@ -16,11 +16,18 @@ public interface ApplicationQueryService {
             SearchVO searchVO);
 
     ApplicationResponse applicationRead(Employee employee);
+
     ApplicationResponse applicationIdRead(Long Id);
+
     CustomPage<ApplicationResponse> applicationListRead(int page, int size);
 
     Application getApplication(Long Id);
+
     Application getApplicationWithEmployee(Long applicationId);
 
     Long getApplicationId(Employee employee);
+
+    List<Application> getApplicationsByEmployee(Employee employee);
+
+
 }

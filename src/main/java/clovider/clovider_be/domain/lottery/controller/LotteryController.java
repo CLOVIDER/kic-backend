@@ -2,8 +2,13 @@ package clovider.clovider_be.domain.lottery.controller;
 
 import clovider.clovider_be.domain.application.service.ApplicationQueryService;
 import clovider.clovider_be.domain.employee.Employee;
-import clovider.clovider_be.domain.lottery.dto.*;
+import clovider.clovider_be.domain.lottery.dto.LotteryIdAndChildNameDTO;
+import clovider.clovider_be.domain.lottery.dto.LotteryResisterResponseDTO;
+import clovider.clovider_be.domain.lottery.dto.LotteryResponse;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.ChildInfo;
+import clovider.clovider_be.domain.lottery.dto.LotteryResponseDTO;
+import clovider.clovider_be.domain.lottery.dto.LotteryResultResponseDTO;
+import clovider.clovider_be.domain.lottery.dto.LotteryResultsGroupedByChildDTO;
 import clovider.clovider_be.domain.lottery.service.LotteryCommandService;
 import clovider.clovider_be.domain.lottery.service.LotteryQueryService;
 import clovider.clovider_be.global.annotation.AuthEmployee;
@@ -40,9 +45,9 @@ public class LotteryController {
 
     @Operation(summary = "어린이집 등록", description = "추첨에 당첨된 사용자가 어린이집을 등록할 것인지 한번더 확인하는 API")
     @Parameter(name = "lotteryId", description = "추첨ID")
-    @PatchMapping("/update/registry/{lotteryId}")
+    @PatchMapping("/lotteries/{lotteryId}/registry")
     public ApiResponse<LotteryResisterResponseDTO> updateRegistry(@PathVariable Long lotteryId) {
-        return  ApiResponse.onSuccess(lotteryService.updateRegistry(lotteryId));
+        return ApiResponse.onSuccess(lotteryService.updateRegistry(lotteryId));
     }
 
     @Operation(summary = "추첨 결과 조회", description = "추첨ID에 따라서 추첨 결과를 조회한다.")
@@ -60,7 +65,7 @@ public class LotteryController {
 
     @Operation(summary = "추첨 취소 ", description = "추첨 신청을 취소한다.")
     @Parameter(name = "lotteryId", description = "추첨ID")
-    @DeleteMapping("/{lotteryId}")
+    @DeleteMapping("/lotteries/{lotteryId}")
     public ApiResponse<String> deleteLottery(@PathVariable Long lotteryId) {
         lotteryService.deleteLotteryBylotteryId(lotteryId);
         return ApiResponse.onSuccess("추첨이 삭제되었습니다.");
@@ -75,24 +80,37 @@ public class LotteryController {
 
     @Operation(summary = "아이 리스트 정보 조회 - 신청서 조회 페이지", description = "사용자 신청서에 제출된 아이 리스트 정보를 조회합니다.")
     @GetMapping("/lotteries/children")
-    public ApiResponse<List<ChildInfo>> getChildrenInfosUsingToken(@AuthEmployee Employee employee) {
+    public ApiResponse<List<ChildInfo>> getChildrenInfosUsingToken(
+            @AuthEmployee Employee employee) {
         Long applicationId = applicationQueryService.getApplicationId(employee);
         return ApiResponse.onSuccess(lotteryQueryService.getChildInfos(applicationId));
     }
 
     @Operation(summary = "추첨 결과조회 ", description = "유저가 본인의 추첨에 대한 결과를 조회합니다.")
-    @Parameter(name = "employeeId", description = "직원 ID")
-    @GetMapping("/lottery/results/employee")
-    public List<LotteryResultsGroupedByChildDTO> getLotteryResultsByEmployeeId(@AuthEmployee Employee employee) {
-        List<LotteryResultsGroupedByChildDTO> results = lotteryQueryService.getLotteryResultsByEmployee(employee);
+    @GetMapping("/lotteries/results")
+    public List<LotteryResultsGroupedByChildDTO> getLotteryResultsByEmployeeId(
+            @AuthEmployee Employee employee) {
+        List<LotteryResultsGroupedByChildDTO> results = lotteryQueryService.getLotteryResultsByEmployee(
+                employee);
 
         return ApiResponse.onSuccess(results).getResult();
     }
 
+    @Operation(summary = "지난 추첨 내역 히스토리 조회 ")
+    @GetMapping("lotteries/history")
+    public ApiResponse<List<LotteryResponse.LotteryHistory>> getLotteryHistoryByEmployee(
+            @AuthEmployee Employee employee) {
+        List<LotteryResponse.LotteryHistory> result = lotteryQueryService.getLotteryHistoryByEmployee(
+                employee);
+      
+        return ApiResponse.onSuccess(result);
+    }
+
     @Operation(summary = "직원에 따른 아이이름과 그에 맞는 추첨ID, 분반명 반환")
-    @GetMapping("/lotteries/employee")
+    @GetMapping("/lotteries")
     public ApiResponse<List<LotteryIdAndChildNameDTO>> getLotteryIdAndChildNameByEmployeeId(@AuthEmployee Employee employee) {
         List<LotteryIdAndChildNameDTO> result = lotteryQueryService.getLotteryGroupedByChildNameByEmployeeId(employee);
+
         return ApiResponse.onSuccess(result);
     }
 

@@ -6,6 +6,7 @@ import clovider.clovider_be.domain.admin.dto.AdminResponse.AcceptResult;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.LotteryResult;
 import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.application.repository.ApplicationRepository;
+import clovider.clovider_be.domain.application.service.ApplicationQueryService;
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.enums.Result;
 import clovider.clovider_be.domain.kindergartenClass.repository.KindergartenClassRepository;
@@ -47,6 +48,8 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
 
     private final LotteryRepository lotteryRepository;
     private final ApplicationRepository applicationRepository;
+    private final ApplicationQueryService applicationQueryService;
+
     private final KindergartenClassRepository kindergartenClassRepository;
     private final RecruitRepository recruitRepository;
 
@@ -135,15 +138,9 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
 
     @Override
     public List<LotteryResultsGroupedByChildDTO> getLotteryResultsByEmployee(Employee employee) {
-        if (employee == null) {
-            throw new ApiException(ErrorStatus._EMPLOYEE_NOT_FOUND);
-        }
 
-        List<Application> applications = applicationRepository.findAllByEmployee(employee);
-
-        if (applications.isEmpty()) {
-            throw new ApiException(ErrorStatus._APPLICATION_NOT_FOUND);
-        }
+        List<Application> applications = applicationQueryService.getApplicationsByEmployee(
+                employee);
 
         Map<String, List<LotteryResultByEmployeeDTO>> groupedResults = applications.stream()
                 .flatMap(application -> lotteryRepository.findByApplicationId(application.getId())
@@ -208,5 +205,43 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
         return dtoList;
     }
 
+    @Override
+    public List<LotteryResponse.LotteryHistory> getLotteryHistoryByEmployee(Employee employee) {
+
+        List<Application> applications = applicationQueryService.getApplicationsByEmployee(
+                employee);
+
+        if (applications.isEmpty()) {
+            throw new ApiException(ErrorStatus._APPLICATION_NOT_FOUND);
+        }
+
+        List<LotteryResponse.LotteryHistory> lotteryHistories = new ArrayList<>();
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        for (Application application : applications) {
+            List<Lottery> lotteries = lotteryRepository.findByApplicationId(application.getId());
+
+            for (Lottery lottery : lotteries) {
+                Recruit recruit = lottery.getRecruit();
+                LocalDateTime lotteryCreatedAt = lottery.getCreatedAt();
+                LocalDateTime recruitEndDt = recruit.getRecruitEndDt();
+
+                if (currentTime.isAfter(recruitEndDt)) {  // 현재 시간이 모집 마감 시간 이후인지 확인
+                    LotteryResponse.LotteryHistory history = LotteryResponse.LotteryHistory.builder()
+                            .lotteryId(lottery.getId())
+                            .childName(lottery.getChildNm())
+                            .kindergartenName(recruit.getKindergarten().getKindergartenNm())
+                            .ageClass(recruit.getAgeClass())
+                            .result(lottery.getResult().name())
+                            .applicationDate(lotteryCreatedAt)
+                            .build();
+
+                    lotteryHistories.add(history);
+                }
+            }
+        }
+
+        return lotteryHistories;
+    }
 
 }

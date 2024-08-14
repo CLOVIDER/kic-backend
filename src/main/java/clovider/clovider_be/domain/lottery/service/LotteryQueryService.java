@@ -4,6 +4,7 @@ import clovider.clovider_be.domain.admin.dto.AdminResponse.AcceptResult;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.LotteryResult;
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.lottery.dto.LotteryIdAndChildNameDTO;
+import clovider.clovider_be.domain.lottery.dto.LotteryResponse;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.ChildInfo;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitResult;
@@ -40,4 +41,6 @@ public interface LotteryQueryService {
 
 
     List<LotteryIdAndChildNameDTO> getLotteryGroupedByChildNameByEmployeeId(Employee employee);
+
+    List<LotteryResponse.LotteryHistory> getLotteryHistoryByEmployee(Employee employee);
 }
