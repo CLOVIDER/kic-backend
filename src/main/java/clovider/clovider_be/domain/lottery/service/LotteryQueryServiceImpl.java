@@ -8,6 +8,7 @@ import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.application.repository.ApplicationRepository;
 import clovider.clovider_be.domain.application.service.ApplicationQueryService;
 import clovider.clovider_be.domain.employee.Employee;
+import clovider.clovider_be.domain.enums.Accept;
 import clovider.clovider_be.domain.enums.Result;
 import clovider.clovider_be.domain.kindergartenClass.repository.KindergartenClassRepository;
 import clovider.clovider_be.domain.lottery.Lottery;
@@ -27,10 +28,7 @@ import clovider.clovider_be.domain.recruit.repository.RecruitRepository;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -193,11 +191,17 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
                 int ageClass = recruitRepository.finAgeClassById(recruitId);
                 String className = kindergartenClassRepository.findClassNameById(kindergartenId,
                         ageClass);
+              
+                Lottery lottery = lotteryRepository.findById(recruitId).orElse(null);
+                Long applicationId = lottery.getApplication().getId();
+                Optional<Application> application = applicationRepository.findById(applicationId);
+                Accept isAccept = application.get().getIsAccept();
 
                 dtoList.add(LotteryIdAndChildNameDTO.builder()
                         .childName(childName)
                         .lotteryId(lotteryId)
                         .className(className)
+                        .isAccept(isAccept)
                         .build());
             }
         }
