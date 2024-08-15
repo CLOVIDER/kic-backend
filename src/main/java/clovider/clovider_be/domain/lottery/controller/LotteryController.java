@@ -87,12 +87,12 @@ public class LotteryController {
 
     @Operation(summary = "추첨 결과조회 ", description = "유저가 본인의 추첨에 대한 결과를 조회합니다.")
     @GetMapping("/lotteries/results")
-    public List<LotteryResultsGroupedByChildDTO> getLotteryResultsByEmployeeId(
+    public ApiResponse<List<LotteryResultsGroupedByChildDTO>> getLotteryResultsByEmployeeId(
             @AuthEmployee Employee employee) {
         List<LotteryResultsGroupedByChildDTO> results = lotteryQueryService.getLotteryResultsByEmployee(
                 employee);
 
-        return ApiResponse.onSuccess(results).getResult();
+        return ApiResponse.onSuccess(results);
     }
 
     @Operation(summary = "지난 추첨 내역 히스토리 조회 ")
