@@ -45,6 +45,16 @@ public class KindergartenClassCommandServiceImpl implements KindergartenClassCom
     public List<KindergartenClassDTO> updateKindergartenClass(Kindergarten kindergarten,
             List<KindergartenClassDTO> newKindergartenClasses) {
 
+        if(newKindergartenClasses == null || newKindergartenClasses.isEmpty()){
+            List<KindergartenClass> existingClasses = kindergartenClassRepository.findByKindergartenId(kindergarten.getId());
+            return existingClasses.stream()
+                    .map(savedClass -> KindergartenClassDTO.builder()
+                            .className(savedClass.getClassName())
+                            .ageClass(savedClass.getAgeClass())
+                            .build())
+                    .toList();
+        }
+
         kindergartenClassRepository.deleteAllByKindergartenId(kindergarten.getId());
 
         List<KindergartenClass> updateKindergartenClasses = newKindergartenClasses.stream()
