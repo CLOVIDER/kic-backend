@@ -191,6 +191,7 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
                 int ageClass = recruitRepository.finAgeClassById(recruitId);
                 String className = kindergartenClassRepository.findClassNameById(kindergartenId,
                         ageClass);
+              
                 Lottery lottery = lotteryRepository.findById(recruitId).orElse(null);
                 Long applicationId = lottery.getApplication().getId();
                 Optional<Application> application = applicationRepository.findById(applicationId);
