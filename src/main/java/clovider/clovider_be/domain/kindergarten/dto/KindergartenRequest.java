@@ -88,7 +88,7 @@ public class KindergartenRequest {
 
         @Schema(
                 description = "어린이집 분반 정보",
-                example = "[{\"className\":\"햇님반\", \"ageClass\":\"0\"}, {\"className\":\"달님반\", \"ageClass\":\"1\"}]",
+                example = "{\"className\":\"햇님반\", \"ageClass\":\"0\"}, {\"className\":\"달님반\", \"ageClass\":\"1\"}",
                 required = true
         )
         private List<KindergartenClassDTO> kindergartenClass;
