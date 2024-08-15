@@ -3,6 +3,7 @@
 # Kids In Company: Backend Project
 
 키즈인컴퍼니 서비스의 Backend Project에 대해 소개합니다.
+작성자: 김현겸 (kylo-dev), 정준희(sungsil0624)
 
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FCLOVIDER%2Fkic-backend&count_bg=%23E7E413&title_bg=%231F36A4&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
 
@@ -38,8 +39,8 @@
 
 ## 🛠️ 기술 스택
 
-<img width="657" alt="image" src="https://github.com/user-attachments/assets/8347d607-772e-4bfc-8043-61526a2af3a1">
-<img width="627" alt="image" src="https://github.com/user-attachments/assets/20b819f7-fa7d-48b7-a608-8682428f78ea">
+<img width="400" alt="image" src="https://github.com/user-attachments/assets/a6610aa3-2cd3-4897-b5cc-4e77fc6c278c">
+
 
 ## 📝 ERD
 
@@ -52,7 +53,10 @@
 ## 도전한 사항
 
 ## 최적화한 사항
-* JIB을 통한 도커 이미지 Create, Push
 
+* JIB 빌드를 통한 빌드 시간 77% 단축
+* JRE 이미지 빌드를 통한 이미지 1.8배 경량화 및 보안성 강화
+    * https://github.com/CLOVIDER/kic-backend/pull/120
+* 관리자 대시보드 페이지 Redis 캐싱을 통한 쿼리 2회 단축 및 서버 데이터 전송과 처리 성능 2.5배 향상
+    * https://github.com/CLOVIDER/kic-backend/issues/186
 
-> 작성자: 김현겸 (kylo-dev), 정준희(sungsil0624)

@@ -36,6 +36,14 @@ public class KindergartenImageCommandServiceImpl implements KindergartenImageCom
     }
 
     public List<Long> updateKindergartenImage(Kindergarten kindergarten, List<String> newImageUrls) {
+
+        if(newImageUrls == null || newImageUrls.isEmpty()){
+            List<KindergartenImage> existingImages = kindergartenImageRepository.findByKindergartenId(kindergarten.getId());
+
+            return existingImages.stream()
+                    .map(KindergartenImage::getId)
+                    .collect(Collectors.toList());
+        }
         kindergartenImageRepository.deleteAllByKindergartenId(kindergarten.getId());
 
         List<KindergartenImage> newImages = newImageUrls.stream()
