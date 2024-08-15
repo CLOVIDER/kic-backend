@@ -64,26 +64,26 @@ public class KindergartenRequest {
     @NoArgsConstructor
     @Builder
     public static class KindergartenUpdateRequest{
-        @Schema(description = "어린이집 이름", example = "샛별 어린이집", required = true)
+        @Schema(description = "어린이집 이름", example = "샛별 어린이집")
         private String kindergartenNm;
 
-        @Schema(description = "어린이집 주소", example = "경기도 성남시", required = true)
+        @Schema(description = "어린이집 주소", example = "경기도 성남시")
         private String kindergartenAddr;
 
-        @Schema(description = "어린이집 규모(평수)", example = "500", required = true)
+        @Schema(description = "어린이집 규모(평수)", example = "500")
         private Integer kindergartenScale;
 
-        @Schema(description = "어린이집 정원(명수)", example = "100", required = true)
+        @Schema(description = "어린이집 정원(명수)", example = "100")
         private Integer kindergartenCapacity;
 
-        @Schema(description = "어린이집 전화번호", example = "031-1234-5678", required = true)
+        @Schema(description = "어린이집 전화번호", example = "031-1234-5678")
         @Pattern(regexp = "^\\d{3}-\\d{4}-\\d{4}$", message = "전화번호 형식이 올바르지 않습니다. 형식: 000-0000-0000")
         private String kindergartenNo;
 
-        @Schema(description = "어린이집 운영시간", example = "7:00 - 22:00", required = true)
+        @Schema(description = "어린이집 운영시간", example = "7:00 - 22:00")
         private String kindergartenTime;
 
-        @Schema(description = "어린이집 기타 정보", example = "- 저희 어린이집은 어쩌구이고\n- 어쩌구입니다.", required = true)
+        @Schema(description = "어린이집 기타 정보", example = "- 저희 어린이집은 어쩌구이고\n- 어쩌구입니다.")
         private String kindergartenInfo;
 
         @Schema(
@@ -93,7 +93,7 @@ public class KindergartenRequest {
         )
         private List<KindergartenClassDTO> kindergartenClass;
 
-        @Schema(description = "어린이집 이미지 url", example = "[\"path/file1.png\", \"path/file2.png\"]", required = true)
+        @Schema(description = "어린이집 이미지 url", example = "[\"path/file1.png\", \"path/file2.png\"]")
         private List<String> kindergartenImages;
     }
 }

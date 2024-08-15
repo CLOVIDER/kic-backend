@@ -77,13 +77,27 @@ public class Kindergarten extends BaseTimeEntity {
 
     public void updateKindergarten(String kindergartenNm, String kindergartenAddr, Integer kindergartenScale,
             Integer kindergartenCapacity, String kindergartenNo, String kindergartenTime, String kindergartenInfo) {
-        this.kindergartenNm = kindergartenNm;
-        this.kindergartenAddr = kindergartenAddr;
-        this.kindergartenScale = kindergartenScale;
-        this.kindergartenCapacity = kindergartenCapacity;
-        this.kindergartenNo = kindergartenNo;
-        this.kindergartenTime = kindergartenTime;
-        this.kindergartenInfo = kindergartenInfo;
+        if (kindergartenNm != null) {
+            this.kindergartenNm = kindergartenNm;
+        }
+        if (kindergartenAddr != null) {
+            this.kindergartenAddr = kindergartenAddr;
+        }
+        if (kindergartenScale != null) {
+            this.kindergartenScale = kindergartenScale;
+        }
+        if (kindergartenCapacity != null) {
+            this.kindergartenCapacity = kindergartenCapacity;
+        }
+        if (kindergartenNo != null) {
+            this.kindergartenNo = kindergartenNo;
+        }
+        if (kindergartenTime != null) {
+            this.kindergartenTime = kindergartenTime;
+        }
+        if (kindergartenInfo != null) {
+            this.kindergartenInfo = kindergartenInfo;
+        }
     }
 }
 
