@@ -146,9 +146,12 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
         List<Application> applications = applicationQueryService.getApplicationsByEmployee(
                 employee);
 
+        LocalDateTime currentTime = LocalDateTime.now();
+
         Map<String, List<LotteryResultByEmployeeDTO>> groupedResults = applications.stream()
                 .flatMap(application -> lotteryRepository.findByApplicationId(application.getId())
                         .stream())
+                .filter(lottery -> currentTime.isBefore(lottery.getRecruit().getRecruitEndDt()))
                 .map(lottery -> LotteryResultByEmployeeDTO.builder()
                         .applicationId(lottery.getApplication().getId())
                         .lotteryId(lottery.getId())
