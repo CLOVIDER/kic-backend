@@ -4,17 +4,15 @@ package clovider.clovider_be.domain.kindergarten.service;
 import static clovider.clovider_be.domain.kindergarten.dto.KindergartenResponse.KindergartenRegisterResponse.toKindergartenRegisterResponse;
 import static clovider.clovider_be.domain.kindergarten.dto.KindergartenResponse.KindergartenDeleteResponse.toKindergartenDeleteResponse;
 
-import clovider.clovider_be.domain.common.CustomResult;
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import clovider.clovider_be.domain.kindergarten.dto.KindergartenRequest.KindergartenRegisterRequest;
 import clovider.clovider_be.domain.kindergarten.dto.KindergartenRequest.KindergartenUpdateRequest;
 import clovider.clovider_be.domain.kindergarten.dto.KindergartenResponse.*;
 import clovider.clovider_be.domain.kindergarten.repository.KindergartenRepository;
-import clovider.clovider_be.domain.kindergartenClass.KindergartenClass;
-import clovider.clovider_be.domain.kindergartenClass.dto.KindergartenClassDTO;
+import clovider.clovider_be.domain.kindergartenClass.dto.KindergartenClassRequest;
+import clovider.clovider_be.domain.kindergartenClass.dto.KindergartenClassResponse;
 import clovider.clovider_be.domain.kindergartenClass.service.KindergartenClassCommandService;
 import clovider.clovider_be.domain.kindergartenImage.service.KindergartenImageCommandService;
-import clovider.clovider_be.domain.kindergartenImage.service.KindergartenImageQueryService;
 import clovider.clovider_be.domain.recruit.service.RecruitCommandService;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
@@ -53,10 +51,13 @@ public class KindergartenCommandServiceImpl implements KindergartenCommandServic
 
         kindergarten = kindergartenRepository.save(kindergarten);
 
-        List<KindergartenClassDTO> kindergartenClasses = kindergartenClassCommandService.saveKindergartenClass(kindergarten, kindergartenRegisterRequest.getKindergartenClass());
+        List<KindergartenClassRequest> kindergartenClasses = kindergartenClassCommandService.saveKindergartenClass(kindergarten, kindergartenRegisterRequest.getKindergartenClass());
 
-        List<KindergartenClassDTO> newKindergartenClasses = kindergartenClasses.stream()
-                .map(KindergartenClassDTO::toKindergartenClassResponse)
+        List<KindergartenClassResponse> newKindergartenClasses = kindergartenClasses.stream()
+                .map(req -> KindergartenClassResponse.builder()
+                        .className(req.getClassName())
+                        .ageClassString(req.getAgeClass() + "세")
+                        .build())
                 .collect(Collectors.toList());
 
         List<Long> kindergartenImageIds = kindergartenImageCommandService.saveKindergartenImage(kindergarten, kindergartenRegisterRequest.getKindergartenImages());
@@ -98,10 +99,13 @@ public class KindergartenCommandServiceImpl implements KindergartenCommandServic
 
         List<Long> kindergartenImageIds = kindergartenImageCommandService.updateKindergartenImage(kindergarten, request.getKindergartenImages());
 
-        List<KindergartenClassDTO> kindergartenClasses = kindergartenClassCommandService.updateKindergartenClass(kindergarten, request.getKindergartenClass());
+        List<KindergartenClassRequest> kindergartenClasses = kindergartenClassCommandService.updateKindergartenClass(kindergarten, request.getKindergartenClass());
 
-        List<KindergartenClassDTO> newKindergartenClasses = kindergartenClasses.stream()
-                .map(KindergartenClassDTO::toKindergartenClassResponse)
+        List<KindergartenClassResponse> newKindergartenClasses = kindergartenClasses.stream()
+                .map(req -> KindergartenClassResponse.builder()
+                        .className(req.getClassName())
+                        .ageClassString(req.getAgeClass() + "세")
+                        .build())
                 .collect(Collectors.toList());
 
         return KindergartenUpdateResponse.toKindergartenUpdateResponse(savedKindergarten, newKindergartenClasses, kindergartenImageIds);

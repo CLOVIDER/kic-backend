@@ -4,6 +4,7 @@ import clovider.clovider_be.domain.admin.dto.AdminResponse.ApplicationList;
 import clovider.clovider_be.domain.admin.dto.SearchVO;
 import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.application.dto.ApplicationResponse;
+import clovider.clovider_be.domain.application.dto.ApplicationResponse.ApplicationInfo;
 import clovider.clovider_be.domain.common.CustomPage;
 import clovider.clovider_be.domain.employee.Employee;
 import java.util.List;
@@ -15,7 +16,7 @@ public interface ApplicationQueryService {
     Page<ApplicationList> getNowApplications(List<Long> applicationIds, Pageable pageable,
             SearchVO searchVO);
 
-    ApplicationResponse applicationRead(Employee employee);
+    ApplicationInfo applicationRead(Employee employee);
 
     ApplicationResponse applicationIdRead(Long Id);
 

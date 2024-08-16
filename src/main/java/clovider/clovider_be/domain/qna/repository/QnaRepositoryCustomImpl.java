@@ -28,6 +28,7 @@ public class QnaRepositoryCustomImpl implements QnaRepositoryCustom {
                 .from(qna)
                 .join(qna.employee,employee).fetchJoin()
                 .where(buildPredicate(type, keyword))
+                .orderBy(qna.createdAt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch()
