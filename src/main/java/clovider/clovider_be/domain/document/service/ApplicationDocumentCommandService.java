@@ -8,5 +8,6 @@ import java.util.Map;
 
 public interface ApplicationDocumentCommandService {
     void createApplicationDocuments(Map<DocumentType, String> imageUrls, Application application);
+    void updateApplicationDocuments(Map<DocumentType, String> imageUrls, Application application);
     void acceptDocument(Long documentId, Accept accept);
 }

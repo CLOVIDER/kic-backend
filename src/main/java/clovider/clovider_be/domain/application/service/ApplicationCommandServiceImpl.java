@@ -59,7 +59,7 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
     public CustomResult applicationUpdate(Long Id, ApplicationRequest applicationRequest) {
         Application savedApplication = applicationRepository.findById(Id).orElseThrow();
         savedApplication.update(applicationRequest);
-        applicationDocumentCommandService.createApplicationDocuments(applicationRequest.getFileUrls(), savedApplication);
+        applicationDocumentCommandService.updateApplicationDocuments(applicationRequest.getFileUrls(), savedApplication);
 
         return CustomResult.toCustomResult(savedApplication.getId());
     }
