@@ -43,6 +43,7 @@ public class ApplicationCommandServiceImpl implements ApplicationCommandService 
                 .isDualIncome(applicationRequest.getIsDualIncome())
                 .isEmployeeCouple(applicationRequest.getIsEmployeeCouple())
                 .isSibling(applicationRequest.getIsSibling())
+                .isTemp(Save.APPLIED)
                 .build();
 
         applicationRepository.save(savedApplication);
