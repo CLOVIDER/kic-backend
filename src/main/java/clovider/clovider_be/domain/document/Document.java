@@ -52,6 +52,8 @@ public class Document {
     @JoinColumn(name = "application_id", nullable = false)
     private Application application;
 
+    public void changeFileUrl(String fileUrl) { this.image = fileUrl; }
+
     public void changeAccept(Accept accept) {
         this.isAccept = accept;
     }
