@@ -176,36 +176,43 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
 
 
     @Override
-    public List<LotteryIdAndChildNameDTO> getLotteryGroupedByChildNameByEmployeeId(
-            Employee employee) {
+    public List<LotteryIdAndChildNameDTO> getLotteryGroupedByChildNameByEmployeeId(Employee employee) {
 
-        List<Object[]> results = lotteryRepository.findLotteryGroupedByChildNameByEmployee(
-                employee);
+        List<Object[]> results = lotteryRepository.findLotteryGroupedByChildNameByEmployee(employee);
 
         List<LotteryIdAndChildNameDTO> dtoList = new ArrayList<>();
+        LocalDateTime currentTime = LocalDateTime.now();
+
         for (Object[] result : results) {
             String childName = (String) result[0];
             String lotteryIdsStr = (String) result[1];
             List<Long> lotteryIds = convertStringToList(lotteryIdsStr);
 
             for (Long lotteryId : lotteryIds) {
-                Long recruitId = lotteryRepository.findRecruitId(lotteryId);
-                Long kindergartenId = recruitRepository.findKindergartenIdByRecruitId(recruitId);
-                int ageClass = recruitRepository.finAgeClassById(recruitId);
-                String className = kindergartenClassRepository.findClassNameById(kindergartenId,
-                        ageClass);
-              
-                Lottery lottery = lotteryRepository.findById(recruitId).orElse(null);
-                Long applicationId = lottery.getApplication().getId();
-                Optional<Application> application = applicationRepository.findById(applicationId);
-                Accept isAccept = application.get().getIsAccept();
+                Lottery lottery = lotteryRepository.findById(lotteryId).orElse(null);
 
-                dtoList.add(LotteryIdAndChildNameDTO.builder()
-                        .childName(childName)
-                        .lotteryId(lotteryId)
-                        .className(className)
-                        .isAccept(isAccept)
-                        .build());
+                if (lottery != null) {
+                    Recruit recruit = lottery.getRecruit();
+                    LocalDateTime recruitEndDt = recruit.getRecruitEndDt();
+
+                    if (currentTime.isBefore(recruitEndDt)) {
+                        Long recruitId = recruit.getId();
+                        Long kindergartenId = recruitRepository.findKindergartenIdByRecruitId(recruitId);
+                        int ageClass = recruitRepository.finAgeClassById(recruitId);
+                        String className = kindergartenClassRepository.findClassNameById(kindergartenId, ageClass);
+
+                        Long applicationId = lottery.getApplication().getId();
+                        Optional<Application> application = applicationRepository.findById(applicationId);
+                        Accept isAccept = application.map(Application::getIsAccept).orElse(null);
+
+                        dtoList.add(LotteryIdAndChildNameDTO.builder()
+                                .childName(childName)
+                                .lotteryId(lotteryId)
+                                .className(className)
+                                .isAccept(isAccept)
+                                .build());
+                    }
+                }
             }
         }
 
@@ -215,6 +222,7 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
 
         return dtoList;
     }
+
 
     @Override
     public List<LotteryResponse.LotteryHistory> getLotteryHistoryByEmployee(Employee employee) {
