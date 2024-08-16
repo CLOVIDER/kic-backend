@@ -5,17 +5,12 @@ import static clovider.clovider_be.domain.employee.QEmployee.employee;
 import static clovider.clovider_be.domain.lottery.QLottery.lottery;
 import static clovider.clovider_be.domain.recruit.QRecruit.recruit;
 
-import clovider.clovider_be.domain.admin.dto.AdminResponse.AcceptResult;
 import clovider.clovider_be.domain.admin.dto.AdminResponse;
+import clovider.clovider_be.domain.admin.dto.AdminResponse.AcceptResult;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.LotteryResult;
-import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.enums.Accept;
-import clovider.clovider_be.domain.enums.AgeClass;
-import clovider.clovider_be.domain.lottery.dto.LotteryResponse;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.CompetitionRate;
 import clovider.clovider_be.domain.recruit.Recruit;
-import clovider.clovider_be.global.exception.ApiException;
-import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -117,6 +112,7 @@ public class LotteryRepositoryCustomImpl implements LotteryRepositoryCustom {
                 .where(lottery.recruit.kindergarten.id.in(kindergartenId),
                         searchEmployee(value),
                         lottery.recruit.recruitEndDt.lt(LocalDateTime.now()),
+                        lottery.recruit.secondEndDt.gt(LocalDateTime.now()),
                         lottery.recruit.ageClass.eq(ageClass))
                 .orderBy(lottery.rankNo.asc())
                 .offset(pageable.getOffset())
@@ -125,8 +121,6 @@ public class LotteryRepositoryCustomImpl implements LotteryRepositoryCustom {
                 .stream()
                 .map(AdminResponse::toLotteryResult)
                 .toList();
-
-
 
         // 카운트 쿼리: 전체 결과 수를 계산하는 쿼리
         JPAQuery<Long> countQuery = jpaQueryFactory
@@ -142,7 +136,7 @@ public class LotteryRepositoryCustomImpl implements LotteryRepositoryCustom {
     }
 
     private BooleanExpression searchEmployee(String value) {
-        return value != null ? employee.accountId.containsIgnoreCase(value) : null;
+        return value != null ? employee.nameKo.containsIgnoreCase(value) : null;
     }
 
     private List<AcceptResult> extractAcceptResult(List<Tuple> results) {

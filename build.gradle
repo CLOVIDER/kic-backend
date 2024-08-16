@@ -93,6 +93,9 @@ dependencies {
     // test h2
     testRuntimeOnly 'com.h2database:h2'
 
+    // h2
+    runtimeOnly 'com.h2database:h2'
+
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3'
 }
 
@@ -106,7 +109,6 @@ task copyGitSubmodule(type: Copy) {
     from './application-config'
     include '*.yml'
     into 'src/main/resources'
-
 }
 
 // Querydsl 설정부

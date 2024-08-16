@@ -207,7 +207,7 @@ public class AdminController {
     @Parameters({
             @Parameter(name = "page", description = "페이지 번호"),
             @Parameter(name = "size", description = "페이지 크기"),
-            @Parameter(name = "accountId", description = "신청자 아이디 검색")
+            @Parameter(name = "nameKo", description = "신청자 이름 검색")
     })
     @GetMapping("/lotteries/result/{kindergartenId}")
     public ApiResponse<CustomPage<LotteryResult>> getLotteryResult(
