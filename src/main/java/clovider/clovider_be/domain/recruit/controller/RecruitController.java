@@ -56,6 +56,16 @@ public class RecruitController {
 
     }
 
+    @Operation(summary = "추첨 완료된 모집 조회 API", description = "어린이집, 분반 정보를 포함하여 추첨 결과를 조회합니다. 전체 당첨 확인 메일을 보내기 위해 보여지는 페이지입니다.")
+    @GetMapping("/recruits/results")
+    public ApiResponse<List<RecruitKdgInfo>> RecruitResult() {
+
+        List<Recruit> recruits = recruitQueryService.getRecruitResultWithRecruitAndKindergarten();
+
+        return ApiResponse.onSuccess(toRecruitKdgInfos(recruits));
+
+    }
+
     @Operation(summary = "[신청서 작성폼] 진행 중인 어린이집 모집의 가중치 설정 조회 API", description = "어린이집 모집의 설정된 가중치를 전달합니다.")
     @GetMapping("/recruits/weights")
     public ApiResponse<RecruitWeight> recruitWeight() {

@@ -82,6 +82,11 @@ public class RecruitQueryServiceImpl implements RecruitQueryService {
     }
 
     @Override
+    public List<Recruit> getRecruitResultWithRecruitAndKindergarten() {
+        return recruitRepository.findRecruitResult(LocalDateTime.now());
+    }
+
+    @Override
     public RecruitCreationInfo getRecruitCreationInfo() {
         List<Recruit> nowRecruit = getRecruitAndKindergarten();
 
