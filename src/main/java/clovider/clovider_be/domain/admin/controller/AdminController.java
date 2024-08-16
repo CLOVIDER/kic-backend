@@ -215,7 +215,7 @@ public class AdminController {
             @RequestParam(name = "class", required = true) Integer ageClass,
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
-            @RequestParam(name = "accountId", required = false) String value) {
+            @RequestParam(name = "nameKo", required = false) String value) {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<LotteryResult> lotteryResultPage = lotteryQueryService.getLotteryResultByLotteryId(
                 ageClass, kindergartenId,
