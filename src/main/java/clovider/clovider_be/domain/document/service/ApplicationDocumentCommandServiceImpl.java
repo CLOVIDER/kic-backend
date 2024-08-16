@@ -22,15 +22,12 @@ public class ApplicationDocumentCommandServiceImpl implements ApplicationDocumen
     @Override
     public void createApplicationDocuments(Map<DocumentType, String> fileUrls, Application application) {
 
-        if (fileUrls == null) {
-            fileUrls = new HashMap<>();
-        }
-
         fileUrls.forEach((documentType, fileUrl) -> {
             Document document = Document.builder()
                     .image(fileUrl)
                     .application(application)
                     .documentType(documentType)
+                    .isAccept(Accept.WAIT)
                     .build();
             applicationDocumentRepository.save(document);
         });
