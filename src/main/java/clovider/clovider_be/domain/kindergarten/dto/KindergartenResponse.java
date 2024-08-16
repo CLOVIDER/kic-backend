@@ -1,8 +1,8 @@
 package clovider.clovider_be.domain.kindergarten.dto;
 
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
-import clovider.clovider_be.domain.kindergartenClass.KindergartenClass;
-import clovider.clovider_be.domain.kindergartenClass.dto.KindergartenClassDTO;
+import clovider.clovider_be.domain.kindergartenClass.dto.KindergartenClassRequest;
+import clovider.clovider_be.domain.kindergartenClass.dto.KindergartenClassResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,10 +29,14 @@ public class KindergartenResponse {
         private String kindergartenNo;
         private String kindergartenTime;
         private String kindergartenInfo;
-        private List<KindergartenClassDTO> kindergartenClass;
+        private List<KindergartenClassResponse> kindergartenClass;
         private LocalDateTime createdAt;
 
-        public static KindergartenRegisterResponse toKindergartenRegisterResponse(Kindergarten kindergarten,List<KindergartenClassDTO> kindergartenClasses, List<Long> kindergartenImageIds) {
+        public static KindergartenRegisterResponse toKindergartenRegisterResponse(
+                Kindergarten kindergarten,
+                List<KindergartenClassResponse> kindergartenClasses,
+                List<Long> kindergartenImageIds) {
+
             return KindergartenRegisterResponse.builder()
                     .kindergartenId(kindergarten.getId())
                     .kindergartenImageIds(kindergartenImageIds)
@@ -84,12 +88,12 @@ public class KindergartenResponse {
         private String kindergartenNo;
         private String kindergartenTime;
         private String kindergartenInfo;
-        private List<KindergartenClassDTO> kindergartenClass;
+        private List<KindergartenClassResponse> kindergartenClass;
         private LocalDateTime updatedAt;
 
         public static KindergartenUpdateResponse toKindergartenUpdateResponse(
                 Kindergarten kindergarten,
-                List<KindergartenClassDTO> kindergartenClasses,
+                List<KindergartenClassResponse> kindergartenClasses,
                 List<Long> kindergartenImageIds) {
             return KindergartenUpdateResponse.builder()
                     .kindergartenId(kindergarten.getId())
@@ -123,14 +127,15 @@ public class KindergartenResponse {
         private String kindergartenNo;
         private String kindergartenTime;
         private String kindergartenInfo;
-        private List<KindergartenClassDTO> kindergartenClass;
+        private List<KindergartenClassResponse> kindergartenClass;
 
         private List<String> kindergartenImageUrls;
 
         public static KindergartenGetResponse toKindergartenGetResponse(
                 Kindergarten kindergarten,
-                List<KindergartenClassDTO> kindergartenClasses,
+                List<KindergartenClassResponse> kindergartenClasses,
                 List<String> kindergartenImageUrls) {
+
             return KindergartenGetResponse.builder()
                     .kindergartenId(kindergarten.getId())
                     .kindergartenNm(kindergarten.getKindergartenNm())

@@ -4,7 +4,8 @@ package clovider.clovider_be.domain.kindergarten.service;
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import clovider.clovider_be.domain.kindergarten.dto.KindergartenResponse.KindergartenGetResponse;
 import clovider.clovider_be.domain.kindergarten.repository.KindergartenRepository;
-import clovider.clovider_be.domain.kindergartenClass.dto.KindergartenClassDTO;
+import clovider.clovider_be.domain.kindergartenClass.dto.KindergartenClassRequest;
+import clovider.clovider_be.domain.kindergartenClass.dto.KindergartenClassResponse;
 import clovider.clovider_be.domain.kindergartenClass.service.KindergartenClassQueryService;
 import clovider.clovider_be.domain.kindergartenImage.service.KindergartenImageQueryService;
 import clovider.clovider_be.global.exception.ApiException;
@@ -32,11 +33,14 @@ public class KindergartenQueryServiceImpl implements KindergartenQueryService {
 
         List<String> imageUrls = kindergartenImageQuery.getKindergartenImageUrls(kindergartenId);
 
-        List<KindergartenClassDTO> kindergartenClasses = kindergartenClassQueryService.getKindergartenClass(
+        List<KindergartenClassRequest> kindergartenClasses = kindergartenClassQueryService.getKindergartenClass(
                 kindergartenId);
 
-        List<KindergartenClassDTO> newKindergartenClasses = kindergartenClasses.stream()
-                .map(KindergartenClassDTO::toKindergartenClassResponse)
+        List<KindergartenClassResponse> newKindergartenClasses = kindergartenClasses.stream()
+                .map(req -> KindergartenClassResponse.builder()
+                        .className(req.getClassName())
+                        .ageClassString(req.getAgeClass() + "세")
+                        .build())
                 .collect(Collectors.toList());
 
         return KindergartenGetResponse.toKindergartenGetResponse(kindergarten,
@@ -61,11 +65,14 @@ public class KindergartenQueryServiceImpl implements KindergartenQueryService {
             List<String> imageUrls = kindergartenImageQuery.getKindergartenImageUrls(
                     kindergarten.getId());
 
-            List<KindergartenClassDTO> kindergartenClasses = kindergartenClassQueryService.getKindergartenClass(
+            List<KindergartenClassRequest> kindergartenClasses = kindergartenClassQueryService.getKindergartenClass(
                     kindergarten.getId());
 
-            List<KindergartenClassDTO> newKindergartenClasses = kindergartenClasses.stream()
-                    .map(KindergartenClassDTO::toKindergartenClassResponse)
+            List<KindergartenClassResponse> newKindergartenClasses = kindergartenClasses.stream()
+                    .map(req -> KindergartenClassResponse.builder()
+                            .className(req.getClassName())
+                            .ageClassString(req.getAgeClass() + "세")
+                            .build())
                     .collect(Collectors.toList());
 
             KindergartenGetResponse response = KindergartenGetResponse.toKindergartenGetResponse(
