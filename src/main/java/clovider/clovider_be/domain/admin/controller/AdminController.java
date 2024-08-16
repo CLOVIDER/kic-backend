@@ -207,7 +207,7 @@ public class AdminController {
     @Parameters({
             @Parameter(name = "page", description = "페이지 번호"),
             @Parameter(name = "size", description = "페이지 크기"),
-            @Parameter(name = "accountId", description = "신청자 아이디 검색")
+            @Parameter(name = "nameKo", description = "신청자 이름 검색")
     })
     @GetMapping("/lotteries/result/{kindergartenId}")
     public ApiResponse<CustomPage<LotteryResult>> getLotteryResult(
@@ -215,7 +215,7 @@ public class AdminController {
             @RequestParam(name = "class", required = true) Integer ageClass,
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
-            @RequestParam(name = "accountId", required = false) String value) {
+            @RequestParam(name = "nameKo", required = false) String value) {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<LotteryResult> lotteryResultPage = lotteryQueryService.getLotteryResultByLotteryId(
                 ageClass, kindergartenId,

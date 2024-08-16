@@ -2,7 +2,6 @@ package clovider.clovider_be.domain.employee.dto;
 
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.global.util.TimeUtil;
-import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,7 +27,7 @@ public class EmployeeResponse {
                 .nameKo(employee.getNameKo())
                 .accountId(employee.getAccountId())
                 .employeeNo(employee.getEmployeeNo())
-                .isCouple(employee.getCoupleNo() == null)
+                .isCouple(employee.getCoupleNo() != null)
                 .workedAt(TimeUtil.formattedDate(employee.getCreatedAt()))
                 .build();
 
