@@ -1,6 +1,7 @@
 package clovider.clovider_be.domain.document.service;
 
 import clovider.clovider_be.domain.application.Application;
+import clovider.clovider_be.domain.application.service.ApplicationQueryService;
 import clovider.clovider_be.domain.document.Document;
 import clovider.clovider_be.domain.document.repository.ApplicationDocumentRepository;
 import clovider.clovider_be.domain.enums.Accept;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class ApplicationDocumentCommandServiceImpl implements ApplicationDocumentCommandService {
     private final ApplicationDocumentRepository applicationDocumentRepository;
+    private final ApplicationQueryService applicationQueryService;
 
     @Override
     public void createApplicationDocuments(Map<DocumentType, String> fileUrls, Application application) {
@@ -29,6 +31,19 @@ public class ApplicationDocumentCommandServiceImpl implements ApplicationDocumen
                     .documentType(documentType)
                     .isAccept(Accept.WAIT)
                     .build();
+            applicationDocumentRepository.save(document);
+        });
+    }
+
+    @Override
+    public void updateApplicationDocuments(Map<DocumentType, String> fileUrls, Application application){
+
+        fileUrls.forEach((documentType, fileUrl) -> {
+            Document document = applicationDocumentRepository.findByApplicationAndDocumentType(application, documentType)
+                    .orElseThrow(() -> new ApiException(ErrorStatus._DOCUMENT_NOT_FOUND));
+
+            document.changeFileUrl(fileUrl);
+
             applicationDocumentRepository.save(document);
         });
     }
