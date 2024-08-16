@@ -4,9 +4,13 @@ import clovider.clovider_be.domain.admin.dto.AdminResponse.ApplicationList;
 import clovider.clovider_be.domain.admin.dto.SearchVO;
 import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.application.dto.ApplicationResponse;
+import clovider.clovider_be.domain.application.dto.ApplicationResponse.ApplicationInfo;
+import clovider.clovider_be.domain.application.dto.ApplicationResponse.ChildrenRecruit;
 import clovider.clovider_be.domain.application.repository.ApplicationRepository;
 import clovider.clovider_be.domain.common.CustomPage;
 import clovider.clovider_be.domain.employee.Employee;
+import clovider.clovider_be.domain.lottery.Lottery;
+import clovider.clovider_be.domain.lottery.repository.LotteryRepository;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import java.util.List;
@@ -23,17 +27,22 @@ import org.springframework.transaction.annotation.Transactional;
 public class ApplicationQueryServiceImpl implements ApplicationQueryService {
 
     private final ApplicationRepository applicationRepository;
+    private final LotteryRepository lotteryRepository;
 
     @Override
-    public ApplicationResponse applicationRead(Employee employee) {
+    public ApplicationInfo applicationRead(Employee employee) {
+
         Application savedApplication = applicationRepository.findFirstByEmployeeOrderByCreatedAtDesc(
                 employee);
 
+        List<Lottery> lotteries = lotteryRepository.findAllByApplication(savedApplication);
+        List<ChildrenRecruit> childrenRecruits = ApplicationResponse.toChildrenRecruits(lotteries);
+
         if (savedApplication == null) {
-            return ApplicationResponse.emptyEntity();
+            return ApplicationResponse.emptyApplicationInfo();
         }
 
-        return ApplicationResponse.toEntity(savedApplication);
+        return ApplicationResponse.toApplicationInfo(savedApplication, childrenRecruits);
     }
 
     @Override
