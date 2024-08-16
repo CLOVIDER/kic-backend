@@ -58,6 +58,9 @@ public class KindergartenQueryServiceImpl implements KindergartenQueryService {
         List<KindergartenGetResponse> responses = new ArrayList<>();
 
         for (Kindergarten kindergarten : kindergartens) {
+            
+            if(kindergarten.getId() == 5) continue;
+
             List<String> imageUrls = kindergartenImageQuery.getKindergartenImageUrls(
                     kindergarten.getId());
 
