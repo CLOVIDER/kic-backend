@@ -29,5 +29,5 @@ public interface RecruitQueryService {
 
     RecruitCreationInfo getRecruitCreationInfo();
 
-    Optional<Recruit> getRecruitByKindergarten(Kindergarten kindergarten, Integer ageClass);
+    Optional<Recruit> getRecruitByKindergarten(Kindergarten kindergarten, Integer ageClass, LocalDateTime now);
 }

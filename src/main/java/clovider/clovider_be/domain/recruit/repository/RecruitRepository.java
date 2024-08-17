@@ -31,5 +31,6 @@ public interface RecruitRepository extends JpaRepository<Recruit, Long>, Recruit
     @Query("select r.ageClass from Recruit r where r.id = :recruitId")
     int finAgeClassById(@Param("recruitId") Long recruitId);
 
-    Optional<Recruit> findByKindergartenAndAgeClass(Kindergarten kindergarten, Integer ageClass);
+    @Query("select r from Recruit r where r.kindergarten =:kindergarten and r.ageClass =:ageClass and r.recruitStartDt <= :now and r.secondEndDt >= :now")
+    Optional<Recruit> findByKindergartenAndAgeClass(Kindergarten kindergarten, Integer ageClass, LocalDateTime now);
 }
