@@ -4,6 +4,7 @@ import clovider.clovider_be.domain.application.Application;
 import clovider.clovider_be.domain.document.Document;
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.enums.Accept;
+import clovider.clovider_be.domain.enums.DocumentType;
 import clovider.clovider_be.domain.enums.Save;
 import clovider.clovider_be.domain.lottery.Lottery;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -71,7 +72,7 @@ public class ApplicationResponse {
         @Schema(description = "한부모 가정 여부 (해당 시 '1', 미해당 시 '0'으로 입력)", example = "0")
         private Character isSingleParent;
         @Schema(description = "자녀 수 (해당되는 자녀 수 만큼 입력)", example = "3")
-        private Integer ChildrenCnt;
+        private Integer childrenCnt;
         @Schema(description = "장애 여부 (해당 시 '1', 미해당 시 '0'으로 입력)", example = "1")
         private Character isDisability;
         @Schema(description = "맞벌이 여부 (해당 시 '1', 미해당 시 '0'으로 입력)", example = "1")
@@ -92,30 +93,26 @@ public class ApplicationResponse {
                     }
                   ]""")
         private List<ChildrenRecruit> childrenRecruitList;
-        @Schema(description = "증빙 서류 URL 리스트", example = "{\n"
-                + "      \"RESIDENT_REGISTER\": \"s3-1\",\n"
-                + "      \"DUAL_INCOME\": \"s3-2\",\n"
-                + "      \"SINGLE_PARENT\": \"s3-3\",\n"
-                + "      \"DISABILITY\": \"s3-4\",\n"
-                + "      \"MULTI_CHILDREN\": \"s3-5\",\n"
-                + "      \"SIBLING\": \"s3-6\"\n"
-                + "    }")
-        private List<Document> documents;
+        private List<DocumentInfo> documents;
     }
 
     public static ApplicationInfo toApplicationInfo(Application application,
             List<ChildrenRecruit> childrenRecruits) {
 
+        List<DocumentInfo> documentInfos = application.getDocuments().stream()
+                .map(ApplicationResponse::toDocumentInfo)
+                .toList();
+
         return ApplicationInfo.builder()
                 .id(application.getId())
                 .isSingleParent(application.getIsSingleParent())
-                .ChildrenCnt(application.getChildrenCnt())
+                .childrenCnt(application.getChildrenCnt())
                 .isDisability(application.getIsDisability())
                 .isDualIncome(application.getIsDualIncome())
                 .isEmployeeCouple(application.getIsEmployeeCouple())
                 .isSibling(application.getIsSibling())
                 .childrenRecruitList(childrenRecruits)
-                .documents(application.getDocuments())
+                .documents(documentInfos)
                 .build();
     }
 
@@ -152,6 +149,29 @@ public class ApplicationResponse {
         });
 
         return childrenRecruits;
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    @Getter
+    public static class DocumentInfo {
+
+        @Schema(description = "Document ID", example = "1")
+        private Long id;
+        @Schema(description = "증빙서류 S3 경로", example = "https://kidsincompany-bucket.s3.ap-northeast-2.amazonaws.com/images/kindergarten/08b4d564-68d7-4061-b8da-823f0acfc287.jpg")
+        private String image;
+        @Schema(description = "문서 종류 / 주민등록등본, 맞벌이 여부, 한부모 가정, 장애 증빙, 다자녀, 형제/자매", example = "SINGLE_PARENT")
+        private DocumentType documentType;
+    }
+
+    public static DocumentInfo toDocumentInfo(Document document) {
+
+        return DocumentInfo.builder()
+                .id(document.getId())
+                .image(document.getImage())
+                .documentType(document.getDocumentType())
+                .build();
     }
 
     public static ApplicationResponse emptyEntity() {
