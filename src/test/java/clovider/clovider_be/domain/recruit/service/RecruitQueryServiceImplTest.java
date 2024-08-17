@@ -114,14 +114,14 @@ class RecruitQueryServiceImplTest {
         Recruit recruit = recruitQueryService.getRecruit(recruit1.getId());
         Kindergarten kdg1 = recruit1.getKindergarten();
         Kindergarten kdg2 = recruit2.getKindergarten();
-        AgeClass ageClass1 = recruit1.getAgeClass();
+        Integer ageClass1 = recruit1.getAgeClass();
 
         // then
         verify(recruitRepository, times(1)).findById(recruit1.getId());
         assertThat(recruit).isEqualTo(recruit1);
         assertThat(recruit1).isNotSameAs(recruit2);
         assertThat(kdg1).isSameAs(kdg2);
-        assertThat(ageClass1.getDescription()).isEqualTo(AgeClass.KID.getDescription());
+        assertThat(ageClass1).isEqualTo(1);
 
     }
 
@@ -139,12 +139,12 @@ class RecruitQueryServiceImplTest {
 
         RecruitInfo recruitInfo = recruitQueryService.getRecruitInfo(recruit1.getId());
         String kindergartenNm = recruitInfo.getKindergartenNm();
-        String ageClass = recruitInfo.getAgeClass();
+        Integer ageClass = recruitInfo.getAgeClass();
 
         // then
         assertThat(recruitInfo).isNotNull();
         assertThat(kindergartenNm).isEqualTo("애플 어린이집");
-        assertThat(ageClass).isNotEqualTo(AgeClass.TODDLER.getDescription());
+        assertThat(ageClass).isNotEqualTo(2);
         assertThat(recruitInfo).isInstanceOf(RecruitInfo.class);
     }
 }

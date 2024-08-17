@@ -234,7 +234,7 @@ public class AdminController {
     @PatchMapping("/recruits")
     public ApiResponse<String> updateRecruit(
             @RequestBody RecruitCreationRequest request) {
-        return ApiResponse.onSuccess(recruitCommandService.updateRecruit(request));
+        return ApiResponse.onSuccess(recruitCommandService.updateRecruit(request, LocalDateTime.now()));
     }
 
     @Operation(summary = "모집 생성", description = "관리자가 모집을 생성합니다.")
