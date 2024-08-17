@@ -82,6 +82,11 @@ public class RecruitQueryServiceImpl implements RecruitQueryService {
     }
 
     @Override
+    public List<Recruit> getRecruitResultWithRecruitAndKindergarten() {
+        return recruitRepository.findRecruitResult(LocalDateTime.now());
+    }
+
+    @Override
     public RecruitCreationInfo getRecruitCreationInfo() {
         List<Recruit> nowRecruit = getRecruitAndKindergarten();
 
@@ -143,7 +148,7 @@ public class RecruitQueryServiceImpl implements RecruitQueryService {
     }
 
     @Override
-    public Optional<Recruit> getRecruitByKindergarten(Kindergarten kindergarten, Integer ageClass) {
-        return recruitRepository.findByKindergartenAndAgeClass(kindergarten, ageClass);
+    public Optional<Recruit> getRecruitByKindergarten(Kindergarten kindergarten, Integer ageClass, LocalDateTime now) {
+        return recruitRepository.findByKindergartenAndAgeClass(kindergarten, ageClass, now);
     }
 }

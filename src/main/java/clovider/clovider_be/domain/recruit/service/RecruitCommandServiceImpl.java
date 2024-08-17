@@ -9,6 +9,7 @@ import clovider.clovider_be.domain.kindergarten.service.KindergartenQueryService
 import clovider.clovider_be.domain.recruit.Recruit;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.RecruitDateAndWeightInfo;
 import clovider.clovider_be.domain.recruit.repository.RecruitRepository;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +46,7 @@ public class RecruitCommandServiceImpl implements RecruitCommandService {
 
 
     @Override
-    public String updateRecruit(RecruitCreationRequest request) {
+    public String updateRecruit(RecruitCreationRequest request, LocalDateTime now) {
 
         List<AdminRequest.KindergartenClassInfo> kindergartenClassInfoList = request.getKindergartenClassInfoList();
         RecruitDateAndWeightInfo recruitDateAndWeightInfo = request.getRecruitDateAndWeightInfo();
@@ -62,7 +63,7 @@ public class RecruitCommandServiceImpl implements RecruitCommandService {
             for (RecruitClassInfo classInfo : classInfoList) {
 
                 Optional<Recruit> optionalRecruit = recruitQueryService.getRecruitByKindergarten(
-                        kindergarten, classInfo.getAgeClass());
+                        kindergarten, classInfo.getAgeClass(), now);
 
                 if (optionalRecruit.isEmpty()) {
                     recruitRepository.save(Recruit.createRecruit(classInfo, recruitDateAndWeightInfo,
