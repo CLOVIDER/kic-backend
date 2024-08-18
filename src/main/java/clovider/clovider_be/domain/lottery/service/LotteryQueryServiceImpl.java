@@ -229,10 +229,7 @@ public class LotteryQueryServiceImpl implements LotteryQueryService {
 
         List<Application> applications = applicationQueryService.getApplicationsByEmployee(
                 employee);
-
-        if (applications.isEmpty()) {
-            throw new ApiException(ErrorStatus._APPLICATION_NOT_FOUND);
-        }
+        
 
         List<LotteryResponse.LotteryHistory> lotteryHistories = new ArrayList<>();
         LocalDateTime currentTime = LocalDateTime.now();
