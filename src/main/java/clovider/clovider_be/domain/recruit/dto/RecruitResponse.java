@@ -189,6 +189,9 @@ public class RecruitResponse {
         private List<Long> recruitIds;
         @Schema(description = "사내 어린이집 클래스반 리스트", example = "[\"0세\", \"1세\"]")
         private List<String> ageClasses;
+        @Schema(description = "사내 어린이집 아이디 리스트", example = "[\"1\", \"2\"]")
+        private List<Long> kindergartenIds;
+
     }
 
     public static List<RecruitKdgInfo> toRecruitKdgInfos(List<Recruit> recruits) {
@@ -210,10 +213,15 @@ public class RecruitResponse {
                             .map(r -> r.getAgeClass() + "세")
                             .toList();
 
+                    List<Long> kindergartenIds = recruitList.stream()
+                        .map(r -> r.getKindergarten().getId())
+                        .toList();
+
                     return RecruitKdgInfo.builder()
                             .kindergartenNm(kindergartenNm)
                             .recruitIds(recruitIds)
                             .ageClasses(ageClasses)
+                            .kindergartenIds(kindergartenIds)
                             .build();
                 })
                 .toList();
