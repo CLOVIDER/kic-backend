@@ -56,7 +56,7 @@ public class KindergartenRequest {
 
         @Schema(description = "어린이집 이미지 url", example = "[\"path/file1.png\", \"path/file2.png\"]", required = true)
         @NotNull(message = "어린이집 이미지 url은 필수 항목입니다.")
-        private List<String> kindergartenImages;
+        private List<String> kindergartenImageUrls;
     }
 
     @Data
@@ -94,6 +94,6 @@ public class KindergartenRequest {
         private List<KindergartenClassRequest> kindergartenClass;
 
         @Schema(description = "어린이집 이미지 url", example = "[\"path/file1.png\", \"path/file2.png\"]")
-        private List<String> kindergartenImages;
+        private List<String> kindergartenImageUrls;
     }
 }
