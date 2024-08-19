@@ -25,6 +25,10 @@ public class ApplicationDocumentCommandServiceImpl implements ApplicationDocumen
     public void createApplicationDocuments(Map<DocumentType, String> fileUrls, Application application) {
 
         fileUrls.forEach((documentType, fileUrl) -> {
+            if (fileUrl == null || fileUrl.isEmpty()) {
+                return;
+            }
+
             Document document = Document.builder()
                     .image(fileUrl)
                     .application(application)
