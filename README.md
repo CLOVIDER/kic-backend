@@ -25,14 +25,14 @@
 
 ## 🫶 팀원
 
-| No.1 | No.2 | No.3 |
+| 팀원1 | 팀원2 | 팀원3 |
 | :-: | :-: | :-: |
 | <img src="https://avatars.githubusercontent.com/u/103489352?v=4" width="150" height="150"/> | <img src="https://avatars.githubusercontent.com/u/117968404?v=4" height="150"/> | <img src="https://avatars.githubusercontent.com/u/113875098?v=4" width="150" height="150"/> |
 | **김현겸** | **권민우** | **정준희** |
 | PM, BE | PL, BE | BE |
 | [kylo-dev](https://github.com/kylo-dev) | [MINUUUUUUUUUUUU](https://github.com/MINUUUUUUUUUUUU) | [sungsil0624](https://github.com/sungsil0624) |
 
-| No.4 | No.5 | No.6 |
+| 팀원4 | 팀원5 | 팀원6 |
 | :-: | :-: | :-: |
 | <img src="https://avatars.githubusercontent.com/u/24919880?v=4" width="150" height="150"/> | <img src="https://avatars.githubusercontent.com/u/51390115?v=4" height="150"/> | <img src="https://avatars.githubusercontent.com/u/118953934?v=4" width="150" height="150"/> |
 | **정희찬** | **이주애** | **김관일** |
