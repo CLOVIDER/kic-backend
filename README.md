@@ -61,4 +61,10 @@
     * https://github.com/CLOVIDER/kic-backend/pull/120
 * 관리자 대시보드 페이지 Redis 캐싱을 통한 쿼리 2회 단축 및 서버 데이터 전송과 처리 성능 2.5배 향상
     * https://github.com/CLOVIDER/kic-backend/issues/186
-
+* S3 이미지 다중 업로드 API의 멀티스레딩 처리
+    * https://github.com/CLOVIDER/kic-backend/pull/130
+* 스프링 스케줄러를 활용한 서비스 이미지 처리 간 S3 호출 의존성 제거
+    * https://github.com/CLOVIDER/kic-backend/pull/59=
+* 점진적인 공지사항 조회수 중복 처리 방지 로직 개선
+    * https://github.com/CLOVIDER/kic-backend/pull/59
+    * https://github.com/CLOVIDER/kic-backend/pull/141
