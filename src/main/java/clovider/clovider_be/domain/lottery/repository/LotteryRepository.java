@@ -42,6 +42,12 @@ public interface LotteryRepository extends JpaRepository<Lottery, Long>, Lottery
             "FROM Lottery l " +
             "JOIN l.application a " +
             "WHERE a.employee = :employee " +
+            "AND a.id = ( " +
+            "    SELECT MAX(sub_a.id) " +
+            "    FROM Lottery sub_l " +
+            "    JOIN sub_l.application sub_a " +
+            "    WHERE sub_l.childNm = l.childNm " +
+            ") " +
             "GROUP BY l.childNm")
     List<Object[]> findLotteryGroupedByChildNameByEmployee(Employee employee);
 }
