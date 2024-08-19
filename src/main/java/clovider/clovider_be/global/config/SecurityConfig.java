@@ -44,6 +44,7 @@ public class SecurityConfig {
         "/api/login",
         "/api/signup",
         "/api/emails/**",
+        "/api/kindergartens/**",
 
         // swagger
         "/v3/api-docs/**",
