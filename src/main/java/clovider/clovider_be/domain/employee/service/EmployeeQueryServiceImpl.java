@@ -33,6 +33,13 @@ public class EmployeeQueryServiceImpl implements EmployeeQueryService {
     }
 
     @Override
+    public Employee findEmployee(Employee employee) {
+        return employeeRepository.findById(employee.getId()).orElseThrow(
+                () -> new ApiException(ErrorStatus._EMPLOYEE_NOT_FOUND)
+        );
+    }
+
+    @Override
     public Employee checkAccountIdAndPwd(LoginRequest loginRequest) {
 
         Employee employee = employeeRepository.findByAccountId(

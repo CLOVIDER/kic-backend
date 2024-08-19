@@ -5,7 +5,6 @@ import clovider.clovider_be.domain.admin.dto.AdminRequest.RecruitClassInfo;
 import clovider.clovider_be.domain.common.BaseTimeEntity;
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
 import clovider.clovider_be.domain.lottery.Lottery;
-import clovider.clovider_be.domain.recruit.dto.RecruitCreateRequestDTO;
 import clovider.clovider_be.domain.recruit.dto.RecruitResponse.RecruitDateAndWeightInfo;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -33,7 +32,6 @@ import org.hibernate.annotations.ColumnDefault;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @Getter
-@Setter
 @Table(name = "recruit_tb")
 public class Recruit extends BaseTimeEntity {
 
@@ -101,33 +99,14 @@ public class Recruit extends BaseTimeEntity {
     @ColumnDefault("'0'")
     private Character isSiblingUsage;
 
+    @Column(nullable = false, length = 1)
+    @ColumnDefault("'0'")
+    private Character isDrew;
+
     public void changeKindergarten(Kindergarten kindergarten) {
         this.kindergarten = kindergarten;
     }
 
-    // 생성 메서드
-    public static Recruit createRecruit(
-            RecruitCreateRequestDTO.RecruitClassCreateRequestDTO requestDTO,
-            Kindergarten kindergarten) {
-        return Recruit.builder()
-                .recruitStartDt(requestDTO.getRecruitStartDt())
-                .recruitEndDt(requestDTO.getRecruitEndDt())
-                .recruitCnt(requestDTO.getRecruitCnt())
-                .ageClass(requestDTO.getAgeClass())
-                .firstStartDt(requestDTO.getFirstStartDt())
-                .firstEndDt(requestDTO.getFirstEndDt())
-                .secondStartDt(requestDTO.getSecondStartDt())
-                .secondEndDt(requestDTO.getSecondEndDt())
-                .kindergarten(kindergarten)
-                .workYearsUsage(requestDTO.getWorkYearsUsage())
-                .isSingleParentUsage(requestDTO.getIsSingleParentUsage())
-                .childrenCntUsage(requestDTO.getChildrenCntUsage())
-                .isDisabilityUsage(requestDTO.getIsDisabilityUsage())
-                .isDualIncomeUsage(requestDTO.getIsDualIncomeUsage())
-                .isEmployeeCoupleUsage(requestDTO.getIsEmployeeCoupleUsage())
-                .isSiblingUsage(requestDTO.getIsSiblingUsage())
-                .build();
-    }
 
     public void updateRecruitDetails(RecruitClassInfo classInfo,
             RecruitDateAndWeightInfo recruitDateAndWeightInfo) {
@@ -184,5 +163,9 @@ public class Recruit extends BaseTimeEntity {
                         recruitDateAndWeightInfo.getRecruitWeightInfo().getIsEmployeeCoupleUsage())
                 .isSiblingUsage(recruitDateAndWeightInfo.getRecruitWeightInfo().getIsSiblingUsage())
                 .build();
+    }
+
+    public void setIsDrew(char c) {
+        this.isDrew = c;
     }
 }
