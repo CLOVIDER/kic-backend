@@ -5,6 +5,8 @@ import clovider.clovider_be.domain.recruit.Recruit;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -78,6 +80,7 @@ public class LotteryResponse {
         private String kindergartenName;
         private Integer ageClass;
         private String result;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
         private LocalDateTime applicationDate;
         private String competition;
     }
