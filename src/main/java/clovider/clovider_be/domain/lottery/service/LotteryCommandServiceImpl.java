@@ -59,6 +59,15 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
             Recruit recruit = recruitRepository.findById(recruitId)
                     .orElseThrow(() -> new ApiException(ErrorStatus._RECRUIT_NOT_FOUND));
 
+            if(recruit.getIsDrew() == '1'){
+                return new LotteryResponseDTO(
+                        true,
+                        "COMMON200",
+                        "이미 진행된 추첨입니다.",
+                        new LotteryResponseDTO.Result(recruit.getId(), recruit.getCreatedAt())
+                );
+            }
+
             List<Application> applications = lotteryRepository.findAllApplicationByRecruitId(recruit.getId());
 
             List<Map<String, Object>> applicants = new ArrayList<>();
@@ -85,7 +94,15 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
 
             int recruitCnt = recruit.getRecruitCnt();
 
-            List<Map<String, Object>> selectedApplicants = WeightedRandomSelection.weightedRandomSelection(applicants, recruitCnt);
+            List<Map<String, Object>> selectedApplicants;
+
+            if (applications.size() <= recruitCnt) {
+                // 지원자 수가 모집 정원에 못 미칠 경우 모든 지원자를 합격 처리
+                selectedApplicants = new ArrayList<>(applicants);
+            } else {
+                // 지원자 수가 모집 정원을 초과할 경우 추첨 로직 수행
+                selectedApplicants = WeightedRandomSelection.weightedRandomSelection(applicants, recruitCnt);
+            }
 
         // 순서대로 업데이트
         int rank = 1;
@@ -110,8 +127,10 @@ public class LotteryCommandServiceImpl implements LotteryCommandService {
             lottery.setResult(result);
             lottery.setIsRegistry('0');
 
+
             lotteryRepository.save(lottery);
         }
+            recruit.setIsDrew('1');
 
             return new LotteryResponseDTO(
                     true,

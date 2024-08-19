@@ -100,6 +100,7 @@ public class RecruitCommandServiceImpl implements RecruitCommandService {
             }
         }
 
+
         return "모집을 정상적으로 생성하였습니다.";
 
     }
