@@ -162,6 +162,7 @@ public class Recruit extends BaseTimeEntity {
                 .isEmployeeCoupleUsage(
                         recruitDateAndWeightInfo.getRecruitWeightInfo().getIsEmployeeCoupleUsage())
                 .isSiblingUsage(recruitDateAndWeightInfo.getRecruitWeightInfo().getIsSiblingUsage())
+                .isDrew('0')
                 .build();
     }
 
