@@ -12,4 +12,6 @@ public interface EmployeeQueryService {
 
     EmployeeInfo getEmployeeInfo(Long applicationId);
 
+    Employee findEmployee(Employee employee);
+
 }

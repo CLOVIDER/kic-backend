@@ -1,10 +1,10 @@
 package clovider.clovider_be.domain.employee.service;
 
+import clovider.clovider_be.domain.auth.dto.AuthRequest.LoginRequest;
 import clovider.clovider_be.domain.common.CustomResult;
 import clovider.clovider_be.domain.employee.Employee;
 import clovider.clovider_be.domain.employee.dto.EmployeeRequest;
 import clovider.clovider_be.domain.employee.repository.EmployeeRepository;
-import clovider.clovider_be.domain.auth.dto.AuthRequest.LoginRequest;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import lombok.RequiredArgsConstructor;
@@ -19,14 +19,16 @@ public class EmployeeCommandServiceImpl implements EmployeeCommandService {
 
     private final BCryptPasswordEncoder bCryptEncoder;
     private final EmployeeRepository employeeRepository;
+    private final EmployeeQueryService employeeQueryService;
 
     @Override
     public CustomResult changePassword(Employee employee, String newPassword) {
 
         String encodePassword = bCryptEncoder.encode(newPassword);
-        employee.changePassword(encodePassword);
+        Employee existEmployee = employeeQueryService.findEmployee(employee);
+        existEmployee.changePassword(encodePassword);
 
-        return CustomResult.toCustomResult(employee.getId());
+        return CustomResult.toCustomResult(existEmployee.getId());
     }
 
     @Override
