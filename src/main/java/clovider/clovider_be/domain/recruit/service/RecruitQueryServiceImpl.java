@@ -7,6 +7,8 @@ import clovider.clovider_be.domain.admin.dto.AdminResponse.KindergartenClassInfo
 import clovider.clovider_be.domain.admin.dto.AdminResponse.RecruitClassInfo;
 import clovider.clovider_be.domain.admin.dto.AdminResponse.RecruitCreationInfo;
 import clovider.clovider_be.domain.kindergarten.Kindergarten;
+import clovider.clovider_be.domain.kindergartenClass.KindergartenClass;
+import clovider.clovider_be.domain.kindergartenClass.service.KindergartenClassQueryService;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse;
 import clovider.clovider_be.domain.lottery.dto.LotteryResponse.RecruitInfo;
 import clovider.clovider_be.domain.recruit.Recruit;
@@ -17,7 +19,6 @@ import clovider.clovider_be.domain.recruit.repository.RecruitRepository;
 import clovider.clovider_be.global.exception.ApiException;
 import clovider.clovider_be.global.response.code.status.ErrorStatus;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -33,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class RecruitQueryServiceImpl implements RecruitQueryService {
 
     private final RecruitRepository recruitRepository;
+    private final KindergartenClassQueryService kindergartenClassQueryService;
 
     @Override
     public List<Recruit> getRecruitByKindergarten(Long kindergartenId) {
@@ -88,22 +90,22 @@ public class RecruitQueryServiceImpl implements RecruitQueryService {
 
     @Override
     public RecruitCreationInfo getRecruitCreationInfo() {
-        List<Recruit> nowRecruit = getRecruitAndKindergarten();
 
-        // 현재 생성돼있는 모집이 없을 시
+        List<Recruit> nowRecruit = getRecruitAndKindergarten();
         if (nowRecruit.isEmpty()) {
-            return createEmptyRecruitCreationInfo();
+            List<KindergartenClass> kindergartenClasses = kindergartenClassQueryService.getAllKindergartenClass();
+            return createEmptyRecruitCreationInfo(kindergartenClasses);
         }
 
         return createRecruitCreationInfoForNonEmpty(nowRecruit);
     }
 
-    private RecruitCreationInfo createEmptyRecruitCreationInfo() {
-        // 빈 응답 생성 메소드를 DTO 클래스로 분리
+    private RecruitCreationInfo createEmptyRecruitCreationInfo(
+            List<KindergartenClass> kindergartenClasses) {
+
         RecruitDateAndWeightInfo recruitDateAndWeightInfo = RecruitDateAndWeightInfo.createEmpty();
-        KindergartenClassInfo emptyKindergartenClassInfo = KindergartenClassInfo.createEmpty();
-        List<KindergartenClassInfo> kindergartenClassInfoList = Collections.singletonList(
-                emptyKindergartenClassInfo);
+        List<KindergartenClassInfo> kindergartenClassInfoList = KindergartenClassInfo.createEmpty(
+                kindergartenClasses);
 
         return AdminResponse.toRecruitCreationInfo(kindergartenClassInfoList,
                 recruitDateAndWeightInfo, false);
@@ -148,7 +150,8 @@ public class RecruitQueryServiceImpl implements RecruitQueryService {
     }
 
     @Override
-    public Optional<Recruit> getRecruitByKindergarten(Kindergarten kindergarten, Integer ageClass, LocalDateTime now) {
+    public Optional<Recruit> getRecruitByKindergarten(Kindergarten kindergarten, Integer ageClass,
+            LocalDateTime now) {
         return recruitRepository.findByKindergartenAndAgeClass(kindergarten, ageClass, now);
     }
 }
