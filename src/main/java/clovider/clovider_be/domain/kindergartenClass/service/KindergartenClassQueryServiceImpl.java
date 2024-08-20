@@ -14,11 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class KindergartenClassQueryServiceImpl implements KindergartenClassQueryService {
+
     private final KindergartenClassRepository kindergartenClassRepository;
 
     @Override
     public List<KindergartenClassRequest> getKindergartenClass(Long kindergartenId) {
-        List<KindergartenClass> kindergartenClasses = kindergartenClassRepository.findByKindergartenId(kindergartenId);
+        List<KindergartenClass> kindergartenClasses = kindergartenClassRepository.findByKindergartenId(
+                kindergartenId);
 
         if (kindergartenClasses == null || kindergartenClasses.isEmpty()) {
             throw new ApiException(ErrorStatus._KDG_ClASS_NOT_FOUND);
@@ -30,5 +32,10 @@ public class KindergartenClassQueryServiceImpl implements KindergartenClassQuery
                         .ageClass(kindergartenClass.getAgeClass())
                         .build())
                 .toList();
+    }
+
+    @Override
+    public List<KindergartenClass> getAllKindergartenClass() {
+        return kindergartenClassRepository.findAllWithKindergarten();
     }
 }
