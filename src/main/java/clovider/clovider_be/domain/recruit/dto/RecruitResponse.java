@@ -104,8 +104,6 @@ public class RecruitResponse {
 
         if (now.isBefore(recruit.getRecruitStartDt())) {
             return Period.SCHEDULED.getDescription();
-        } else if (now.isAfter(recruit.getRecruitEndDt())) {
-            return Period.NOT_RECRUIT.getDescription();
         } else if (now.isAfter(recruit.getFirstStartDt()) && now.isBefore(
                 recruit.getFirstEndDt())) {
             return Period.FIRST_REGISTRY.getDescription();
@@ -214,8 +212,8 @@ public class RecruitResponse {
                             .toList();
 
                     List<Long> kindergartenIds = recruitList.stream()
-                        .map(r -> r.getKindergarten().getId())
-                        .toList();
+                            .map(r -> r.getKindergarten().getId())
+                            .toList();
 
                     return RecruitKdgInfo.builder()
                             .kindergartenNm(kindergartenNm)
