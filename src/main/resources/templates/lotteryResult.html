@@ -48,10 +48,15 @@
       font-size: 12px;
     }
 
-    .content .result {
+    .content {
       font-size: 32px;
       font-weight: bold;
       color: #FFAB2D;
+    }
+
+    .result {
+      font-size: 16px;
+      text-decoration-line: none;
     }
 
     .contact {
@@ -71,7 +76,7 @@
   <tr class="content">
     <td>
       <h3 th:text="${accountId} + '님의 사내 어린이집 모집 결과'"></h3>
-      <p class="result" th:text="${result} + '입니다.'"></p>
+      <a class="result" href="http://kidsincompany.shop">📌️ 결과 확인하러 가기</a>
     </td>
   </tr>
   <tr class="footer">
