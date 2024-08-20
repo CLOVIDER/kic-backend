@@ -1,6 +1,7 @@
 package clovider.clovider_be.domain.admin.dto;
 
 import clovider.clovider_be.domain.application.Application;
+import clovider.clovider_be.domain.kindergartenClass.KindergartenClass;
 import clovider.clovider_be.domain.lottery.Lottery;
 import clovider.clovider_be.domain.notice.dto.NoticeTop3;
 import clovider.clovider_be.domain.recruit.Recruit;
@@ -9,6 +10,8 @@ import clovider.clovider_be.domain.recruit.dto.RecruitResponse.RecruitDateAndWei
 import clovider.clovider_be.global.util.TimeUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -195,6 +198,13 @@ public class AdminResponse {
                 .build();
     }
 
+    public static RecruitClassInfo toDefaultRecruitClassInfo(KindergartenClass kindergartenClass) {
+        return RecruitClassInfo.builder()
+                .ageClass(kindergartenClass.getAgeClass())
+                .recruitCnt(0)
+                .build();
+    }
+
 
     @Schema(description = "어린이집의 클래스(분반) 정보 DTO")
     @Builder
@@ -209,11 +219,23 @@ public class AdminResponse {
         @Schema(description = "어린이집의 분반 리스트")
         private List<RecruitClassInfo> classInfoList;
 
-        public static KindergartenClassInfo createEmpty() {
-            return KindergartenClassInfo.builder()
-                    .kindergartenName(null)
-                    .classInfoList(null)
-                    .build();
+        public static List<KindergartenClassInfo> createEmpty(
+                List<KindergartenClass> kindergartenClasses) {
+
+            Map<String, List<RecruitClassInfo>> recruitClassInfoMap = kindergartenClasses.stream()
+                    .collect(Collectors.groupingBy(
+                            kc -> kc.getKindergarten().getKindergartenNm(),
+                            Collectors.mapping(
+                                    AdminResponse::toDefaultRecruitClassInfo,
+                                    Collectors.toList()
+                            )
+                    ));
+
+            return recruitClassInfoMap.entrySet()
+                    .stream()
+                    .map(entry -> new KindergartenClassInfo(entry.getKey(), entry.getValue()))
+                    .toList();
+
         }
     }
 
